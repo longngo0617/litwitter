@@ -1,0 +1,29 @@
+@import "./reset";
+@import "./variables";
+//pages
+@import "./pages/home";
+@import "./pages/login.scss";
+
+//components
+@import "./components/tweetBox.scss";
+@import "./components/post.scss";
+
+body,
+html {
+  overscroll-behavior: none;
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.overflow {
+  overflow: hidden;
+}
+.full-width {
+  width: 100%;
+}
+.block {
+  display: block;
+}
+
+

@@ -1,0 +1,35 @@
+.login-page {
+    .login__form {
+        max-width: 400px;
+        margin-top: 20px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 16px;
+        &--header {
+            margin: 0 16px;
+            h1 {
+                margin-bottom: 12px;
+                margin-top: 32px;
+                line-height: 36px;
+                font-size: 31px;
+                font-weight: 700;
+                overflow-wrap: break-word;
+            }
+        }
+        &--body {
+            width: 100%;
+        }
+        &--footer {
+            margin-top: 40px;
+        }
+        &--links {
+            display: flex;
+            align-items: center;
+        }
+        &--link {
+            margin-left: auto;
+            color:$twitter-color;
+        }
+    }
+}

@@ -1,0 +1,19 @@
+fragment PostSnippet on Post {
+    id
+    body
+    createdAt
+    username
+    verified
+    image
+    likeCount
+    likes {
+      username
+    }
+    commentCount
+    comments {
+      id
+      username
+      createdAt
+      body
+    }
+}

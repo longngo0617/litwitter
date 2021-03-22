@@ -1,0 +1,8 @@
+mutation createPost($body:String!,$image: String!) {
+  createPost(body: $body,image:$image) {
+    id
+    body
+    createdAt
+    username
+  }
+}

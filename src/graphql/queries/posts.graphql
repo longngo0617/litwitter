@@ -1,0 +1,5 @@
+query Posts($cursor:String!,$limit: Int!) {
+  getPosts(cursor:$cursor,limit:$limit) {
+    ...PostSnippet
+  }
+}
