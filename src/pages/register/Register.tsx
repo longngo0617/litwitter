@@ -39,12 +39,12 @@ export const Register: React.FC<RegisterProps> = ({}) => {
               if (response.data?.register.error) {
                 setErrors(toErrorMap(response.data?.register.error));
               } else {
-                context.login(response.data?.register);
+                context.login(response.data?.register.user);
                 router.push("/home");
               }
             }}
           >
-            {({}) => (
+            {({isSubmitting}) => (
               <Form>
                 <Field
                   label="Username"
@@ -65,7 +65,7 @@ export const Register: React.FC<RegisterProps> = ({}) => {
                 />
                 <Field
                   label="ConfirmPassword"
-                  name="confirmpassword"
+                  name="confirmPassword"
                   type="password"
                   component={TextFormField}
                 />

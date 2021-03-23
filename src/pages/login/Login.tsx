@@ -13,7 +13,7 @@ export const Login: React.FC<{}> = ({}) => {
   const router = useHistory();
   const context = useContext(UserContext);
 
-  if (context?.user?.user) return <Redirect to="/home" />;
+  if (context?.user?.id) return <Redirect to="/home" />;
 
   return (
     <div className="login-page">

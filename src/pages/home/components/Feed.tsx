@@ -1,32 +1,44 @@
-import {TweetBox} from '../../../components/TweetBox'
-import { usePostsQuery } from '../../../generated/graphql'
-
+import { TweetBox } from "../../../components/TweetBox";
+import { usePostsQuery } from "../../../generated/graphql";
+import { Post } from "../../../components/Post";
 const Feed = () => {
-    // const {data,error,loading, fetchMore, variables} = usePostsQuery({
-    //     variables: {
-    //         limit:15,
-    //         cursor:"",
-    //     },
-    //     notifyOnNetworkStatusChange:true,
-    // })
+  // const {data,error,loading, fetchMore, variables} = usePostsQuery({
+  //     variables: {
+  //         limit:15,
+  //         cursor:"",
+  //     },
+  //     notifyOnNetworkStatusChange:true,
+  // })
 
-    // if(!loading && !data) {
-    //     return (
-    //         <div>
-    //             <div>you got query failed</div>
-    //             <div>{error?.message}</div>
-    //         </div>
-    //     )
-    // }
-    return (
-        <div className="feed">
-            <div className="feed__header">
-                <h2>Home</h2>
-            </div>
+  // if(!loading && !data) {
+  //     return (
+  //         <div>
+  //             <div>you got query failed</div>
+  //             <div>{error?.message}</div>
+  //         </div>
+  //     )
+  // }
+  return (
+    <div className="feed">
+      <div className="feed__header">
+        <h2>Home</h2>
+      </div>
 
-            <TweetBox/>
+      <TweetBox />
 
-            {/* {data.getPosts.map(p => (
+      <Post
+        displayName={"Vy"}
+        username={"VY "}
+        verified={true}
+        text={"asdashdjashdjkasd"}
+        avatar={""}
+        date={""}
+        image={"./17.jpeg"}
+        likes={21}
+        tweets={4}
+      />
+
+      {/* {data.getPosts.map(p => (
                 <Post
                 key={p.id}
                 displayName={p.displayname}
@@ -38,8 +50,8 @@ const Feed = () => {
                 tweets={p.commentCount}   
               />
             ))} */}
-        </div>
-    )
-}
+    </div>
+  );
+};
 
-export default Feed
+export default Feed;
