@@ -3,6 +3,7 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import { Field, Form, Formik } from "formik";
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
+import { Loading } from "../../components/Loading";
 import { TextFormField } from "../../components/TextFormField";
 import { useRegisterMutation } from "../../generated/graphql";
 import { toErrorMap } from "../../utils/toErrorMap";
@@ -44,7 +45,7 @@ export const Register: React.FC<RegisterProps> = ({}) => {
               }
             }}
           >
-            {({isSubmitting}) => (
+            {({ isSubmitting }) => (
               <Form>
                 <Field
                   label="Username"
@@ -75,7 +76,7 @@ export const Register: React.FC<RegisterProps> = ({}) => {
                   variant="outlined"
                   className="sidebar__tweet"
                 >
-                  Đăng ký
+                  {isSubmitting ? <Loading /> : "Đăng ký"}
                 </Button>
               </Form>
             )}

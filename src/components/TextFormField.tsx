@@ -1,6 +1,6 @@
 import React from "react";
 import { getIn, FieldProps } from "formik";
-import { TextField } from "@material-ui/core";
+import { TextareaAutosize, TextField } from "@material-ui/core";
 
 export const TextFormField: React.FC<FieldProps> = ({
   field,
@@ -18,6 +18,15 @@ export const TextFormField: React.FC<FieldProps> = ({
       error={!!errorText}
       {...field}
       {...props}
+    />
+  );
+};
+export const TextArea: React.FC<FieldProps> = ({ field }) => {
+  return (
+    <TextareaAutosize
+      rowsMin={3}
+      placeholder="Bạn đang nghĩ gì ?"
+      {...field}
     />
   );
 };

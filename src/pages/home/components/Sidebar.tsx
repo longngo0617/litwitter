@@ -8,7 +8,7 @@ import NotificationsNoneIcon from "@material-ui/icons/Notifications";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import SearchIcon from "@material-ui/icons/Search";
 import TwitterIcon from "@material-ui/icons/Twitter";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Popover } from "./Popover";
 import SidebarOption from "./SidebarOption";
 
@@ -39,10 +39,10 @@ function Sidebar({ username, displayname }: any) {
             </div>
             <div className="info">
               <div className="displayname">
-                <span>DEMO ALK</span>
+                <span>{displayname}</span>
               </div>
               <div className="username">
-                <span>@asdasd</span>
+                <span>@{username}</span>
               </div>
             </div>
             <div className="dot">

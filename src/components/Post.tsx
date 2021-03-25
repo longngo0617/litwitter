@@ -6,30 +6,12 @@ import RepeatIcon from "@material-ui/icons/Repeat";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import PublishIcon from "@material-ui/icons/Publish";
 import IconOption from "./IconOption";
+import {PostSnippetFragment} from "../generated/graphql";
+import { getNullableType, isNullableType } from "graphql";
+import { Image } from "./Image";
 
-interface PostProps {
-  displayName: string;
-  username: string;
-  verified: boolean;
-  text: string;
-  image: string;
-  avatar: string;
-  date: string;
-  likes: number;
-  tweets: number;
-}
 
-export const Post: React.FC<PostProps> = ({
-  displayName,
-  username,
-  verified,
-  text,
-  image,
-  avatar,
-  date,
-  likes,
-  tweets,
-}) => {
+export const Post: React.FC<PostSnippetFragment> = (props) => {
   const [backGround, setBackGround] = useState<
     "reply" | "retweet" | "like" | "share" | ""
   >("");
@@ -43,45 +25,18 @@ export const Post: React.FC<PostProps> = ({
         <div className="post__header">
           <div className="post__headerText">
             <h3>
-              {displayName}
+              {/* {props.displayname} */}
               <span className="post__headerSpecial">
-                {verified && <VerifiedUserIcon className="post__badge" />}@
-                {username}
+                {props.verified && <VerifiedUserIcon className="post__badge" />}@
+                {props.username}
               </span>
             </h3>
           </div>
           <div className="post__headerDescription">
-            <p>{text}</p>
+            <p>{props.body}</p>
           </div>
         </div>
-        <div className="post__image--wrap">
-          <div className="post__image--wrap">
-            <div className="post__image--wrap post__image">
-              <div className="post__image--wrap">
-                <a href="#" className="post__image--wrap post__image--link">
-                  <div className="post__image--wrap overflow">
-                    <div
-                      className="full-width block"
-                      style={{ paddingBottom: "56.25%" }}
-                    ></div>
-                    <div className="post__image--body">
-                      <div
-                        className="post__image--big"
-                        style={{ marginBottom: "-21%" }}
-                      >
-                        <div
-                          className="post__image--background"
-                          style={{ backgroundImage: `url(${image})` }}
-                        ></div>
-                        <img src={image} alt="" className="post__image--hide" />
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+        {props?.image ? <Image image={props.image}/> : null}
         {/* <div className="post__date">
           <span>{date}</span>
         </div> */}
@@ -90,7 +45,7 @@ export const Post: React.FC<PostProps> = ({
             background={backGround}
             Icon={ChatBubbleOutlineIcon}
             color={"reply"}
-            object={"12"}
+            object={props.commentCount}
             mouseEnter={() => setBackGround("reply")}
             mouseLeave={() => setBackGround("")}
           />
@@ -98,7 +53,7 @@ export const Post: React.FC<PostProps> = ({
             background={backGround}
             Icon={RepeatIcon}
             color={"retweet"}
-            object={tweets}
+            object={props.commentCount}
             mouseEnter={() => setBackGround("retweet")}
             mouseLeave={() => setBackGround("")}
           />
@@ -106,7 +61,7 @@ export const Post: React.FC<PostProps> = ({
             background={backGround}
             Icon={FavoriteBorderIcon}
             color={"like"}
-            object={likes}
+            object={props.likeCount}
             mouseEnter={() => setBackGround("like")}
             mouseLeave={() => setBackGround("")}
           />

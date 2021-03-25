@@ -7,6 +7,7 @@ import { useLoginMutation } from "../../generated/graphql";
 import { Redirect, useHistory } from "react-router-dom";
 import { UserContext } from "../../utils/useAuth";
 import { toErrorMap } from "../../utils/toErrorMap";
+import { Loading } from "../../components/Loading";
 
 export const Login: React.FC<{}> = ({}) => {
   const [login] = useLoginMutation();
@@ -39,7 +40,7 @@ export const Login: React.FC<{}> = ({}) => {
               }
             }}
           >
-            {({}) => (
+            {({isSubmitting}) => (
               <Form>
                 <Field
                   label="Username"
@@ -58,7 +59,7 @@ export const Login: React.FC<{}> = ({}) => {
                   variant="outlined"
                   className="sidebar__tweet"
                 >
-                  Đăng nhập
+                  {isSubmitting ? <Loading /> : "Đăng nhập"}
                 </Button>
               </Form>
             )}

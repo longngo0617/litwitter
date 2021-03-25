@@ -9,7 +9,6 @@
 .sidebar {
   border-right: 1px solid $twitter-background;
   flex: 0.2;
-  margin-top: 20px;
   padding-left: 20px;
   padding-right: 20px;
   &__twiiterIcon {
@@ -120,7 +119,7 @@
     top: 0;
     background-color: #fff;
     z-index: 100;
-    border: 1px solid $twitter-background;
+    border-bottom: 1px solid $twitter-background;
     padding: 15px 20px;
     > h2 {
       font-size: 20px;

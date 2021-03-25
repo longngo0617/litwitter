@@ -4,5 +4,8 @@ mutation createPost($body:String!,$image: String!) {
     body
     createdAt
     username
+    image
+    likeCount
+    commentCount
   }
 }

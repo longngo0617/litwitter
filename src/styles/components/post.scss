@@ -7,16 +7,18 @@
     flex: 1;
     padding: 10px;
     > img {
-        border-radius: 20px;
+      border-radius: 20px;
     }
   }
   &__image {
     margin-top: 12px;
-    border:1px solid rgb(196,207,214);
+    border: 1px solid rgb(196, 207, 214);
     border-radius: 16px;
     overflow: hidden;
     outline-style: none;
     &--wrap {
+      max-width: 504px;
+      max-height: 285px;
       display: flex;
       flex-basis: auto;
       flex-direction: column;
@@ -33,6 +35,22 @@
       padding-top: 0px;
       position: relative;
       z-index: 0;
+      cursor: pointer;
+    }
+    &--close {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      min-height: 32px;
+      min-width: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &--cancel {
+      color:#ffffff;
+      width: 1.5em !important;
+      height: 1.5em !important;
     }
     &--link {
       overflow: hidden;
@@ -42,14 +60,14 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      top:0;
-      left:0;
+      top: 0;
+      left: 0;
       bottom: 0;
     }
     &--big {
       position: absolute;
-      top:0;
-      left:0;
+      top: 0;
+      left: 0;
       right: 0;
       bottom: 0;
       overflow: hidden;
@@ -66,8 +84,8 @@
       height: 100%;
       width: 100%;
       position: absolute;
-      top:0;
-      left:0;
+      top: 0;
+      left: 0;
       right: 0;
       bottom: 0;
     }
@@ -92,51 +110,55 @@
       position: absolute;
       border-radius: 9999px;
       display: inline-flex;
-      top:0;
-      left:0;
+      top: 0;
+      left: 0;
       right: 0;
       bottom: 0;
-      margin:-8px;
-      background-color: rgba(0,0,0,0);
-      transition-duration: .2s;
+      margin: -8px;
+      background-color: rgba(0, 0, 0, 0);
+      transition-duration: 0.2s;
       transition-property: background-color, box-shadow;
       outline-style: none;
     }
     &--item {
-      display:inline-flex;
+      display: inline-flex;
       align-items: center;
       cursor: pointer;
-      &.reply,&.share {
-        .post__footer--icon,.post__footer--number {
-          color:$twitter-color
+      &.reply,
+      &.share {
+        .post__footer--icon,
+        .post__footer--number {
+          color: $twitter-color;
         }
         .post__footer--blur {
-          background-color: rgba(29,161,242,0.1);
+          background-color: rgba(29, 161, 242, 0.1);
         }
       }
       &.retweet {
-        .post__footer--icon,.post__footer--number {
-          color:rgb(23,191,99)
+        .post__footer--icon,
+        .post__footer--number {
+          color: rgb(23, 191, 99);
         }
         .post__footer--blur {
-          background-color: rgba(23,191,99,0.1);
+          background-color: rgba(23, 191, 99, 0.1);
         }
       }
       &.like {
-        .post__footer--icon,.post__footer--number {
-          color:rgb(224,36,94)
+        .post__footer--icon,
+        .post__footer--number {
+          color: rgb(224, 36, 94);
         }
         .post__footer--blur {
-          background-color: rgba(224,36,94,0.1);
+          background-color: rgba(224, 36, 94, 0.1);
         }
       }
     }
     &--icon {
-      transition: color .2s !important;
+      transition: color 0.2s !important;
       vertical-align: middle;
     }
     &--number {
-      transition: color .2s;
+      transition: color 0.2s;
       font-size: 13px;
       padding: 0 12px;
     }
@@ -144,6 +166,9 @@
   &__headerDescription {
     margin-bottom: 10px;
     font-size: 15px;
+    > p {
+      max-width: 504px;
+    }
   }
   &__headerText > h3 {
     font-size: 15px;

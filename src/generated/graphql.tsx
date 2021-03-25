@@ -31,6 +31,17 @@ export type Post = {
   commentCount: Scalars['Int'];
 };
 
+export type File = {
+  __typename?: 'File';
+  url: Scalars['String'];
+};
+
+export type PaginatedPost = {
+  __typename?: 'PaginatedPost';
+  hasMore: Scalars['Boolean'];
+  posts: Array<Post>;
+};
+
 export type Comment = {
   __typename?: 'Comment';
   id: Scalars['ID'];
@@ -80,12 +91,11 @@ export type Member = {
 
 export type User = {
   __typename?: 'User';
-  id?: Maybe<Scalars['ID']>;
-  email?: Maybe<Scalars['String']>;
-  token?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['String']>;
-  displayname?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  email: Scalars['String'];
+  token: Scalars['String'];
+  username: Scalars['String'];
+  createdAt: Scalars['String'];
   friends?: Maybe<Array<Maybe<Friend>>>;
   profile?: Maybe<Profile>;
 };
@@ -104,13 +114,14 @@ export type FieldError = {
 
 export type Profile = {
   __typename?: 'Profile';
-  id: Scalars['ID'];
-  avatar: Scalars['String'];
-  dateOfBirth: Scalars['String'];
-  fullName: Scalars['String'];
-  story: Scalars['String'];
-  follower: Scalars['String'];
-  following: Scalars['String'];
+  id?: Maybe<Scalars['ID']>;
+  avatar?: Maybe<Scalars['String']>;
+  displayname?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
+  story?: Maybe<Scalars['String']>;
+  follower?: Maybe<Scalars['String']>;
+  following?: Maybe<Scalars['String']>;
 };
 
 export type Friend = {
@@ -129,7 +140,7 @@ export type RegisterInput = {
 
 export type Query = {
   __typename?: 'Query';
-  getPosts?: Maybe<Array<Maybe<Post>>>;
+  getPosts: PaginatedPost;
   getPost?: Maybe<Post>;
   getChats?: Maybe<Array<Maybe<RoomChat>>>;
   getChat?: Maybe<RoomChat>;
@@ -143,7 +154,7 @@ export type Query = {
 
 
 export type QueryGetPostsArgs = {
-  cursor: Scalars['String'];
+  cursor?: Maybe<Scalars['String']>;
   limit: Scalars['Int'];
 };
 
@@ -171,6 +182,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   register: UserResponse;
   login: UserResponse;
+  Upload?: Maybe<Scalars['String']>;
   createPost: Post;
   deletePost: Scalars['String'];
   createComment: Post;
@@ -194,6 +206,11 @@ export type MutationRegisterArgs = {
 export type MutationLoginArgs = {
   username: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type MutationUploadArgs = {
+  file: Scalars['String'];
 };
 
 
@@ -263,6 +280,7 @@ export type MutationEditProfileArgs = {
   dateOfBirth: Scalars['String'];
   fullName: Scalars['String'];
   story: Scalars['String'];
+  displayname: Scalars['String'];
 };
 
 export type Subscription = {
@@ -319,7 +337,20 @@ export type CreatePostMutation = (
   { __typename?: 'Mutation' }
   & { createPost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'body' | 'createdAt' | 'username'>
+    & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'image' | 'likeCount' | 'commentCount'>
+  ) }
+);
+
+export type LikeMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type LikeMutation = (
+  { __typename?: 'Mutation' }
+  & { likePost: (
+    { __typename?: 'Post' }
+    & Pick<Post, 'id'>
   ) }
 );
 
@@ -358,10 +389,14 @@ export type PostsQueryVariables = Exact<{
 
 export type PostsQuery = (
   { __typename?: 'Query' }
-  & { getPosts?: Maybe<Array<Maybe<(
-    { __typename?: 'Post' }
-    & PostSnippetFragment
-  )>>> }
+  & { getPosts: (
+    { __typename?: 'PaginatedPost' }
+    & Pick<PaginatedPost, 'hasMore'>
+    & { posts: Array<(
+      { __typename?: 'Post' }
+      & PostSnippetFragment
+    )> }
+  ) }
 );
 
 export const PostSnippetFragmentDoc = gql`
@@ -417,6 +452,9 @@ export const CreatePostDocument = gql`
     body
     createdAt
     username
+    image
+    likeCount
+    commentCount
   }
 }
     `;
@@ -447,6 +485,39 @@ export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const LikeDocument = gql`
+    mutation Like($id: ID!) {
+  likePost(postId: $id) {
+    id
+  }
+}
+    `;
+export type LikeMutationFn = Apollo.MutationFunction<LikeMutation, LikeMutationVariables>;
+
+/**
+ * __useLikeMutation__
+ *
+ * To run a mutation, you first call `useLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [likeMutation, { data, loading, error }] = useLikeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useLikeMutation(baseOptions?: Apollo.MutationHookOptions<LikeMutation, LikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LikeMutation, LikeMutationVariables>(LikeDocument, options);
+      }
+export type LikeMutationHookResult = ReturnType<typeof useLikeMutation>;
+export type LikeMutationResult = Apollo.MutationResult<LikeMutation>;
+export type LikeMutationOptions = Apollo.BaseMutationOptions<LikeMutation, LikeMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
@@ -517,7 +588,10 @@ export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutatio
 export const PostsDocument = gql`
     query Posts($cursor: String!, $limit: Int!) {
   getPosts(cursor: $cursor, limit: $limit) {
-    ...PostSnippet
+    hasMore
+    posts {
+      ...PostSnippet
+    }
   }
 }
     ${PostSnippetFragmentDoc}`;
