@@ -1,20 +1,13 @@
 import React, { useState } from "react";
 import { Avatar } from "@material-ui/core";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
-import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
-import RepeatIcon from "@material-ui/icons/Repeat";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import PublishIcon from "@material-ui/icons/Publish";
-import IconOption from "./IconOption";
+
 import {PostSnippetFragment} from "../generated/graphql";
-import { getNullableType, isNullableType } from "graphql";
 import { Image } from "./Image";
+import { InteractiveBar } from "./InteractiveBar";
 
 
 export const Post: React.FC<PostSnippetFragment> = (props) => {
-  const [backGround, setBackGround] = useState<
-    "reply" | "retweet" | "like" | "share" | ""
-  >("");
 
   return (
     <div className="post">
@@ -41,37 +34,7 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
           <span>{date}</span>
         </div> */}
         <div className="post__footer">
-          <IconOption
-            background={backGround}
-            Icon={ChatBubbleOutlineIcon}
-            color={"reply"}
-            object={props.commentCount}
-            mouseEnter={() => setBackGround("reply")}
-            mouseLeave={() => setBackGround("")}
-          />
-          <IconOption
-            background={backGround}
-            Icon={RepeatIcon}
-            color={"retweet"}
-            object={props.commentCount}
-            mouseEnter={() => setBackGround("retweet")}
-            mouseLeave={() => setBackGround("")}
-          />
-          <IconOption
-            background={backGround}
-            Icon={FavoriteBorderIcon}
-            color={"like"}
-            object={props.likeCount}
-            mouseEnter={() => setBackGround("like")}
-            mouseLeave={() => setBackGround("")}
-          />
-          <IconOption
-            background={backGround}
-            Icon={PublishIcon}
-            color={"share"}
-            mouseEnter={() => setBackGround("share")}
-            mouseLeave={() => setBackGround("")}
-          />
+            <InteractiveBar commentCount={props.commentCount} likeCount={props.likeCount}/>
         </div>
       </div>
     </div>

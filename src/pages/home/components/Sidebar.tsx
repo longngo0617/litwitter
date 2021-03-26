@@ -8,7 +8,7 @@ import NotificationsNoneIcon from "@material-ui/icons/Notifications";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import SearchIcon from "@material-ui/icons/Search";
 import TwitterIcon from "@material-ui/icons/Twitter";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Popover } from "./Popover";
 import SidebarOption from "./SidebarOption";
 

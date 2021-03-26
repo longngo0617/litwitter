@@ -11,7 +11,7 @@ const Home = () => {
 
   return (
     <div className="homepage">
-      <Sidebar username={user.username}/>
+      <Sidebar username={user.username} displayname={user.displayname}/>
       <Feed/>
       <Widgets/>
     </div>

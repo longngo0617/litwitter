@@ -32,6 +32,7 @@ export const Register: React.FC<RegisterProps> = ({}) => {
               password: "",
               confirmPassword: "",
               email: "",
+              displayname:"",
             }}
             onSubmit={async (values, { setErrors }) => {
               const response = await register({
@@ -50,6 +51,11 @@ export const Register: React.FC<RegisterProps> = ({}) => {
                 <Field
                   label="Username"
                   name="username"
+                  component={TextFormField}
+                />
+                <Field
+                  label="Fullname"
+                  name="displayname"
                   component={TextFormField}
                 />
                 <Field

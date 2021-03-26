@@ -91,19 +91,20 @@ export type Member = {
 
 export type User = {
   __typename?: 'User';
-  id: Scalars['ID'];
-  email: Scalars['String'];
-  token: Scalars['String'];
-  username: Scalars['String'];
-  createdAt: Scalars['String'];
-  friends?: Maybe<Array<Maybe<Friend>>>;
+  id?: Maybe<Scalars['ID']>;
+  email?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['String']>;
+  displayname?: Maybe<Scalars['String']>;
+  friends?: Maybe<Array<Scalars['String']>>;
   profile?: Maybe<Profile>;
 };
 
 export type UserResponse = {
   __typename?: 'UserResponse';
   error?: Maybe<Array<FieldError>>;
-  user?: Maybe<User>;
+  user: User;
 };
 
 export type FieldError = {
@@ -116,7 +117,6 @@ export type Profile = {
   __typename?: 'Profile';
   id?: Maybe<Scalars['ID']>;
   avatar?: Maybe<Scalars['String']>;
-  displayname?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['String']>;
   fullName?: Maybe<Scalars['String']>;
   story?: Maybe<Scalars['String']>;
@@ -136,12 +136,14 @@ export type RegisterInput = {
   password: Scalars['String'];
   confirmPassword: Scalars['String'];
   email: Scalars['String'];
+  displayname: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
   getPosts: PaginatedPost;
-  getPost?: Maybe<Post>;
+  getPost: Post;
+  getMyPosts: PaginatedPost;
   getChats?: Maybe<Array<Maybe<RoomChat>>>;
   getChat?: Maybe<RoomChat>;
   getUsers?: Maybe<Array<Maybe<User>>>;
@@ -161,6 +163,12 @@ export type QueryGetPostsArgs = {
 
 export type QueryGetPostArgs = {
   postId: Scalars['ID'];
+};
+
+
+export type QueryGetMyPostsArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
 };
 
 
@@ -302,7 +310,7 @@ export type PostSnippetFragment = (
     & Pick<Like, 'username'>
   )>>, comments: Array<Maybe<(
     { __typename?: 'Comment' }
-    & Pick<Comment, 'id' | 'username' | 'createdAt' | 'body'>
+    & Pick<Comment, 'username' | 'createdAt' | 'body'>
   )>> }
 );
 
@@ -313,7 +321,7 @@ export type RegularErrorFragment = (
 
 export type RegularUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'email' | 'token'>
+  & Pick<User, 'id' | 'username' | 'email' | 'token' | 'displayname'>
 );
 
 export type RegularUserResponseFragment = (
@@ -321,10 +329,10 @@ export type RegularUserResponseFragment = (
   & { error?: Maybe<Array<(
     { __typename?: 'FieldError' }
     & RegularErrorFragment
-  )>>, user?: Maybe<(
+  )>>, user: (
     { __typename?: 'User' }
     & RegularUserFragment
-  )> }
+  ) }
 );
 
 export type CreatePostMutationVariables = Exact<{
@@ -381,6 +389,19 @@ export type RegisterMutation = (
   ) }
 );
 
+export type PostQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type PostQuery = (
+  { __typename?: 'Query' }
+  & { getPost: (
+    { __typename?: 'Post' }
+    & PostSnippetFragment
+  ) }
+);
+
 export type PostsQueryVariables = Exact<{
   cursor: Scalars['String'];
   limit: Scalars['Int'];
@@ -413,7 +434,6 @@ export const PostSnippetFragmentDoc = gql`
   }
   commentCount
   comments {
-    id
     username
     createdAt
     body
@@ -432,6 +452,7 @@ export const RegularUserFragmentDoc = gql`
   username
   email
   token
+  displayname
 }
     `;
 export const RegularUserResponseFragmentDoc = gql`
@@ -585,6 +606,41 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const PostDocument = gql`
+    query Post($id: ID!) {
+  getPost(postId: $id) {
+    ...PostSnippet
+  }
+}
+    ${PostSnippetFragmentDoc}`;
+
+/**
+ * __usePostQuery__
+ *
+ * To run a query within a React component, call `usePostQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function usePostQuery(baseOptions: Apollo.QueryHookOptions<PostQuery, PostQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PostQuery, PostQueryVariables>(PostDocument, options);
+      }
+export function usePostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostQuery, PostQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PostQuery, PostQueryVariables>(PostDocument, options);
+        }
+export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
+export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
+export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
 export const PostsDocument = gql`
     query Posts($cursor: String!, $limit: Int!) {
   getPosts(cursor: $cursor, limit: $limit) {

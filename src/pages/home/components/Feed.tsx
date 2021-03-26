@@ -1,5 +1,5 @@
 import { TweetBox } from "../../../components/TweetBox";
-import { PostsQuery, usePostsQuery } from "../../../generated/graphql";
+import { usePostsQuery } from "../../../generated/graphql";
 import { Post } from "../../../components/Post";
 import Box from "@material-ui/core/Box";
 import { Button } from "@material-ui/core";
@@ -28,7 +28,7 @@ const Feed = () => {
       </div>
       <TweetBox />
       {!data && loading ? (
-        <div>loading...</div>
+        <Box display="flex" justifyContent="center" marginTop="20px"><Loading blue/></Box>
       ) : (
         data!.getPosts?.posts.map((p) =>
           !p ? null : (

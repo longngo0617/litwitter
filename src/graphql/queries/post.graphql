@@ -1,0 +1,5 @@
+query Post($id : ID!) {
+  getPost(postId:$id) {
+   ...PostSnippet
+  }
+}

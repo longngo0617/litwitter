@@ -107,7 +107,6 @@
 .feed {
   flex: 0.5;
   border-right: 1px solid $twitter-background;
-  min-width: fit-content;
   overflow-y: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -115,6 +114,8 @@
     display: none;
   }
   &__header {
+    display:flex;
+    align-items: center;
     position: sticky;
     top: 0;
     background-color: #fff;
@@ -124,6 +125,11 @@
     > h2 {
       font-size: 20px;
       font-weight: 800;
+    }
+    &--icon {
+      color:$twitter-color !important;
+      margin-right: 20px;
+      cursor: pointer;
     }
   }
 }

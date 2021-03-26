@@ -3,6 +3,7 @@
 //pages
 @import "./pages/home";
 @import "./pages/login.scss";
+@import "./pages/details.scss";
 
 //components
 @import "./components/tweetBox.scss";
@@ -27,6 +28,9 @@ html {
 }
 .progress {
   color:#fff !important;
+  &.blue{
+    color:$twitter-color !important;
+  }
 }
 
 
