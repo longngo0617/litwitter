@@ -29,6 +29,7 @@ export type Post = {
   likes: Array<Maybe<Like>>;
   likeCount: Scalars['Int'];
   commentCount: Scalars['Int'];
+  displayname: Scalars['String'];
 };
 
 export type File = {
@@ -304,7 +305,7 @@ export enum CacheControlScope {
 
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'verified' | 'image' | 'likeCount' | 'commentCount'>
+  & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'displayname' | 'verified' | 'image' | 'likeCount' | 'commentCount'>
   & { likes: Array<Maybe<(
     { __typename?: 'Like' }
     & Pick<Like, 'username'>
@@ -426,6 +427,7 @@ export const PostSnippetFragmentDoc = gql`
   body
   createdAt
   username
+  displayname
   verified
   image
   likeCount

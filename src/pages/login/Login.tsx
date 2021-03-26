@@ -9,7 +9,9 @@ import { UserContext } from "../../utils/useAuth";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { Loading } from "../../components/Loading";
 
-export const Login: React.FC<{}> = ({}) => {
+interface LoginProps {}
+
+export const Login: React.FC<LoginProps> = () => {
   const [login] = useLoginMutation();
   const router = useHistory();
   const context = useContext(UserContext);

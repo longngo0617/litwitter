@@ -1,5 +1,5 @@
 import Hook from "./Hook";
-export default {
+const LocalStorage = {
     get: (name : string) => {
         try{
             let data = JSON.parse(localStorage.getItem(name) || '{}');
@@ -25,3 +25,4 @@ export default {
         localStorage.clear();
     }
 }
+export default LocalStorage;

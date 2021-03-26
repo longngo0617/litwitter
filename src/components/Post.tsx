@@ -1,16 +1,15 @@
-import React, { useState } from "react";
 import { Avatar } from "@material-ui/core";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
-
-import {PostSnippetFragment} from "../generated/graphql";
+import React from "react";
+import { useHistory } from "react-router-dom";
+import { PostSnippetFragment } from "../generated/graphql";
 import { Image } from "./Image";
 import { InteractiveBar } from "./InteractiveBar";
 
-
 export const Post: React.FC<PostSnippetFragment> = (props) => {
-
+  const router = useHistory();
   return (
-    <div className="post">
+    <div className="post" onClick={() => router.replace(`/posts/${props.id}`)}>
       <div className="post__avatar">
         <Avatar src="" />
       </div>
@@ -18,7 +17,7 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
         <div className="post__header">
           <div className="post__headerText">
             <h3>
-              {/* {props.displayname} */}
+              {props.displayname}
               <span className="post__headerSpecial">
                 {props.verified && <VerifiedUserIcon className="post__badge" />}@
                 {props.username}

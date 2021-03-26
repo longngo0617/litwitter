@@ -2,7 +2,7 @@
 let actions : any = {};
 let actionsOneTime : any = {};
 
-export default {
+const Hook = {
     doAction: (name :any,...ref :any[]) => {
         if(name in actions){
             actions[name].forEach((e :any) => e(...ref))
@@ -32,3 +32,4 @@ export default {
         actionsOneTime[name].push(callback);
     },
 }
+export default Hook;

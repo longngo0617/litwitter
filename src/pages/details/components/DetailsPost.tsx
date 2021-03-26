@@ -1,6 +1,6 @@
 import React from "react";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { usePostQuery } from "../../../generated/graphql";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { Avatar, Box } from "@material-ui/core";
@@ -11,17 +11,21 @@ import { Loading } from "../../../components/Loading";
 
 interface DetailsPostProps {}
 
-export const DetailsPost: React.FC<DetailsPostProps> = ({}) => {
+export const DetailsPost: React.FC<DetailsPostProps> = () => {
   const postID: any = useRouteMatch();
+  const router = useHistory();
   const { data, loading } = usePostQuery({
     variables: { id: postID.params.id },
   });
-  const d = new Date("2013-03-10T02:00:00Z");
-  //   console.log(d.)
+  const formatDate = (date: any) => {
+    let d: any = new Date(date);
+    d = `${d.getDate()} Tháng ${d.getMonth()} ${d.getFullYear()}`;
+    return d;
+  }
   return (
     <div className="feed">
       <div className="feed__header">
-        <ArrowBackIcon className="feed__header--icon" />
+        <ArrowBackIcon className="feed__header--icon" onClick={() => router.replace("/")}/>
         <h2>Tweet</h2>
       </div>
 
@@ -35,7 +39,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = ({}) => {
                 <div className="postSingle__header--left">
                   <Avatar src="" />
                   <div className="name">
-                    <span>Thomas Fogdo</span>
+                    <span>{data?.getPost.displayname}</span>
                     <span>@{data?.getPost?.username}</span>
                   </div>
                 </div>
@@ -46,16 +50,12 @@ export const DetailsPost: React.FC<DetailsPostProps> = ({}) => {
               <div className="postSingle__body">
                 <div className="postSingle__text">
                   <span>
-                    {data?.getPost.body} Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Provident dolore quidem, sed optio ullam
-                    aliquam iusto accusamus hic explicabo magnam porro
-                    laudantium exercitationem architecto libero omnis, iste vel
-                    natus. Voluptatum.
+                    {data?.getPost.body}
                   </span>
                 </div>
                 <Image image={data?.getPost.image} />
                 <div className="postSingle__date">
-                  <span>{data?.getPost?.createdAt}</span>
+                  <span>{formatDate(data?.getPost?.createdAt)}</span>
                   <span style={{ padding: "0 4px" }}>.</span>
                   <span>Twitter for website</span>
                 </div>

@@ -7,7 +7,7 @@ interface CommentProps {
 
 }
 
-export const Comment: React.FC<CommentProps> = ({}) => {
+export const Comment: React.FC<CommentProps> = () => {
         return (
             <div className="comment__wrap">
                 <div className="comment__box">

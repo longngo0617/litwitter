@@ -11,7 +11,7 @@ import { UserContext } from "../../utils/useAuth";
 
 interface RegisterProps {}
 
-export const Register: React.FC<RegisterProps> = ({}) => {
+export const Register: React.FC<RegisterProps> = () => {
   const [register] = useRegisterMutation();
   const router = useHistory();
   const context = useContext(UserContext);

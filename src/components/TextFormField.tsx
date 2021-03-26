@@ -24,8 +24,8 @@ export const TextFormField: React.FC<FieldProps> = ({
 export const TextArea: React.FC<FieldProps> = ({ field }) => {
   return (
     <TextareaAutosize
-      rowsMin={3}
       placeholder="Bạn đang nghĩ gì ?"
+      className="text__input"
       {...field}
     />
   );

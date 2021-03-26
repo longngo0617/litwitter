@@ -4,6 +4,7 @@ import { Post } from "../../../components/Post";
 import Box from "@material-ui/core/Box";
 import { Button } from "@material-ui/core";
 import { Loading } from "../../../components/Loading";
+
 const Feed = () => {
   const { data, error, loading, fetchMore, variables } = usePostsQuery({
     variables: {

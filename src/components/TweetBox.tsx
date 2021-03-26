@@ -1,16 +1,16 @@
-import React, { useRef, useState } from "react";
 import { Avatar, Box, Button } from "@material-ui/core";
-import { Field, Form, Formik } from "formik";
-import InsertPhotoIcon from "@material-ui/icons/InsertPhoto";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
-import { Image } from "./Image";
+import InsertPhotoIcon from "@material-ui/icons/InsertPhoto";
+import { Field, Form, Formik } from "formik";
+import React, { useRef, useState } from "react";
 import { useCreatePostMutation } from "../generated/graphql";
-import { TextArea } from "./TextFormField";
+import { Image } from "./Image";
 import { Loading } from "./Loading";
+import { TextArea } from "./TextFormField";
 
 interface TweetBoxProps {}
 
-export const TweetBox: React.FC<TweetBoxProps> = ({}) => {
+export const TweetBox: React.FC<TweetBoxProps> = () => {
   const [createPost] = useCreatePostMutation();
   const inputFile: any = useRef(null);
   const [selectedFile, setSelectedFile] = useState("");
@@ -55,10 +55,10 @@ export const TweetBox: React.FC<TweetBoxProps> = ({}) => {
             values.body = "";
           }}
         >
-          {({isSubmitting}) => (
+          {({ isSubmitting }) => (
             <Form>
+              <Field name="body" component={TextArea}/>
               <div className="tweetBox__input">
-                <Field name="body" component={TextArea} />
                 <div className="tweetBox__imagePreview">
                   {previewSource ? (
                     <Image image={previewSource} close callback={cancelFile} />
@@ -97,7 +97,7 @@ export const TweetBox: React.FC<TweetBoxProps> = ({}) => {
                 </div>
                 <div className="tweetBox__bar--button">
                   <Button className="tweetBox__tweetButton" type="submit">
-                    {isSubmitting ?  <Loading /> : "Tweet"}
+                    {isSubmitting ? <Loading /> : "Tweet"}
                   </Button>
                 </div>
               </Box>

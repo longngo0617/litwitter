@@ -1,9 +1,10 @@
 import { Avatar, Link } from "@material-ui/core";
-import DoneIcon from "@material-ui/icons/Done";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import DoneIcon from "@material-ui/icons/Done";
 import React, { useContext } from "react";
 import { UserContext } from "../../../utils/useAuth";
-export const Popover: React.FC<{}> = ({}) => {
+
+export const Popover: React.FC<{}> = () => {
   const {logout} = useContext(UserContext);
 
   return (

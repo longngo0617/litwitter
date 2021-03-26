@@ -3,6 +3,7 @@ fragment PostSnippet on Post {
     body
     createdAt
     username
+    displayname
     verified
     image
     likeCount
