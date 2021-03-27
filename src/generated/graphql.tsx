@@ -359,7 +359,7 @@ export type LikeMutation = (
   { __typename?: 'Mutation' }
   & { likePost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id'>
+    & PostSnippetFragment
   ) }
 );
 
@@ -511,10 +511,10 @@ export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMut
 export const LikeDocument = gql`
     mutation Like($id: ID!) {
   likePost(postId: $id) {
-    id
+    ...PostSnippet
   }
 }
-    `;
+    ${PostSnippetFragmentDoc}`;
 export type LikeMutationFn = Apollo.MutationFunction<LikeMutation, LikeMutationVariables>;
 
 /**

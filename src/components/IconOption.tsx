@@ -1,11 +1,11 @@
-import React from "react";
 
-const IconOption = ({background, Icon, color, object, mouseEnter, mouseLeave } : any) => {
+const IconOption = ({background, Icon, color, object, mouseEnter, mouseLeave,mouseClick } : any) => {
   return (
     <div
       className={`post__footer--item ${background === color && color}`}
       onMouseEnter={mouseEnter}
       onMouseLeave={mouseLeave}
+      onClick={mouseClick}
     >
       <div className="post__footer--wrapIcon">
         <div className="post__footer--blur"></div>

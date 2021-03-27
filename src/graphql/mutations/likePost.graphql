@@ -1,5 +1,5 @@
 mutation Like($id: ID!) {
-  likePost(postId: $id){
-      id
+  likePost(postId: $id) {
+    ...PostSnippet
   }
 }
