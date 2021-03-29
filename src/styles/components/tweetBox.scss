@@ -13,6 +13,9 @@
     margin-right: 12px;
     flex-basis: 48px;
     -webkit-box-flex: 0;
+    align-items: stretch;
+    justify-content: center;
+    display: flex;
     flex-grow: 0;
   }
   &__form {

@@ -26,7 +26,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
     d = `${d.getDate()} Tháng ${d.getMonth()} ${d.getFullYear()}`;
     return d;
   };
-  
+
   return (
     <div className="feed">
       <div className="feed__header">
@@ -92,38 +92,10 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
                     commentCount={data?.getPost?.commentCount}
                     likeCount={data?.getPost?.likeCount}
                     likeList={data?.getPost.likes}
+                    item={data?.getPost}
                     likePost={async () =>
                       await likePost({
                         variables: { id: data!.getPost.id },
-                        update: (cache) => {
-                          cache.modify({
-                            fields: {
-                              likes(existingLikeRefs = [], { readField }) {
-                                const newLikeRefs = cache.writeFragment({
-                                  data: {
-                                    username: user.username,
-                                  },
-                                  fragment: gql`
-                                    fragment NewLike on Like {
-                                      username
-                                    }
-                                  `,
-                                });
-                                if (
-                                  existingLikeRefs.some(
-                                    (ref: any) =>
-                                      readField("username", ref) ===
-                                      user.username
-                                  )
-                                ) {
-                                  return existingLikeRefs;
-                                }
-
-                                return [...existingLikeRefs, newLikeRefs];
-                              },
-                            },
-                          });
-                        },
                       })
                     }
                   />
@@ -132,10 +104,9 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
             </div>
           </div>
           <div className="postSingle__listComment">
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
+            {data?.getPost.comments.map((cm,i) => (
+              <Comment key={i} {...cm}/>
+            ))}
           </div>
         </div>
       )}

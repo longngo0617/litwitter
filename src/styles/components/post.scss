@@ -171,10 +171,16 @@
       max-width: 504px;
     }
   }
-  &__headerText > h3 {
-    font-size: 15px;
+  &__headerText {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    > h3{
+      font-size: 15px;
     margin-bottom: 5px;
     font-weight: 700;
+    }
+    
   }
   &__badge {
     font-size: 14px !important;

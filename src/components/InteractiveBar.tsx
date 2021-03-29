@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
@@ -11,6 +11,7 @@ interface InteractiveBarProps {
   likeCount?: number;
   likePost?: () => void;
   likeList?: any;
+  item?: any,
 }
 
 export const InteractiveBar: React.FC<InteractiveBarProps> = ({
@@ -18,12 +19,14 @@ export const InteractiveBar: React.FC<InteractiveBarProps> = ({
   likeCount,
   likePost,
   likeList,
+  item,
 }) => {
   const [backGround, setBackGround] = useState<
     "reply" | "retweet" | "like" | "share" | ""
   >("");
-  const { user } = useContext(UserContext);
+  const { user,openComment } = useContext(UserContext);
   let favorite = likeList.find((like: any) => like.username === user.username);
+
   const IconFavorite = () => {
     return (
       <FavoriteIcon
@@ -42,6 +45,7 @@ export const InteractiveBar: React.FC<InteractiveBarProps> = ({
         object={commentCount}
         mouseEnter={() => setBackGround("reply")}
         mouseLeave={() => setBackGround("")}
+        mouseClick={() => openComment(item)}
       />
       <IconOption
         background={backGround}

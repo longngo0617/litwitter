@@ -1,0 +1,11 @@
+mutation Comment($id: String!, $body: String!) {
+  createComment(postId: $id,body:$body) {
+    id
+    comments{
+      body
+      createdAt
+      username
+    }
+    commentCount
+  }
+}

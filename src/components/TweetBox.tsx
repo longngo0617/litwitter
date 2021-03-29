@@ -1,17 +1,26 @@
-import { Avatar, Box, Button } from "@material-ui/core";
+import { Avatar, Box, Button, IconButton } from "@material-ui/core";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import InsertPhotoIcon from "@material-ui/icons/InsertPhoto";
 import { Field, Form, Formik } from "formik";
-import React, { useRef, useState } from "react";
-import { useCreatePostMutation } from "../generated/graphql";
+import React, { useContext, useRef, useState } from "react";
+import {
+  useCreatePostMutation,
+  useCommentMutation,
+} from "../generated/graphql";
+import { UserContext } from "../utils/useAuth";
 import { Image } from "./Image";
 import { Loading } from "./Loading";
 import { TextArea } from "./TextFormField";
 
-interface TweetBoxProps {}
+interface TweetBoxProps {
+  isComment?: boolean;
+  postId?: string;
+}
 
-export const TweetBox: React.FC<TweetBoxProps> = () => {
+export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
   const [createPost] = useCreatePostMutation();
+  const [createComment] = useCommentMutation();
+  const { closeComment } = useContext(UserContext);
   const inputFile: any = useRef(null);
   const [selectedFile, setSelectedFile] = useState("");
   const [previewSource, setPreviewSource] = useState<any>("");
@@ -45,19 +54,27 @@ export const TweetBox: React.FC<TweetBoxProps> = () => {
           initialValues={{ body: "", image: "" }}
           onSubmit={async (values) => {
             values.image = previewSource as string;
-            await createPost({
-              variables: values,
-              update: (cache) => {
-                cache.evict({ fieldName: "getPosts:{}" });
-              },
-            });
+            (await !isComment)
+              ? createPost({
+                  variables: values,
+                  update: (cache) => {
+                    cache.evict({ fieldName: "getPosts:{}" });
+                  },
+                })
+              : createComment({
+                  variables: { id: postId as string, body: values.body },
+                  update: () => {
+                    closeComment();
+                  },
+                });
             setPreviewSource("");
+            setSelectedFile("");
             values.body = "";
           }}
         >
           {({ isSubmitting }) => (
             <Form>
-              <Field name="body" component={TextArea}/>
+              <Field name="body" component={TextArea} />
               <div className="tweetBox__input">
                 <div className="tweetBox__imagePreview">
                   {previewSource ? (
@@ -74,10 +91,13 @@ export const TweetBox: React.FC<TweetBoxProps> = () => {
                 <div className="tweetBox__bar--icon">
                   <div className="icon--wrap">
                     <div className="icon--item">
-                      <InsertPhotoIcon
-                        className="icon"
+                      <IconButton
+                        aria-label="insert photo"
+                        color="primary"
                         onClick={() => inputFile.current.click()}
-                      />
+                      >
+                        <InsertPhotoIcon className="icon" />
+                      </IconButton>
                       <input
                         accept="image/jpeg,image/png,image/webp,image/gif"
                         multiple
@@ -91,7 +111,9 @@ export const TweetBox: React.FC<TweetBoxProps> = () => {
                   </div>
                   <div className="icon--wrap">
                     <div className="icon--item">
-                      <InsertEmoticonIcon className="icon" />
+                      <IconButton aria-label="insert emoji" color="primary">
+                        <InsertEmoticonIcon className="icon" />
+                      </IconButton>
                     </div>
                   </div>
                 </div>

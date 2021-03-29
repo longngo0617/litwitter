@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
 interface CommentProps {
-
+    username?:string,
+    body?:string,
+    createdAt?: string,
 }
 
-export const Comment: React.FC<CommentProps> = () => {
+export const Comment: React.FC<CommentProps> = ({username,body}) => {
         return (
             <div className="comment__wrap">
                 <div className="comment__box">
@@ -19,7 +21,7 @@ export const Comment: React.FC<CommentProps> = () => {
                             <div className="name">
                                 <Link to="">
                                     <div className="fullname">Lasse Angantyr</div>
-                                    <div className="username">@LAngantyr</div>
+                                    <div className="username">@{username}</div>
                                 </Link>
                                 <span className="dot">.</span>
                                 <span className="day">
@@ -31,7 +33,7 @@ export const Comment: React.FC<CommentProps> = () => {
                             </div>
                         </div>
                         <div className="comment__box--content">
-                            Va vad det for en "helpful and cool feature"
+                            {body}
                         </div>
                     </div>
                 </div>

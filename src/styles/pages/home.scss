@@ -119,7 +119,8 @@
     position: sticky;
     top: 0;
     background-color: #fff;
-    z-index: 100;
+    z-index: 3;
+    backface-visibility: hidden;
     border-bottom: 1px solid $twitter-background;
     padding: 15px 20px;
     > h2 {

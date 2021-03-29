@@ -5,6 +5,7 @@ import { Login } from "./pages/login/Login";
 import { UserProvider } from "./utils/useAuth";
 import { Register } from "./pages/register/Register";
 import { Details } from "./pages/details/Details";
+import { CommentPost } from "./components/CommentPost";
 
 const App = () => {
   const routes = [
@@ -18,6 +19,7 @@ const App = () => {
     <>
       <UserProvider>
         <Router>
+          <CommentPost />
           <Switch>
             {routes.map((e: any) => (
               <Route key={e.path} path={e.path}>
