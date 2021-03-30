@@ -12,6 +12,7 @@ fragment PostSnippet on Post {
     }
     commentCount
     comments {
+      displayname
       username
       createdAt
       body

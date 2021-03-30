@@ -1,14 +1,13 @@
 import { Avatar, Box } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import React, { useContext } from "react";
+import React from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { Image } from "../../../components/Image";
 import { InteractiveBar } from "../../../components/InteractiveBar";
 import { Loading } from "../../../components/Loading";
 import { useLikeMutation, usePostQuery } from "../../../generated/graphql";
 import { formatDate } from "../../../utils/toErrorMap";
-import { UserContext } from "../../../utils/useAuth";
 import { Comment } from "./Comment";
 
 interface DetailsPostProps {}
@@ -20,7 +19,6 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
     variables: { id: postID.params.id },
   });
   const [likePost] = useLikeMutation();
-  const { user } = useContext(UserContext);
 
 
   return (

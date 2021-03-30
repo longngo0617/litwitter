@@ -30,6 +30,7 @@ export type Post = {
   likeCount: Scalars['Int'];
   commentCount: Scalars['Int'];
   displayname: Scalars['String'];
+  avatar: Scalars['String'];
 };
 
 export type File = {
@@ -48,7 +49,9 @@ export type Comment = {
   id: Scalars['ID'];
   createdAt: Scalars['String'];
   username: Scalars['String'];
+  displayname: Scalars['String'];
   body: Scalars['String'];
+  avatar: Scalars['String'];
 };
 
 export type Like = {
@@ -116,7 +119,6 @@ export type FieldError = {
 
 export type Profile = {
   __typename?: 'Profile';
-  id?: Maybe<Scalars['ID']>;
   avatar?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['String']>;
   fullName?: Maybe<Scalars['String']>;
@@ -289,7 +291,6 @@ export type MutationEditProfileArgs = {
   dateOfBirth: Scalars['String'];
   fullName: Scalars['String'];
   story: Scalars['String'];
-  displayname: Scalars['String'];
 };
 
 export type Subscription = {
@@ -311,7 +312,7 @@ export type PostSnippetFragment = (
     & Pick<Like, 'username'>
   )>>, comments: Array<Maybe<(
     { __typename?: 'Comment' }
-    & Pick<Comment, 'username' | 'createdAt' | 'body'>
+    & Pick<Comment, 'displayname' | 'username' | 'createdAt' | 'body'>
   )>> }
 );
 
@@ -464,6 +465,7 @@ export const PostSnippetFragmentDoc = gql`
   }
   commentCount
   comments {
+    displayname
     username
     createdAt
     body
