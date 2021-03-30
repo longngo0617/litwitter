@@ -1,11 +1,21 @@
-
-const IconOption = ({background, Icon, color, object, mouseEnter, mouseLeave,mouseClick } : any) => {
+const IconOption = ({
+  background,
+  Icon,
+  color,
+  object,
+  mouseEnter,
+  mouseLeave,
+  mouseClick,
+}: any) => {
   return (
     <div
       className={`post__footer--item ${background === color && color}`}
       onMouseEnter={mouseEnter}
       onMouseLeave={mouseLeave}
-      onClick={mouseClick}
+      onClick={(e) => {
+        mouseClick();
+        e.stopPropagation();
+      }}
     >
       <div className="post__footer--wrapIcon">
         <div className="post__footer--blur"></div>

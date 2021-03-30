@@ -1,3 +1,12 @@
 mutation DeletePost($id: ID!) {
-  deletePost(postId: $id)
+  deletePost(postId: $id) {
+    id
+    comments {
+      id
+      username
+      createdAt
+      body
+    }
+    commentCount
+  }
 }

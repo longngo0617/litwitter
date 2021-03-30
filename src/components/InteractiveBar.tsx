@@ -45,7 +45,7 @@ export const InteractiveBar: React.FC<InteractiveBarProps> = ({
         object={commentCount}
         mouseEnter={() => setBackGround("reply")}
         mouseLeave={() => setBackGround("")}
-        mouseClick={() => openComment(item)}
+        mouseClick={() => {openComment(item)}}
       />
       <IconOption
         background={backGround}

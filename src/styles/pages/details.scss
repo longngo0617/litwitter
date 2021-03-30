@@ -107,6 +107,8 @@
       padding: 12px 16px;
       display: flex;
       align-items: stretch;
+      transition: background-color .2s;
+      cursor: pointer;
       &--left {
         flex-basis: 48px;
         margin-right: 12px;
@@ -152,6 +154,15 @@
                   padding:0 4px;
               }
           }
+          .more {
+            position: relative;
+            &-blur{
+              position: absolute;
+            }
+          }
+      }
+      &:hover{
+        background-color: rgba(0,0,0,0.03);
       }
     }
   }

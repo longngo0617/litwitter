@@ -1,15 +1,15 @@
-import React, { useContext } from "react";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { Link, useHistory, useRouteMatch } from "react-router-dom";
-import { useLikeMutation, usePostQuery } from "../../../generated/graphql";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { Avatar, Box } from "@material-ui/core";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import React, { useContext } from "react";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { Image } from "../../../components/Image";
 import { InteractiveBar } from "../../../components/InteractiveBar";
-import { Comment } from "./Comment";
 import { Loading } from "../../../components/Loading";
-import gql from "graphql-tag";
+import { useLikeMutation, usePostQuery } from "../../../generated/graphql";
+import { formatDate } from "../../../utils/toErrorMap";
 import { UserContext } from "../../../utils/useAuth";
+import { Comment } from "./Comment";
 
 interface DetailsPostProps {}
 
@@ -21,11 +21,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
   });
   const [likePost] = useLikeMutation();
   const { user } = useContext(UserContext);
-  const formatDate = (date: any) => {
-    let d: any = new Date(date);
-    d = `${d.getDate()} Tháng ${d.getMonth()} ${d.getFullYear()}`;
-    return d;
-  };
+
 
   return (
     <div className="feed">
@@ -105,7 +101,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
           </div>
           <div className="postSingle__listComment">
             {data?.getPost.comments.map((cm,i) => (
-              <Comment key={i} {...cm}/>
+              <Comment key={i} {...cm} postOwner={data.getPost.username}/>
             ))}
           </div>
         </div>

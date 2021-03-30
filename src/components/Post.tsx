@@ -56,7 +56,7 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
 
   return (
     <>
-      <div className="post">
+      <div className="post" onClick={() => router.replace(`/posts/${props.id}`)}>
         <div className="post__avatar">
           <Avatar src="" />
         </div>
@@ -76,7 +76,8 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
                 <IconButton
                   aria-label="delete"
                   color="secondary"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     deletePost({
                       variables: { id: props.id },
                       update: (cache) => {
@@ -111,7 +112,6 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
           </div>
         </div>
       </div>
-      {/* <CommentPost/> */}
     </>
   );
 };
