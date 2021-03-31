@@ -8,10 +8,10 @@ import { useContext } from "react";
 const Home = () => {
   useIsAuth();
   const {user} = useContext(UserContext);
-
+  
   return (
     <div className="homepage">
-      <Sidebar username={user.username} displayname={user.displayname}/>
+      <Sidebar {...user}/>
       <Feed/>
       <Widgets/>
     </div>

@@ -226,8 +226,8 @@ export type MutationUploadArgs = {
 
 
 export type MutationCreatePostArgs = {
-  body: Scalars['String'];
-  image: Scalars['String'];
+  body?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
 };
 
 
@@ -306,13 +306,13 @@ export enum CacheControlScope {
 
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'displayname' | 'verified' | 'image' | 'likeCount' | 'commentCount'>
+  & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'displayname' | 'verified' | 'image' | 'avatar' | 'likeCount' | 'commentCount'>
   & { likes: Array<Maybe<(
     { __typename?: 'Like' }
     & Pick<Like, 'username'>
   )>>, comments: Array<Maybe<(
     { __typename?: 'Comment' }
-    & Pick<Comment, 'displayname' | 'username' | 'createdAt' | 'body'>
+    & Pick<Comment, 'avatar' | 'displayname' | 'username' | 'createdAt' | 'body'>
   )>> }
 );
 
@@ -324,6 +324,10 @@ export type RegularErrorFragment = (
 export type RegularUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username' | 'email' | 'token' | 'displayname'>
+  & { profile?: Maybe<(
+    { __typename?: 'Profile' }
+    & Pick<Profile, 'avatar'>
+  )> }
 );
 
 export type RegularUserResponseFragment = (
@@ -459,12 +463,14 @@ export const PostSnippetFragmentDoc = gql`
   displayname
   verified
   image
+  avatar
   likeCount
   likes {
     username
   }
   commentCount
   comments {
+    avatar
     displayname
     username
     createdAt
@@ -483,6 +489,9 @@ export const RegularUserFragmentDoc = gql`
   id
   username
   email
+  profile {
+    avatar
+  }
   token
   displayname
 }

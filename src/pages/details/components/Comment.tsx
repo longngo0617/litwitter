@@ -11,6 +11,7 @@ interface CommentProps {
   displayname?:string,
   createdAt?: string;
   postOwner?: string;
+  avatar?: string;
 }
 
 export const Comment: React.FC<CommentProps> = ({
@@ -19,6 +20,7 @@ export const Comment: React.FC<CommentProps> = ({
   body,
   createdAt,
   postOwner,
+  avatar
 }) => {
   const { user } = useContext(UserContext);
   const checkUser = user.username === postOwner || user.username === username;
@@ -26,7 +28,7 @@ export const Comment: React.FC<CommentProps> = ({
     <div className="comment__wrap">
       <div className="comment__box">
         <div className="comment__box--left">
-          <Avatar src="" />
+          <Avatar src={avatar || ""} />
         </div>
         <div className="comment__box--right">
           <div className="comment__box--name">

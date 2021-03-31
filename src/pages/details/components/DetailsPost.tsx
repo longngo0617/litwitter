@@ -20,7 +20,6 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
   });
   const [likePost] = useLikeMutation();
 
-
   return (
     <div className="feed">
       <div className="feed__header">
@@ -41,7 +40,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
             <div className="postSingle">
               <div className="postSingle__header">
                 <div className="postSingle__header--left">
-                  <Avatar src="" />
+                  <Avatar src={data?.getPost.avatar || ""} />
                   <div className="name">
                     <span>{data?.getPost.displayname}</span>
                     <span>@{data?.getPost?.username}</span>
@@ -98,8 +97,8 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
             </div>
           </div>
           <div className="postSingle__listComment">
-            {data?.getPost.comments.map((cm,i) => (
-              <Comment key={i} {...cm} postOwner={data.getPost.username}/>
+            {data?.getPost.comments.map((cm, i) => (
+              <Comment key={i} {...cm} postOwner={data.getPost.username} />
             ))}
           </div>
         </div>

@@ -2,6 +2,9 @@ fragment RegularUser on User {
     id
     username
     email
+    profile{
+        avatar
+    }
     token
     displayname
 }

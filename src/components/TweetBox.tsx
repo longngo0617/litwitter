@@ -20,7 +20,7 @@ interface TweetBoxProps {
 export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
   const [createPost] = useCreatePostMutation();
   const [createComment] = useCommentMutation();
-  const { closeComment } = useContext(UserContext);
+  const { closeComment,user } = useContext(UserContext);
   const inputFile: any = useRef(null);
   const [selectedFile, setSelectedFile] = useState("");
   const [previewSource, setPreviewSource] = useState<any>("");
@@ -47,7 +47,7 @@ export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
   return (
     <div className="tweetBox">
       <div className="tweetBox__avatar">
-        <Avatar src="" />
+        <Avatar src={user.profile.avatar || ""} />
       </div>
       <div className="tweetBox__form">
         <Formik

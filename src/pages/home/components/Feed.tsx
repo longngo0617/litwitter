@@ -13,7 +13,7 @@ const Feed = () => {
     },
     notifyOnNetworkStatusChange: true,
   });
-
+  console.log(data)
   if (!loading && !data) {
     return (
       <div>

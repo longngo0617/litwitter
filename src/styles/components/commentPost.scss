@@ -72,9 +72,14 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        flex-grow: 0;
+        -webkit-box-flex: 0;
       }
       .info {
         padding-bottom: 12px;
+        flex-grow: 1;
+        -webkit-box-flex: 1;
+        flex-basis: 0px;
         &__top {
           margin-bottom: 2px;
           &--name {
@@ -131,7 +136,7 @@
   }
 }
 .bar {
-  flex-basis: 40px;
+  flex-basis: 48px;
   height: 100%;
   display: flex;
   align-items: center;

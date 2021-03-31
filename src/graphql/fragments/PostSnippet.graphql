@@ -6,12 +6,14 @@ fragment PostSnippet on Post {
     displayname
     verified
     image
+    avatar
     likeCount
     likes {
       username
     }
     commentCount
     comments {
+      avatar
       displayname
       username
       createdAt

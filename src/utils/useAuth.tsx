@@ -1,4 +1,5 @@
 import { createContext, useReducer } from "react";
+import { LoginDocument } from "../generated/graphql";
 import LocalStorage from "./LocalStorage";
 
 const initState = {
@@ -59,6 +60,7 @@ const UserProvider = (props: any) => {
   const [state, dispatch] = useReducer(userReducer, initState);
 
   function login(userData: any) {
+    console.log(userData)
     LocalStorage.set("jwtToken", userData.token);
     LocalStorage.set("user", userData);
     dispatch({

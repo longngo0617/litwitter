@@ -1,6 +1,7 @@
 import { ApolloCache } from "@apollo/client";
 import { Avatar, IconButton } from "@material-ui/core";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import gql from "graphql-tag";
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
@@ -58,7 +59,7 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
     <>
       <div className="post" onClick={() => router.replace(`/posts/${props.id}`)}>
         <div className="post__avatar">
-          <Avatar src="" />
+          <Avatar src={props.avatar} />
         </div>
         <div className="post__body">
           <div className="post__header">
@@ -74,8 +75,8 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
               </h3>
               {user.username === props.username ? (
                 <IconButton
-                  aria-label="delete"
-                  color="secondary"
+                  aria-label="more"
+                  color="primary"
                   onClick={(e) => {
                     e.stopPropagation();
                     deletePost({
@@ -86,7 +87,7 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
                     });
                   }}
                 >
-                  <DeleteIcon fontSize="small" />
+                  <MoreHorizIcon fontSize="small"  />
                 </IconButton>
               ) : null}
             </div>

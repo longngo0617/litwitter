@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Popover } from "./Popover";
 import SidebarOption from "./SidebarOption";
 
-function Sidebar({ username, displayname }: any) {
+function Sidebar(props : any) {
   const [popState,setPopState] = useState(false);
   return (
     <div className="sidebar">
@@ -35,14 +35,14 @@ function Sidebar({ username, displayname }: any) {
         <div className="sidebar__profile--button">
           <div className="button">
             <div className="avatar">
-              <Avatar src="" />
+              <Avatar src={props.profile?.avatar || ""} />
             </div>
             <div className="info">
               <div className="displayname">
-                <span>{displayname}</span>
+                <span>{props.displayname}</span>
               </div>
               <div className="username">
-                <span>@{username}</span>
+                <span>@{props.username}</span>
               </div>
             </div>
             <div className="dot">
