@@ -1,13 +1,14 @@
-import { Avatar, Box } from "@material-ui/core";
+import { Avatar, Box, IconButton } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { Image } from "../../../components/Image";
 import { InteractiveBar } from "../../../components/InteractiveBar";
 import { Loading } from "../../../components/Loading";
 import { useLikeMutation, usePostQuery } from "../../../generated/graphql";
 import { formatDate } from "../../../utils/toErrorMap";
+import { UserContext } from "../../../utils/useAuth";
 import { Comment } from "./Comment";
 
 interface DetailsPostProps {}
@@ -15,6 +16,7 @@ interface DetailsPostProps {}
 export const DetailsPost: React.FC<DetailsPostProps> = () => {
   const postID: any = useRouteMatch();
   const router = useHistory();
+  const {openMore} = useContext(UserContext);
   const { data, loading } = usePostQuery({
     variables: { id: postID.params.id },
   });
@@ -47,7 +49,20 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
                   </div>
                 </div>
                 <div className="postSingle__header--right">
-                  <MoreHorizIcon />
+                  <IconButton
+                    aria-label="more"
+                    color="primary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openMore({
+                          x: `${e.pageX}px`,
+                          y: `${e.pageY}px`,
+                        },data?.getPost
+                      );
+                    }}
+                  >
+                    <MoreHorizIcon fontSize="small" />
+                  </IconButton>
                 </div>
               </div>
               <div className="postSingle__body">

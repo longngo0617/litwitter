@@ -1,26 +1,29 @@
 import { createContext, useReducer } from "react";
-import { LoginDocument } from "../generated/graphql";
 import LocalStorage from "./LocalStorage";
 
 const initState = {
   user: LocalStorage.get("user"),
   commentState: false,
   commentItem: {},
+  moreState: { xPos: "0px", yPos: "0px", showMenu: false },
 };
 
 const UserContext = createContext({
   user: LocalStorage.get("user"),
   commentState: false,
-  commentItem:{
-    id:"",
+  commentItem: {
+    id: "",
     username: null,
-    displayname:null,
-    body:null,
+    displayname: null,
+    body: null,
   },
+  moreState: { item: {displayname:"",username:""}, xPos: "0px", yPos: "0px", showMenu: false },
+  openMore: (mousePos: any, item: any) => {},
+  closeMore: () => {},
   login: (userData: any) => {},
   logout: () => {},
-  openComment: (item : any) =>{},
-  closeComment: () =>{},
+  openComment: (item: any) => {},
+  closeComment: () => {},
 });
 const userReducer = (state: any, action: any) => {
   switch (action.type) {
@@ -51,6 +54,23 @@ const userReducer = (state: any, action: any) => {
         ...state,
         commentState: false,
       };
+    case "OPEN_MORE":
+      return {
+        ...state,
+        moreState: {
+          item: action.payload.item,
+          xPos: action.payload.mousePos.x,
+          yPos: action.payload.mousePos.y,
+          showMenu: true,
+        },
+      };
+    case "CLOSE_MORE":
+      return {
+        ...state,
+        moreState: {
+          showMenu: false,
+        },
+      };
     default:
       return state;
   }
@@ -60,7 +80,7 @@ const UserProvider = (props: any) => {
   const [state, dispatch] = useReducer(userReducer, initState);
 
   function login(userData: any) {
-    console.log(userData)
+    console.log(userData);
     LocalStorage.set("jwtToken", userData.token);
     LocalStorage.set("user", userData);
     dispatch({
@@ -74,21 +94,33 @@ const UserProvider = (props: any) => {
     dispatch({ type: "LOUGOUT" });
   }
 
-  function openComment(item : any) {
-    dispatch({ type: "OPEN_COMMENT",payload: item });
+  function openComment(item: any) {
+    dispatch({ type: "OPEN_COMMENT", payload: item });
   }
 
   function closeComment() {
     dispatch({ type: "CLOSE_COMMENT" });
   }
+
+  function openMore(mousePos: any, item: any) {
+    dispatch({ type: "OPEN_MORE", payload: { mousePos, item } });
+  }
+
+  function closeMore() {
+    dispatch({ type: "CLOSE_MORE" });
+  }
+
   const values = {
     user: state.user,
     commentState: state.commentState,
     commentItem: state.commentItem,
+    moreState: state.moreState,
     login,
     logout,
     openComment,
-    closeComment
+    closeComment,
+    openMore,
+    closeMore,
   };
   return <UserContext.Provider value={values} {...props} />;
 };

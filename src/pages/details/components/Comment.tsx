@@ -8,7 +8,7 @@ import { UserContext } from "../../../utils/useAuth";
 interface CommentProps {
   username?: string;
   body?: string;
-  displayname?:string,
+  displayname?: string;
   createdAt?: string;
   postOwner?: string;
   avatar?: string;
@@ -20,10 +20,9 @@ export const Comment: React.FC<CommentProps> = ({
   body,
   createdAt,
   postOwner,
-  avatar
+  avatar,
 }) => {
-  const { user } = useContext(UserContext);
-  const checkUser = user.username === postOwner || user.username === username;
+  const { user, openMore } = useContext(UserContext);
   return (
     <div className="comment__wrap">
       <div className="comment__box">
@@ -40,11 +39,25 @@ export const Comment: React.FC<CommentProps> = ({
               <span className="dot">.</span>
               <span className="day">{formatDate(createdAt)}</span>
             </div>
-            {checkUser ? (
-              <IconButton aria-label="button delete comment" style={{padding:"0px"}}>
-                <MoreHorizIcon fontSize="small"/>
-              </IconButton>
-            ) : null}
+            <IconButton
+              aria-label="button delete comment"
+              style={{ padding: "0px" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                openMore(
+                  {
+                    x: `${e.pageX}px`,
+                    y: `${e.pageY}px`,
+                  },
+                  {
+                    displayname,
+                    username,
+                  }
+                );
+              }}
+            >
+              <MoreHorizIcon fontSize="small" />
+            </IconButton>
           </div>
           <div className="comment__box--content">{body}</div>
         </div>

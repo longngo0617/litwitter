@@ -1,7 +1,7 @@
 import { ApolloCache } from "@apollo/client";
 import { Avatar, IconButton } from "@material-ui/core";
-import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import gql from "graphql-tag";
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
@@ -9,19 +9,16 @@ import {
   Like,
   LikeMutation,
   PostSnippetFragment,
-  useLikeMutation,
-  useDeletePostMutation,
+  useLikeMutation
 } from "../generated/graphql";
 import { UserContext } from "../utils/useAuth";
 import { Image } from "./Image";
 import { InteractiveBar } from "./InteractiveBar";
-import DeleteIcon from "@material-ui/icons/Delete";
 
 export const Post: React.FC<PostSnippetFragment> = (props) => {
   const router = useHistory();
   const [likePost] = useLikeMutation();
-  const { user } = useContext(UserContext);
-  const [deletePost] = useDeletePostMutation();
+  const { user, openMore } = useContext(UserContext);
 
   const updateAfterLike = (
     value: string,
@@ -57,7 +54,10 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
 
   return (
     <>
-      <div className="post" onClick={() => router.replace(`/posts/${props.id}`)}>
+      <div
+        className="post"
+        onClick={() => router.replace(`/posts/${props.id}`)}
+      >
         <div className="post__avatar">
           <Avatar src={props.avatar} />
         </div>
@@ -73,7 +73,7 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
                   @{props.username}
                 </span>
               </h3>
-              {user.username === props.username ? (
+              {/* {user.username === props.username ? (
                 <IconButton
                   aria-label="more"
                   color="primary"
@@ -82,14 +82,27 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
                     deletePost({
                       variables: { id: props.id },
                       update: (cache) => {
-                        cache.evict({ id: "Post:" + props.id })
+                        cache.evict({ id: "Post:" + props.id });
                       },
                     });
                   }}
                 >
-                  <MoreHorizIcon fontSize="small"  />
+                  <MoreHorizIcon fontSize="small" />
                 </IconButton>
-              ) : null}
+              ) : null} */}
+              <IconButton
+                aria-label="more"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openMore({
+                      x: `${e.pageX}px`,
+                      y: `${e.pageY}px`},
+                    props
+                  );
+                }}
+              >
+                <MoreHorizIcon fontSize="small" />
+              </IconButton>
             </div>
             <div className="post__headerDescription">
               <p>{props.body}</p>

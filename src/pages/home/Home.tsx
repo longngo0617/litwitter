@@ -1,19 +1,15 @@
-import Sidebar from "./components/Sidebar";
-import Feed from "./components/Feed";
-import Widgets from "./components/Widgets";
+import { WithSide } from "../../components/WithSide";
 import { useIsAuth } from "../../utils/useIsAuth";
-import { UserContext } from "../../utils/useAuth";
-import { useContext } from "react";
+import Feed from "./components/Feed";
 
 const Home = () => {
   useIsAuth();
-  const {user} = useContext(UserContext);
-  
+
   return (
     <div className="homepage">
-      <Sidebar {...user}/>
-      <Feed/>
-      <Widgets/>
+      <WithSide>
+        <Feed />
+      </WithSide>
     </div>
   );
 };
