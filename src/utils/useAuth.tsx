@@ -17,8 +17,14 @@ const UserContext = createContext({
     displayname: null,
     body: null,
   },
-  moreState: { item: {displayname:"",username:""}, xPos: "0px", yPos: "0px", showMenu: false },
-  openMore: (mousePos: any, item: any) => {},
+  moreState: {
+    item: { displayname: "", username: "", id: "" ,postId: ""},
+    xPos: "0px",
+    yPos: "0px",
+    showMenu: false,
+    isComment: false,
+  },
+  openMore: (mousePos: any, item: any, isComment?: boolean) => {},
   closeMore: () => {},
   login: (userData: any) => {},
   logout: () => {},
@@ -62,6 +68,7 @@ const userReducer = (state: any, action: any) => {
           xPos: action.payload.mousePos.x,
           yPos: action.payload.mousePos.y,
           showMenu: true,
+          isComment: action.payload.isComment,
         },
       };
     case "CLOSE_MORE":
@@ -102,8 +109,8 @@ const UserProvider = (props: any) => {
     dispatch({ type: "CLOSE_COMMENT" });
   }
 
-  function openMore(mousePos: any, item: any) {
-    dispatch({ type: "OPEN_MORE", payload: { mousePos, item } });
+  function openMore(mousePos: any, item: any, isComment?: boolean) {
+    dispatch({ type: "OPEN_MORE", payload: { mousePos, item, isComment } });
   }
 
   function closeMore() {

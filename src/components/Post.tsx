@@ -73,23 +73,6 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
                   @{props.username}
                 </span>
               </h3>
-              {/* {user.username === props.username ? (
-                <IconButton
-                  aria-label="more"
-                  color="primary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deletePost({
-                      variables: { id: props.id },
-                      update: (cache) => {
-                        cache.evict({ id: "Post:" + props.id });
-                      },
-                    });
-                  }}
-                >
-                  <MoreHorizIcon fontSize="small" />
-                </IconButton>
-              ) : null} */}
               <IconButton
                 aria-label="more"
                 onClick={(e) => {

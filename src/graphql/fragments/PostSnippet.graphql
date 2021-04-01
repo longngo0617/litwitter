@@ -13,6 +13,7 @@ fragment PostSnippet on Post {
     }
     commentCount
     comments {
+      id
       avatar
       displayname
       username

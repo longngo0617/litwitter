@@ -16,7 +16,7 @@ interface DetailsPostProps {}
 export const DetailsPost: React.FC<DetailsPostProps> = () => {
   const postID: any = useRouteMatch();
   const router = useHistory();
-  const {openMore} = useContext(UserContext);
+  const { openMore } = useContext(UserContext);
   const { data, loading } = usePostQuery({
     variables: { id: postID.params.id },
   });
@@ -54,10 +54,12 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
                     color="primary"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openMore({
+                      openMore(
+                        {
                           x: `${e.pageX}px`,
                           y: `${e.pageY}px`,
-                        },data?.getPost
+                        },
+                        data?.getPost
                       );
                     }}
                   >
@@ -113,7 +115,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
           </div>
           <div className="postSingle__listComment">
             {data?.getPost.comments.map((cm, i) => (
-              <Comment key={i} {...cm} postOwner={data.getPost.username} />
+              <Comment key={i} {...cm} postId={data.getPost.id} />
             ))}
           </div>
         </div>

@@ -6,23 +6,26 @@ import { formatDate } from "../../../utils/toErrorMap";
 import { UserContext } from "../../../utils/useAuth";
 
 interface CommentProps {
+  id?:string;
   username?: string;
   body?: string;
   displayname?: string;
   createdAt?: string;
   postOwner?: string;
   avatar?: string;
+  postId?: string;
 }
 
 export const Comment: React.FC<CommentProps> = ({
+  id,
   username,
   displayname,
   body,
   createdAt,
-  postOwner,
   avatar,
+  postId
 }) => {
-  const { user, openMore } = useContext(UserContext);
+  const { openMore } = useContext(UserContext);
   return (
     <div className="comment__wrap">
       <div className="comment__box">
@@ -52,7 +55,10 @@ export const Comment: React.FC<CommentProps> = ({
                   {
                     displayname,
                     username,
-                  }
+                    id,
+                    postId
+                  },
+                  true
                 );
               }}
             >

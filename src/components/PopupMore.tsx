@@ -7,13 +7,17 @@ import BlockIcon from "@material-ui/icons/Block";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { UserContext } from "../utils/useAuth";
 import { useOutside } from "@pacote/react-use-outside";
-import { useDeletePostMutation } from "../generated/graphql";
+import {
+  useDeletePostMutation,
+  useDeleteCommentMutation,
+} from "../generated/graphql";
 import FlagIcon from "@material-ui/icons/Flag";
 interface PopupMoreProps {}
 
 export const PopupMore: React.FC<PopupMoreProps> = () => {
   const { user, moreState, closeMore } = useContext(UserContext);
   const [deletePost] = useDeletePostMutation();
+  const [deleteComment] = useDeleteCommentMutation();
   const ref = useOutside("click", () => {
     closeMore();
   });
@@ -34,7 +38,24 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
         <div className="menu--more__wrap">
           <div className="menu--more__wrap">
             {user.username === moreState.item.username ? (
-              <div className="menu--item">
+              <div
+                className="menu--item"
+                onClick={async () => {
+                  (await !moreState.isComment)
+                    ? deletePost({
+                        variables: { id: moreState.item.id },
+                        update: (cache) => {
+                          cache.evict({ id: "Post:" + moreState.item.id });
+                        },
+                      })
+                    : deleteComment({
+                        variables: {
+                          id: moreState.item.postId,
+                          commentId: moreState.item.id,
+                        },
+                      });
+                }}
+              >
                 <div className="menu--item__icon">
                   <DeleteIcon color="secondary" />
                 </div>
