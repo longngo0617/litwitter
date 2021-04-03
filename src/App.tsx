@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, useRouteMatch } from "react-router-dom";
 import { CommentPost } from "./components/CommentPost";
 import { FollowPopup } from "./components/FollowPopup";
 import { PopupMore } from "./components/PopupMore";
@@ -11,20 +11,18 @@ import { UserProvider } from "./utils/useAuth";
 
 const App = () => {
   const routes = [
-    { path: "/home", name: "Home", private: true, Component: Home },
     { path: "/posts/:id", name: "Details", Component: Details },
     { path: "/register", name: "Register", Component: Register },
+    { path: "/home", name: "Home", private: true, Component: Home },
     { path: "/", name: "Login", Component: Login },
   ];
-  
 
   return (
     <>
       <UserProvider>
         <Router>
-          <CommentPost />
           <PopupMore />
-          <FollowPopup />
+          <CommentPost/>
           <Switch>
             {routes.map((e: any) => (
               <Route key={e.path} path={e.path}>

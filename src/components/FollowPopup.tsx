@@ -2,12 +2,12 @@ import { Avatar, Button, IconButton } from "@material-ui/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import CloseIcon from "@material-ui/icons/Close";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 
 interface FollowPopupProps {}
 
 export const FollowPopup: React.FC<FollowPopupProps> = () => {
-
+    let router = useHistory();
   return ReactDOM.createPortal(
     <div className="follow-wrap">
       <div className="follow-overlay"></div>
@@ -15,7 +15,7 @@ export const FollowPopup: React.FC<FollowPopupProps> = () => {
         <div className="follow-modal">
           <div className="follow-modal-top">
             <div className="follow-modal-top-icon">
-              <IconButton aria-label="close-icon" color="primary">
+              <IconButton aria-label="close-icon" color="primary" onClick={() => router.push(router.location.pathname.replace("/comments",""))}>
                 <CloseIcon />
               </IconButton>
             </div>
@@ -53,9 +53,9 @@ export const FollowPopup: React.FC<FollowPopupProps> = () => {
                       </div>
                     </div>
                     <div className="item-right-bottom">
-                        <span className="body">
-                            very cool, calm and calculated Instagram
-                        </span>
+                      <span className="body">
+                        very cool, calm and calculated Instagram
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -90,9 +90,9 @@ export const FollowPopup: React.FC<FollowPopupProps> = () => {
                       </div>
                     </div>
                     <div className="item-right-bottom">
-                        <span className="body">
-                            very cool, calm and calculated Instagram
-                        </span>
+                      <span className="body">
+                        very cool, calm and calculated Instagram
+                      </span>
                     </div>
                   </div>
                 </div>

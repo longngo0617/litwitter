@@ -1,0 +1,8 @@
+fragment CommentSnippet on Comment {
+  id
+  avatar
+  displayname
+  username
+  createdAt
+  body
+}

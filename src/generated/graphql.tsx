@@ -101,7 +101,7 @@ export type User = {
   username?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['String']>;
   displayname?: Maybe<Scalars['String']>;
-  friends?: Maybe<Array<Scalars['String']>>;
+  friends?: Maybe<Array<Friend>>;
   profile?: Maybe<Profile>;
 };
 
@@ -304,6 +304,11 @@ export enum CacheControlScope {
 }
 
 
+export type CommentSnippetFragment = (
+  { __typename?: 'Comment' }
+  & Pick<Comment, 'id' | 'avatar' | 'displayname' | 'username' | 'createdAt' | 'body'>
+);
+
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
   & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'displayname' | 'verified' | 'image' | 'avatar' | 'likeCount' | 'commentCount'>
@@ -312,7 +317,7 @@ export type PostSnippetFragment = (
     & Pick<Like, 'username'>
   )>>, comments: Array<Maybe<(
     { __typename?: 'Comment' }
-    & Pick<Comment, 'id' | 'avatar' | 'displayname' | 'username' | 'createdAt' | 'body'>
+    & CommentSnippetFragment
   )>> }
 );
 
@@ -472,6 +477,16 @@ export type PostsQuery = (
   ) }
 );
 
+export const CommentSnippetFragmentDoc = gql`
+    fragment CommentSnippet on Comment {
+  id
+  avatar
+  displayname
+  username
+  createdAt
+  body
+}
+    `;
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
   id
@@ -488,15 +503,10 @@ export const PostSnippetFragmentDoc = gql`
   }
   commentCount
   comments {
-    id
-    avatar
-    displayname
-    username
-    createdAt
-    body
+    ...CommentSnippet
   }
 }
-    `;
+    ${CommentSnippetFragmentDoc}`;
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
   field

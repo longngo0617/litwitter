@@ -80,7 +80,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
                 <div className="postSingle__bar">
                   <div className="postSingle__barItem">
                     <div>
-                      <Link to="" className="postSingle__barItem--link">
+                      <Link to={`${postID.url}/comments`} className="postSingle__barItem--link">
                         <span>{data?.getPost?.commentCount}</span>
                         <span>Comments</span>
                       </Link>
