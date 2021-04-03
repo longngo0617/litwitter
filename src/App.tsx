@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { CommentPost } from "./components/CommentPost";
+import { FollowPopup } from "./components/FollowPopup";
 import { PopupMore } from "./components/PopupMore";
 import { Details } from "./pages/details/Details";
 import Home from "./pages/home/Home";
@@ -23,6 +24,7 @@ const App = () => {
         <Router>
           <CommentPost />
           <PopupMore />
+          <FollowPopup />
           <Switch>
             {routes.map((e: any) => (
               <Route key={e.path} path={e.path}>
