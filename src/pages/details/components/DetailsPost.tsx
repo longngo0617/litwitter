@@ -16,12 +16,13 @@ interface DetailsPostProps {}
 export const DetailsPost: React.FC<DetailsPostProps> = () => {
   const postID: any = useRouteMatch();
   const router = useHistory();
-  const { openMore } = useContext(UserContext);
+  const { openMore, openListComment } = useContext(UserContext);
   const { data, loading } = usePostQuery({
     variables: { id: postID.params.id },
   });
   const [likePost] = useLikeMutation();
 
+  console.log(!data?.getPost.commentCount);
   return (
     <div className="feed">
       <div className="feed__header">
@@ -77,24 +78,40 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
                   <span style={{ padding: "0 4px" }}>.</span>
                   <span>Twitter for website</span>
                 </div>
-                <div className="postSingle__bar">
-                  <div className="postSingle__barItem">
-                    <div>
-                      <Link to={`${postID.url}/comments`} className="postSingle__barItem--link">
-                        <span>{data?.getPost?.commentCount}</span>
-                        <span>Comments</span>
-                      </Link>
-                    </div>
+                {data?.getPost.commentCount || data?.getPost.likeCount ? (
+                  <div className="postSingle__bar">
+                    {data?.getPost.commentCount ? (
+                      <div className="postSingle__barItem">
+                        <div>
+                          <Link
+                            to={`${postID.url}/comments`}
+                            className="postSingle__barItem--link"
+                            onClick={() =>
+                              openListComment(data?.getPost.comments)
+                            }
+                          >
+                            <span>{data?.getPost?.commentCount}</span>
+                            <span>Comments</span>
+                          </Link>
+                        </div>
+                      </div>
+                    ) : null}
+                    {data?.getPost.likeCount ? (
+                      <div className="postSingle__barItem">
+                        <div>
+                          <Link
+                            to={`${postID.url}/likes`}
+                            className="postSingle__barItem--link"
+                            onClick={() => openListComment(data?.getPost.likes)}
+                          >
+                            <span>{data?.getPost?.likeCount}</span>
+                            <span>Likes</span>
+                          </Link>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
-                  <div className="postSingle__barItem">
-                    <div>
-                      <Link to="" className="postSingle__barItem--link">
-                        <span>{data?.getPost?.likeCount}</span>
-                        <span>Likes</span>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                ) : null}
               </div>
               <div className="postSingle__footer">
                 <div className="postSingle__interactive">

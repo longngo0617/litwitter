@@ -22,6 +22,7 @@ const Feed = () => {
       </div>
     );
   }
+
   return (
     <div className="feed">
       <div className="feed__header">
@@ -31,10 +32,10 @@ const Feed = () => {
       {!data && loading ? (
         <Box display="flex" justifyContent="center" marginTop="20px"><Loading blue/></Box>
       ) : (
-        data!.getPosts?.posts.map((p) =>
+        data!.getPosts?.posts.map((p,index) =>
           !p ? null : (
             <Post
-              key={p.id}
+              key={index}
               {...p}
             />
           )

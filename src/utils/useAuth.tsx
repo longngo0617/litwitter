@@ -6,6 +6,7 @@ const initState = {
   commentState: false,
   commentItem: {},
   moreState: { xPos: "0px", yPos: "0px", showMenu: false },
+  listComment: [] as any[],
 };
 
 const UserContext = createContext({
@@ -18,18 +19,21 @@ const UserContext = createContext({
     body: null,
   },
   moreState: {
-    item: { displayname: "", username: "", id: "" ,postId: ""},
+    item: { displayname: "", username: "", id: "", postId: "" },
     xPos: "0px",
     yPos: "0px",
     showMenu: false,
     isComment: false,
   },
+  listComment: [] as any[],
   openMore: (mousePos: any, item: any, isComment?: boolean) => {},
   closeMore: () => {},
   login: (userData: any) => {},
   logout: () => {},
   openComment: (item: any) => {},
   closeComment: () => {},
+  openListComment: (item: any) => {},
+  closeListComment: () => {},
 });
 const userReducer = (state: any, action: any) => {
   switch (action.type) {
@@ -78,6 +82,16 @@ const userReducer = (state: any, action: any) => {
           showMenu: false,
         },
       };
+    case "OPEN_LIST_COMMENTS":
+      return {
+        ...state,
+        listComment: action.payload,
+      };
+    case "CLOSE_LIST_COMMENTS":
+      return {
+        ...state,
+        listComment: [],
+      };
     default:
       return state;
   }
@@ -117,17 +131,28 @@ const UserProvider = (props: any) => {
     dispatch({ type: "CLOSE_MORE" });
   }
 
+  function openListComment(item: any) {
+    dispatch({ type: "OPEN_LIST_COMMENTS", payload: item });
+  }
+
+  function closeListComment(item: any) {
+    dispatch({ type: "CLOSE_LIST_COMMENTS" });
+  }
+
   const values = {
     user: state.user,
     commentState: state.commentState,
     commentItem: state.commentItem,
     moreState: state.moreState,
+    listComment: state.listComment,
     login,
     logout,
     openComment,
     closeComment,
     openMore,
     closeMore,
+    openListComment,
+    closeListComment,
   };
   return <UserContext.Provider value={values} {...props} />;
 };

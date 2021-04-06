@@ -1,0 +1,57 @@
+.profile__wrapper {
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -webkit-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -webkit-flex-basis: auto;
+  -webkit-flex-direction: column;
+  -webkit-flex-shrink: 0;
+  align-items: stretch;
+  border: 0 solid black;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  position: relative;
+  z-index: 0;
+}
+
+.none-background {
+  background-color: rgb(196, 207, 214);
+}
+.profile__top {
+  &--cover {
+    display: block;
+    overflow: hidden;
+  }
+  .cover-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+  }
+  &--bio {
+    margin-bottom: 16px;
+    padding-top: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

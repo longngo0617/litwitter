@@ -6,7 +6,7 @@ const Home = () => {
   useIsAuth();
 
   return (
-    <div className="homepage">
+    <div className="wrapper">
       <WithSide>
         <Feed />
       </WithSide>

@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
 import { WithSide } from "../../components/WithSide";
-import { UserContext } from "../../utils/useAuth";
 import { DetailsPost } from "./components/DetailsPost";
 interface SinglePostProps {}
 
