@@ -2,8 +2,14 @@ fragment RegularUser on User {
     id
     username
     email
+    createdAt
     profile{
         avatar
+        dateOfBirth
+        fullName
+        story
+        follower
+        following
     }
     token
     displayname

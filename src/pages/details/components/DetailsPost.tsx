@@ -22,7 +22,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
   });
   const [likePost] = useLikeMutation();
 
-  console.log(!data?.getPost.commentCount);
+  console.log(!data?.getPost);
   return (
     <div className="feed">
       <div className="feed__header">

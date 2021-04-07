@@ -54,6 +54,7 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
                           commentId: moreState.item.id,
                         },
                       });
+                  closeMore();
                 }}
               >
                 <div className="menu--item__icon">

@@ -101,7 +101,6 @@ const UserProvider = (props: any) => {
   const [state, dispatch] = useReducer(userReducer, initState);
 
   function login(userData: any) {
-    console.log(userData);
     LocalStorage.set("jwtToken", userData.token);
     LocalStorage.set("user", userData);
     dispatch({

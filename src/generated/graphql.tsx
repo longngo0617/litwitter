@@ -194,6 +194,7 @@ export type Mutation = {
   register: UserResponse;
   login: UserResponse;
   Upload?: Maybe<Scalars['String']>;
+  findUsers?: Maybe<Array<Maybe<User>>>;
   createPost: Post;
   deletePost: Scalars['String'];
   createComment: Post;
@@ -222,6 +223,11 @@ export type MutationLoginArgs = {
 
 export type MutationUploadArgs = {
   file: Scalars['String'];
+};
+
+
+export type MutationFindUsersArgs = {
+  displayname: Scalars['String'];
 };
 
 
@@ -306,7 +312,7 @@ export enum CacheControlScope {
 
 export type CommentSnippetFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'avatar' | 'displayname' | 'username' | 'createdAt' | 'body'>
+  & Pick<Comment, 'id' | 'avatar' | 'username' | 'displayname' | 'createdAt' | 'body'>
 );
 
 export type PostSnippetFragment = (
@@ -328,10 +334,10 @@ export type RegularErrorFragment = (
 
 export type RegularUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'email' | 'token' | 'displayname'>
+  & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'token' | 'displayname'>
   & { profile?: Maybe<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'avatar'>
+    & Pick<Profile, 'avatar' | 'dateOfBirth' | 'fullName' | 'story' | 'follower' | 'following'>
   )> }
 );
 
@@ -481,8 +487,8 @@ export const CommentSnippetFragmentDoc = gql`
     fragment CommentSnippet on Comment {
   id
   avatar
-  displayname
   username
+  displayname
   createdAt
   body
 }
@@ -518,8 +524,14 @@ export const RegularUserFragmentDoc = gql`
   id
   username
   email
+  createdAt
   profile {
     avatar
+    dateOfBirth
+    fullName
+    story
+    follower
+    following
   }
   token
   displayname
