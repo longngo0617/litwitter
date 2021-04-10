@@ -15,8 +15,9 @@ const App = () => {
     { path: "/posts/:id", name: "Details", Component: Details },
     { path: "/register", name: "Register", Component: Register },
     { path: "/home", name: "Home", private: true, Component: Home },
+    { path: "/login", name: "Login", Component: Login },
+    { path: "/logout", name: "Login", Component: Login },
     { path: "/:username", name: "Profile", Component: Profile },
-    { path: "/", name: "Login", Component: Login },
   ];
 
   return (

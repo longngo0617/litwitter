@@ -70,7 +70,7 @@ export const MainPage: React.FC<MainPageProps> = () => {
             </div>
             <div className="bio__info">
               <div className="info">
-                <span> {user.profile.story} Front-end Developer</span>
+                <span> {user.profile.story}</span>
               </div>
             </div>
             <div className="bio__join">
