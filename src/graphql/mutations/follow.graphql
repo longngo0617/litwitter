@@ -1,0 +1,5 @@
+mutation Follow($userId: String) {
+    following(userId: $userId) {
+        ...RegularUser
+    }
+}

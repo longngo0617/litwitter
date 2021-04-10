@@ -1,0 +1,7 @@
+fragment RegularFollow on Follow{
+    id
+    username
+    createdAt
+    displayname
+    avatar
+}

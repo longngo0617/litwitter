@@ -8,9 +8,13 @@ fragment RegularUser on User {
         dateOfBirth
         fullName
         story
-        follower
-        following
     }
     token
     displayname
+    following{
+        ...RegularFollow
+    }
+    follower{
+        ...RegularFollow
+    }
 }

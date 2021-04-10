@@ -64,8 +64,8 @@ export type Like = {
 export type RoomChat = {
   __typename?: 'RoomChat';
   id: Scalars['ID'];
-  from: Scalars['String'];
-  to: Scalars['String'];
+  from: User;
+  to: User;
   content: Array<Maybe<Chat>>;
 };
 
@@ -82,6 +82,7 @@ export type Chat = {
   __typename?: 'Chat';
   id: Scalars['ID'];
   username: Scalars['String'];
+  displayname: Scalars['String'];
   createdAt: Scalars['String'];
   content: Scalars['String'];
 };
@@ -101,8 +102,9 @@ export type User = {
   username?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['String']>;
   displayname?: Maybe<Scalars['String']>;
-  friends?: Maybe<Array<Friend>>;
   profile?: Maybe<Profile>;
+  following?: Maybe<Array<Follow>>;
+  follower?: Maybe<Array<Maybe<Follow>>>;
 };
 
 export type UserResponse = {
@@ -123,15 +125,15 @@ export type Profile = {
   dateOfBirth?: Maybe<Scalars['String']>;
   fullName?: Maybe<Scalars['String']>;
   story?: Maybe<Scalars['String']>;
-  follower?: Maybe<Scalars['String']>;
-  following?: Maybe<Scalars['String']>;
 };
 
-export type Friend = {
-  __typename?: 'Friend';
+export type Follow = {
+  __typename?: 'Follow';
   id: Scalars['ID'];
   username: Scalars['String'];
   createdAt: Scalars['String'];
+  displayname: Scalars['String'];
+  avatar: Scalars['String'];
 };
 
 export type RegisterInput = {
@@ -180,11 +182,6 @@ export type QueryGetChatArgs = {
 };
 
 
-export type QueryGetRoomChatArgs = {
-  username: Scalars['String'];
-};
-
-
 export type QueryGetGroupArgs = {
   groupId: Scalars['ID'];
 };
@@ -205,7 +202,7 @@ export type Mutation = {
   createGroupChat: GroupChat;
   createContentGroupChat: GroupChat;
   createMember: GroupChat;
-  addFriend: User;
+  following: User;
   editProfile: User;
 };
 
@@ -260,7 +257,7 @@ export type MutationLikePostArgs = {
 
 
 export type MutationCreateRoomChatArgs = {
-  username: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 
@@ -287,8 +284,8 @@ export type MutationCreateMemberArgs = {
 };
 
 
-export type MutationAddFriendArgs = {
-  username: Scalars['String'];
+export type MutationFollowingArgs = {
+  userId?: Maybe<Scalars['String']>;
 };
 
 
@@ -315,6 +312,11 @@ export type CommentSnippetFragment = (
   & Pick<Comment, 'id' | 'avatar' | 'username' | 'displayname' | 'createdAt' | 'body'>
 );
 
+export type RegularFollowFragment = (
+  { __typename?: 'Follow' }
+  & Pick<Follow, 'id' | 'username' | 'createdAt' | 'displayname' | 'avatar'>
+);
+
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
   & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'displayname' | 'verified' | 'image' | 'avatar' | 'likeCount' | 'commentCount'>
@@ -337,8 +339,14 @@ export type RegularUserFragment = (
   & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'token' | 'displayname'>
   & { profile?: Maybe<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'avatar' | 'dateOfBirth' | 'fullName' | 'story' | 'follower' | 'following'>
-  )> }
+    & Pick<Profile, 'avatar' | 'dateOfBirth' | 'fullName' | 'story'>
+  )>, following?: Maybe<Array<(
+    { __typename?: 'Follow' }
+    & RegularFollowFragment
+  )>>, follower?: Maybe<Array<Maybe<(
+    { __typename?: 'Follow' }
+    & RegularFollowFragment
+  )>>> }
 );
 
 export type RegularUserResponseFragment = (
@@ -410,6 +418,19 @@ export type DeletePostMutationVariables = Exact<{
 export type DeletePostMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deletePost'>
+);
+
+export type FollowMutationVariables = Exact<{
+  userId?: Maybe<Scalars['String']>;
+}>;
+
+
+export type FollowMutation = (
+  { __typename?: 'Mutation' }
+  & { following: (
+    { __typename?: 'User' }
+    & RegularUserFragment
+  ) }
 );
 
 export type LikeMutationVariables = Exact<{
@@ -519,6 +540,15 @@ export const RegularErrorFragmentDoc = gql`
   message
 }
     `;
+export const RegularFollowFragmentDoc = gql`
+    fragment RegularFollow on Follow {
+  id
+  username
+  createdAt
+  displayname
+  avatar
+}
+    `;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
@@ -530,13 +560,17 @@ export const RegularUserFragmentDoc = gql`
     dateOfBirth
     fullName
     story
-    follower
-    following
   }
   token
   displayname
+  following {
+    ...RegularFollow
+  }
+  follower {
+    ...RegularFollow
+  }
 }
-    `;
+    ${RegularFollowFragmentDoc}`;
 export const RegularUserResponseFragmentDoc = gql`
     fragment RegularUserResponse on UserResponse {
   error {
@@ -700,6 +734,39 @@ export function useDeletePostMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>;
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
+export const FollowDocument = gql`
+    mutation Follow($userId: String) {
+  following(userId: $userId) {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
+export type FollowMutationFn = Apollo.MutationFunction<FollowMutation, FollowMutationVariables>;
+
+/**
+ * __useFollowMutation__
+ *
+ * To run a mutation, you first call `useFollowMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFollowMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [followMutation, { data, loading, error }] = useFollowMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useFollowMutation(baseOptions?: Apollo.MutationHookOptions<FollowMutation, FollowMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<FollowMutation, FollowMutationVariables>(FollowDocument, options);
+      }
+export type FollowMutationHookResult = ReturnType<typeof useFollowMutation>;
+export type FollowMutationResult = Apollo.MutationResult<FollowMutation>;
+export type FollowMutationOptions = Apollo.BaseMutationOptions<FollowMutation, FollowMutationVariables>;
 export const LikeDocument = gql`
     mutation Like($id: ID!) {
   likePost(postId: $id) {

@@ -55,4 +55,14 @@ html {
   }
 }
 
-
+.btn-follow {
+  background-color: $twitter-color !important;
+  border-radius: 9999px !important;
+  color:#fff !important;
+  box-shadow: none !important;
+  text-transform: capitalize !important;
+  width: 100%;
+  &:hover{
+    background-color: rgb(202, 32, 85) !important;
+  }
+}

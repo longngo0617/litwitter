@@ -9,7 +9,6 @@ interface MainPageProps {}
 export const MainPage: React.FC<MainPageProps> = () => {
   const { url } = useRouteMatch();
   const { user } = useContext(UserContext);
-
   return (
     <div className="profile__wrapper">
       <div className="profile__wrapper">
@@ -85,13 +84,13 @@ export const MainPage: React.FC<MainPageProps> = () => {
             <div className="bio__follow">
               <div className="bio__follow--item">
                 <Link to={`${url}/following`}>
-                  <span className="number">{user.profile.follower}</span>
+                  <span className="number">{user.following}</span>
                   <span className="title">Following</span>
                 </Link>
               </div>
               <div className="bio__follow--item">
                 <Link to={`${url}/followers`}>
-                  <span className="number">{user.profile.follower}</span>
+                  <span className="number">{user.follower}</span>
                   <span className="title">Follower</span>
                 </Link>
               </div>
