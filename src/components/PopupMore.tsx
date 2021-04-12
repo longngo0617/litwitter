@@ -14,11 +14,11 @@ import {
   Follow,
 } from "../generated/graphql";
 import FlagIcon from "@material-ui/icons/Flag";
-import { Euro } from "@material-ui/icons";
+
 interface PopupMoreProps {}
 
 export const PopupMore: React.FC<PopupMoreProps> = () => {
-  const { user, moreState, closeMore } = useContext(UserContext);
+  const { user, moreState, closeMore,addUser } = useContext(UserContext);
   const [deletePost] = useDeletePostMutation();
   const [deleteComment] = useDeleteCommentMutation();
   const [followUser] = useFollowUserMutation();
@@ -79,10 +79,11 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
                 <div
                   className="menu--item"
                   onClick={async () => {
+                    addUser(moreState.item);
+                    closeMore();
                     await followUser({ variables: {
                       username: moreState.item.username
                     } });
-                    closeMore();
                   }}
                 >
                   <div className="menu--item__icon">

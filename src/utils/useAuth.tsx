@@ -1,6 +1,11 @@
 import { createContext, useReducer } from "react";
 import LocalStorage from "./LocalStorage";
 
+function returnState(state: any) {
+  LocalStorage.set("user", state);
+  return { ...state };
+}
+
 const initState = {
   user: LocalStorage.get("user"),
   commentState: false,
@@ -19,7 +24,7 @@ const UserContext = createContext({
     body: null,
   },
   moreState: {
-    item: { displayname: "", username: "", id: "", postId: "" },
+    item: {} as any,
     xPos: "0px",
     yPos: "0px",
     showMenu: false,
@@ -34,7 +39,10 @@ const UserContext = createContext({
   closeComment: () => {},
   openListComment: (item: any) => {},
   closeListComment: () => {},
+  addUser: (user: any) => {},
 });
+
+
 const userReducer = (state: any, action: any) => {
   switch (action.type) {
     case "LOGIN":
@@ -92,6 +100,15 @@ const userReducer = (state: any, action: any) => {
         ...state,
         listComment: [],
       };
+    case "ADD_USER":
+      // const existUser: any =state.user.following.find((x: any) => x.username === action.payload.username);
+      return returnState({
+        ...state,
+        user: {
+          ...state.user,
+          following: [...state.user.following,action.payload]
+        }
+      })
     default:
       return state;
   }
@@ -123,11 +140,16 @@ const UserProvider = (props: any) => {
   }
 
   function openMore(mousePos: any, item: any, isComment?: boolean) {
+    console.log(item)
     dispatch({ type: "OPEN_MORE", payload: { mousePos, item, isComment } });
   }
 
   function closeMore() {
     dispatch({ type: "CLOSE_MORE" });
+  }
+
+  function addUser(user: any) {
+    dispatch({type: "ADD_USER",payload: user})
   }
 
   function openListComment(item: any) {
@@ -152,6 +174,7 @@ const UserProvider = (props: any) => {
     closeMore,
     openListComment,
     closeListComment,
+    addUser,
   };
   return <UserContext.Provider value={values} {...props} />;
 };

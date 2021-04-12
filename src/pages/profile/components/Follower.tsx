@@ -4,8 +4,6 @@ import { Link, useRouteMatch } from "react-router-dom";
 import { Follow } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
 
-
-
 export const Follower: React.FC<any> = (props) => {
   const { url } = useRouteMatch();
   const { user } = useContext(UserContext);
@@ -28,7 +26,7 @@ export const Follower: React.FC<any> = (props) => {
         </div>
       </nav>
       <div className="profile__wrapper">
-        {props?.props?.follower?.length === 0? (
+        {props?.props?.follower?.length === 0 ? (
           <div className="profile__wrapper">
             <div className="empty">
               <div className="empty--text">
@@ -63,29 +61,36 @@ export const Follower: React.FC<any> = (props) => {
                             </div>
                             <div className="username">
                               <span>@{f.username}</span>
-                              <span className="follow--me">Theo dõi bạn</span>
+                              {user.follower.find((ele:Follow) => ele.username === f.username) ? (
+                                <span className="follow--me">Theo dõi bạn</span>
+                              ) : null}
                             </div>
                           </div>
                         </Link>
                       </div>
-                      <div
-                        className="item-right-top-button"
-                        style={{ minWidth: "102px" }}
-                      >
-                        {user.following.length &&
-                        user.following[index]["username"] === f.username ? (
-                          <Button
-                            variant="contained"
-                            className="btn-follow btn-following"
-                          >
-                            Following
-                          </Button>
-                        ) : (
-                          <Button variant="outlined" className="btn-follow">
-                            Follow
-                          </Button>
-                        )}
-                      </div>
+                      {user.username === f.username ? null : (
+                        <div
+                          className="item-right-top-button"
+                          style={{ minWidth: "102px" }}
+                        >
+                          {user.following.find(
+                            (ele: Follow) => ele.username === f.username
+                          ) ? (
+                            <Button
+                              variant="contained"
+                              className="btn-follow btn-following"
+                              onMouseEnter={(e : any) => e.target.children[0].innerText = "Unfollow"}
+                              onMouseLeave={(e : any) => e.target.children[0].innerText = "Following"}
+                            >
+                              Following
+                            </Button>
+                          ) : (
+                            <Button variant="outlined" className="btn-follow">
+                              Follow
+                            </Button>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <div className="item-right-bottom">
                       <span className="body">info user</span>

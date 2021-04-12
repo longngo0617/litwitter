@@ -1,15 +1,19 @@
 import { Avatar, Button } from "@material-ui/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { Follow } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
 
-
 export const Following: React.FC<any> = (props) => {
   const { user } = useContext(UserContext);
   const { url } = useRouteMatch();
-  const [follow, setFollow] = useState("following");
-
+  const pTagRef : any = useRef();
+  console.log(pTagRef.current)
+  function setName(name : any) {
+    if (pTagRef.current) {
+      pTagRef.current.innerText = name;
+    }
+  }
   return (
     <div className="profile__wrapper">
       <nav className="profile__nav">
@@ -62,20 +66,39 @@ export const Following: React.FC<any> = (props) => {
                             </div>
                             <div className="username">
                               <span>@{f.username}</span>
+                              {user.follower.find(
+                                (ele: Follow) => ele.username === f.username
+                              ) ? (
+                                <span className="follow--me">Theo dõi bạn</span>
+                              ) : null}
                             </div>
                           </div>
                         </Link>
                       </div>
-                      <div
-                        className="item-right-top-button"
-                        onMouseEnter={() => setFollow("unfollow")}
-                        onMouseLeave={() => setFollow("following")}
-                        style={{ minWidth: "102px" }}
-                      >
-                        <Button variant="contained" className="btn-follow btn-following">
-                          {follow}
-                        </Button>
-                      </div>
+                      {user.username === f.username ? null : (
+                        <div
+                          className="item-right-top-button"
+
+                          style={{ minWidth: "102px" }}
+                        >
+                          {user.following.find(
+                            (ele: Follow) => ele.username === f.username
+                          ) ? (
+                            <Button
+                              variant="contained"
+                              className="btn-follow btn-following"
+                              onMouseEnter={(e : any) => e.target.children[0].innerText = "Unfollow"}
+                              onMouseLeave={(e : any) => e.target.children[0].innerText = "Following"}
+                            >
+                              Following
+                            </Button>
+                          ) : (
+                            <Button variant="outlined" className="btn-follow">
+                              Follow
+                            </Button>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <div className="item-right-bottom">
                       <span className="body">info user</span>
