@@ -59,6 +59,8 @@ export type Like = {
   id: Scalars['ID'];
   createdAt: Scalars['String'];
   username: Scalars['String'];
+  displayname: Scalars['String'];
+  avatar: Scalars['String'];
 };
 
 export type RoomChat = {
@@ -420,12 +422,12 @@ export type DeletePostMutation = (
   & Pick<Mutation, 'deletePost'>
 );
 
-export type FollowMutationVariables = Exact<{
+export type FollowUserMutationVariables = Exact<{
   userId?: Maybe<Scalars['String']>;
 }>;
 
 
-export type FollowMutation = (
+export type FollowUserMutation = (
   { __typename?: 'Mutation' }
   & { following: (
     { __typename?: 'User' }
@@ -734,39 +736,39 @@ export function useDeletePostMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>;
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
-export const FollowDocument = gql`
-    mutation Follow($userId: String) {
+export const FollowUserDocument = gql`
+    mutation followUser($userId: String) {
   following(userId: $userId) {
     ...RegularUser
   }
 }
     ${RegularUserFragmentDoc}`;
-export type FollowMutationFn = Apollo.MutationFunction<FollowMutation, FollowMutationVariables>;
+export type FollowUserMutationFn = Apollo.MutationFunction<FollowUserMutation, FollowUserMutationVariables>;
 
 /**
- * __useFollowMutation__
+ * __useFollowUserMutation__
  *
- * To run a mutation, you first call `useFollowMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useFollowMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useFollowUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFollowUserMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [followMutation, { data, loading, error }] = useFollowMutation({
+ * const [followUserMutation, { data, loading, error }] = useFollowUserMutation({
  *   variables: {
  *      userId: // value for 'userId'
  *   },
  * });
  */
-export function useFollowMutation(baseOptions?: Apollo.MutationHookOptions<FollowMutation, FollowMutationVariables>) {
+export function useFollowUserMutation(baseOptions?: Apollo.MutationHookOptions<FollowUserMutation, FollowUserMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<FollowMutation, FollowMutationVariables>(FollowDocument, options);
+        return Apollo.useMutation<FollowUserMutation, FollowUserMutationVariables>(FollowUserDocument, options);
       }
-export type FollowMutationHookResult = ReturnType<typeof useFollowMutation>;
-export type FollowMutationResult = Apollo.MutationResult<FollowMutation>;
-export type FollowMutationOptions = Apollo.BaseMutationOptions<FollowMutation, FollowMutationVariables>;
+export type FollowUserMutationHookResult = ReturnType<typeof useFollowUserMutation>;
+export type FollowUserMutationResult = Apollo.MutationResult<FollowUserMutation>;
+export type FollowUserMutationOptions = Apollo.BaseMutationOptions<FollowUserMutation, FollowUserMutationVariables>;
 export const LikeDocument = gql`
     mutation Like($id: ID!) {
   likePost(postId: $id) {

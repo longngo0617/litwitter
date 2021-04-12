@@ -10,14 +10,18 @@ import { useOutside } from "@pacote/react-use-outside";
 import {
   useDeletePostMutation,
   useDeleteCommentMutation,
+  useFollowUserMutation,
+  Follow,
 } from "../generated/graphql";
 import FlagIcon from "@material-ui/icons/Flag";
+import { Euro } from "@material-ui/icons";
 interface PopupMoreProps {}
 
 export const PopupMore: React.FC<PopupMoreProps> = () => {
   const { user, moreState, closeMore } = useContext(UserContext);
   const [deletePost] = useDeletePostMutation();
   const [deleteComment] = useDeleteCommentMutation();
+  const [followUser] = useFollowUserMutation();
   const ref = useOutside("click", () => {
     closeMore();
   });
@@ -72,14 +76,22 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
             ) : null}
             {user.username === moreState.item.username ? null : (
               <>
-                <div className="menu--item">
+                <div
+                  className="menu--item"
+                  onClick={async () => {
+                    await followUser({ variables: {
+                      userId: moreState.item.username
+                    } });
+                    closeMore();
+                  }}
+                >
                   <div className="menu--item__icon">
-                    <PersonAddIcon />
+                    {!user.following.find((e:Follow) => e.username === moreState.item.username) ? <PersonAddIcon /> : <PersonAddDisabledIcon/>}
                   </div>
                   <div className="menu--item__text">
                     <div className="menu--item__css">
                       <span className="text">
-                        Follow {moreState?.item?.displayname}
+                        {!user.following.find((e:Follow) => e.username === moreState.item.username) ? "Follow" : "Unfollow" } {moreState?.item?.displayname}
                       </span>
                     </div>
                   </div>

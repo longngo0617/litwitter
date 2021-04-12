@@ -84,13 +84,13 @@ export const MainPage: React.FC<MainPageProps> = () => {
             <div className="bio__follow">
               <div className="bio__follow--item">
                 <Link to={`${url}/following`}>
-                  <span className="number">{user.following}</span>
+                  <span className="number">{user.following.length}</span>
                   <span className="title">Following</span>
                 </Link>
               </div>
               <div className="bio__follow--item">
                 <Link to={`${url}/followers`}>
-                  <span className="number">{user.follower}</span>
+                  <span className="number">{user.follower.length}</span>
                   <span className="title">Follower</span>
                 </Link>
               </div>
