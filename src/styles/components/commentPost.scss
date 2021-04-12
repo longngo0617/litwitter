@@ -380,6 +380,14 @@
                 line-height: 20px;
                 overflow-wrap: break-word;
               }
+              .follow--me{
+                background-color: rgb(235, 238, 240);
+                line-height: 16px;
+                font-size: 13px;
+                margin-left: 4px;
+                padding: 0 4px;
+                border-radius: 4px;
+              }
             }
             &-button {
               min-width: 79px;

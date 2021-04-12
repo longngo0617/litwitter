@@ -1,5 +1,5 @@
-mutation followUser($userId: String) {
-    following(userId: $userId) {
+mutation followUser($username: String) {
+    following(username: $username) {
         ...RegularUser
     }
 }

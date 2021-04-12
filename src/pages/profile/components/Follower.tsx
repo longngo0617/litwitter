@@ -4,12 +4,11 @@ import { Link, useRouteMatch } from "react-router-dom";
 import { Follow } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
 
-interface FollowersProps {}
 
-export const Follower: React.FC<FollowersProps> = ({}) => {
+
+export const Follower: React.FC<any> = (props) => {
   const { url } = useRouteMatch();
   const { user } = useContext(UserContext);
-  console.log(!user.follower.length)
   return (
     <div className="profile__wrapper">
       <nav className="profile__nav">
@@ -21,7 +20,7 @@ export const Follower: React.FC<FollowersProps> = ({}) => {
           </Link>
         </div>
         <div className="profile__nav--item">
-          <Link to={`/${user.username}/following`} className="link">
+          <Link to={`/${props?.props?.username}/following`} className="link">
             <div className="link--title">
               <span>Following</span>
             </div>
@@ -29,7 +28,7 @@ export const Follower: React.FC<FollowersProps> = ({}) => {
         </div>
       </nav>
       <div className="profile__wrapper">
-        {!user.follower.length ? (
+        {props?.props?.follower?.length === 0? (
           <div className="profile__wrapper">
             <div className="empty">
               <div className="empty--text">
@@ -45,7 +44,7 @@ export const Follower: React.FC<FollowersProps> = ({}) => {
             </div>
           </div>
         ) : (
-          user.follower.map((f: Follow, index: number) => (
+          props?.props?.follower.map((f: Follow, index: number) => (
             <div key={index} className="follow-modal-bottom-itemWrap">
               <div className="follow-modal-bottom-item">
                 <div className="item">
@@ -64,6 +63,7 @@ export const Follower: React.FC<FollowersProps> = ({}) => {
                             </div>
                             <div className="username">
                               <span>@{f.username}</span>
+                              <span className="follow--me">Theo dõi bạn</span>
                             </div>
                           </div>
                         </Link>
@@ -72,9 +72,19 @@ export const Follower: React.FC<FollowersProps> = ({}) => {
                         className="item-right-top-button"
                         style={{ minWidth: "102px" }}
                       >
-                        <Button variant="contained" className="btn-follow">
-                          Follow
-                        </Button>
+                        {user.following.length &&
+                        user.following[index]["username"] === f.username ? (
+                          <Button
+                            variant="contained"
+                            className="btn-follow btn-following"
+                          >
+                            Following
+                          </Button>
+                        ) : (
+                          <Button variant="outlined" className="btn-follow">
+                            Follow
+                          </Button>
+                        )}
                       </div>
                     </div>
                     <div className="item-right-bottom">

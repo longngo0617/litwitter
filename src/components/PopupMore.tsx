@@ -80,7 +80,7 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
                   className="menu--item"
                   onClick={async () => {
                     await followUser({ variables: {
-                      userId: moreState.item.username
+                      username: moreState.item.username
                     } });
                     closeMore();
                   }}

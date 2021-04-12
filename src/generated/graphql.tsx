@@ -184,6 +184,11 @@ export type QueryGetChatArgs = {
 };
 
 
+export type QueryGetUserArgs = {
+  username: Scalars['String'];
+};
+
+
 export type QueryGetGroupArgs = {
   groupId: Scalars['ID'];
 };
@@ -287,7 +292,7 @@ export type MutationCreateMemberArgs = {
 
 
 export type MutationFollowingArgs = {
-  userId?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
 };
 
 
@@ -423,7 +428,7 @@ export type DeletePostMutation = (
 );
 
 export type FollowUserMutationVariables = Exact<{
-  userId?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -504,6 +509,19 @@ export type PostsQuery = (
       & PostSnippetFragment
     )> }
   ) }
+);
+
+export type UserQueryVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type UserQuery = (
+  { __typename?: 'Query' }
+  & { getUser?: Maybe<(
+    { __typename?: 'User' }
+    & RegularUserFragment
+  )> }
 );
 
 export const CommentSnippetFragmentDoc = gql`
@@ -737,8 +755,8 @@ export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutati
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
 export const FollowUserDocument = gql`
-    mutation followUser($userId: String) {
-  following(userId: $userId) {
+    mutation followUser($username: String) {
+  following(username: $username) {
     ...RegularUser
   }
 }
@@ -758,7 +776,7 @@ export type FollowUserMutationFn = Apollo.MutationFunction<FollowUserMutation, F
  * @example
  * const [followUserMutation, { data, loading, error }] = useFollowUserMutation({
  *   variables: {
- *      userId: // value for 'userId'
+ *      username: // value for 'username'
  *   },
  * });
  */
@@ -943,3 +961,38 @@ export function usePostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Post
 export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>;
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>;
 export type PostsQueryResult = Apollo.QueryResult<PostsQuery, PostsQueryVariables>;
+export const UserDocument = gql`
+    query User($username: String!) {
+  getUser(username: $username) {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
+
+/**
+ * __useUserQuery__
+ *
+ * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserQuery({
+ *   variables: {
+ *      username: // value for 'username'
+ *   },
+ * });
+ */
+export function useUserQuery(baseOptions: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+      }
+export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+        }
+export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
+export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
+export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;

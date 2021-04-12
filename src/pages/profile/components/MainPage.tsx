@@ -4,11 +4,13 @@ import { formatDate } from "../../../utils/toErrorMap";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import { Link, useRouteMatch } from "react-router-dom";
 import { UserContext } from "../../../utils/useAuth";
-interface MainPageProps {}
+import { UserQuery } from "../../../generated/graphql";
 
-export const MainPage: React.FC<MainPageProps> = () => {
+
+export const MainPage: React.FC<UserQuery> = (props) => {
   const { url } = useRouteMatch();
   const { user } = useContext(UserContext);
+
   return (
     <div className="profile__wrapper">
       <div className="profile__wrapper">
@@ -43,11 +45,11 @@ export const MainPage: React.FC<MainPageProps> = () => {
                     <div
                       className="image--background"
                       style={{
-                        backgroundImage: `url(${user.profile.avatar})`,
+                        backgroundImage: `url(${props.getUser?.profile?.avatar})`,
                       }}
                     ></div>
                     <img
-                      src={`${user.profile.avatar}`}
+                      src={`${props.getUser?.profile?.avatar}`}
                       alt=""
                       className="image--hide"
                     />
@@ -62,35 +64,35 @@ export const MainPage: React.FC<MainPageProps> = () => {
             </div>
             <div className="bio__name">
               <div className="name">
-                <span>{user.displayname}</span>
+                <span>{props.getUser?.displayname}</span>
               </div>
               <div className="username">
-                <span>@{user.username}</span>
+                <span>@{props.getUser?.username}</span>
               </div>
             </div>
             <div className="bio__info">
               <div className="info">
-                <span> {user.profile.story}</span>
+                <span> {props.getUser?.profile?.story}</span>
               </div>
             </div>
             <div className="bio__join">
               <div className="date-join">
                 <span>
                   <DateRangeIcon />
-                  Tham gia {formatDate(user.createdAt)}
+                  Tham gia {formatDate(props.getUser?.createdAt)}
                 </span>
               </div>
             </div>
             <div className="bio__follow">
               <div className="bio__follow--item">
                 <Link to={`${url}/following`}>
-                  <span className="number">{user.following.length}</span>
+                  <span className="number">{props.getUser?.following?.length}</span>
                   <span className="title">Following</span>
                 </Link>
               </div>
               <div className="bio__follow--item">
                 <Link to={`${url}/followers`}>
-                  <span className="number">{user.follower.length}</span>
+                  <span className="number">{props.getUser?.follower?.length}</span>
                   <span className="title">Follower</span>
                 </Link>
               </div>

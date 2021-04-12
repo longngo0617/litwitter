@@ -4,17 +4,17 @@ import { Link, useRouteMatch } from "react-router-dom";
 import { Follow } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
 
-interface FollowingProps {}
 
-export const Following: React.FC<FollowingProps> = ({}) => {
+export const Following: React.FC<any> = (props) => {
   const { user } = useContext(UserContext);
   const { url } = useRouteMatch();
   const [follow, setFollow] = useState("following");
+
   return (
     <div className="profile__wrapper">
       <nav className="profile__nav">
         <div className="profile__nav--item">
-          <Link to={`/${user.username}/followers`} className="link ">
+          <Link to={`/${props?.props?.username}/followers`} className="link ">
             <div className="link--title">
               <span>Followers</span>
             </div>
@@ -29,7 +29,7 @@ export const Following: React.FC<FollowingProps> = ({}) => {
         </div>
       </nav>
       <div className="profile__wrapper">
-        {!user.following.length ? (
+        {props?.props?.following?.length === 0 ? (
           <div className="profile__wrapper">
             <div className="empty">
               <div className="empty--text">
@@ -43,7 +43,7 @@ export const Following: React.FC<FollowingProps> = ({}) => {
             </div>
           </div>
         ) : (
-          user.following.map((f: Follow, index: number) => (
+          props?.props?.following.map((f: Follow, index: number) => (
             <div key={index} className="follow-modal-bottom-itemWrap">
               <div className="follow-modal-bottom-item">
                 <div className="item">
@@ -72,7 +72,7 @@ export const Following: React.FC<FollowingProps> = ({}) => {
                         onMouseLeave={() => setFollow("following")}
                         style={{ minWidth: "102px" }}
                       >
-                        <Button variant="contained" className="btn-follow">
+                        <Button variant="contained" className="btn-follow btn-following">
                           {follow}
                         </Button>
                       </div>
