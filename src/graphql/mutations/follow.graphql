@@ -1,5 +1,7 @@
 mutation followUser($username: String) {
-    following(username: $username) {
-        ...RegularUser
+  following(username: $username) {
+    following {
+      ...RegularFollow
     }
+  }
 }

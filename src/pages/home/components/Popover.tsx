@@ -5,7 +5,7 @@ import React, { useContext } from "react";
 import { UserContext } from "../../../utils/useAuth";
 
 export const Popover: React.FC<{}> = () => {
-  const {logout} = useContext(UserContext);
+  const {logout,user} = useContext(UserContext);
 
   return (
     <div className="popover__wrap">
@@ -23,14 +23,14 @@ export const Popover: React.FC<{}> = () => {
                   <div className="sidebar__profile--button">
                     <div className="button">
                       <div className="avatar">
-                        <Avatar src="" />
+                        <Avatar src={user.profile.avatar} />
                       </div>
                       <div className="info">
                         <div className="displayname">
-                          <span>DEMO ALK</span>
+                          <span>{user.displayname}</span>
                         </div>
                         <div className="username">
-                          <span>@asdasd</span>
+                          <span>@{user.username}</span>
                         </div>
                       </div>
                       <div className="dot">

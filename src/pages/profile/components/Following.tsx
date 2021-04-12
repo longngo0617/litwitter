@@ -7,9 +7,9 @@ import { UserContext } from "../../../utils/useAuth";
 export const Following: React.FC<any> = (props) => {
   const { user } = useContext(UserContext);
   const { url } = useRouteMatch();
-  const pTagRef : any = useRef();
-  console.log(pTagRef.current)
-  function setName(name : any) {
+  const pTagRef: any = useRef();
+  console.log(pTagRef.current);
+  function setName(name: any) {
     if (pTagRef.current) {
       pTagRef.current.innerText = name;
     }
@@ -53,7 +53,7 @@ export const Following: React.FC<any> = (props) => {
                 <div className="item">
                   <div className="item-left">
                     <div className="avatar">
-                      <Avatar src={f ? f.avatar : ""} />
+                      <Avatar src={f.avatar || ""} />
                     </div>
                   </div>
                   <div className="item-right">
@@ -78,7 +78,6 @@ export const Following: React.FC<any> = (props) => {
                       {user.username === f.username ? null : (
                         <div
                           className="item-right-top-button"
-
                           style={{ minWidth: "102px" }}
                         >
                           {user.following.find(
@@ -87,8 +86,12 @@ export const Following: React.FC<any> = (props) => {
                             <Button
                               variant="contained"
                               className="btn-follow btn-following"
-                              onMouseEnter={(e : any) => e.target.children[0].innerText = "Unfollow"}
-                              onMouseLeave={(e : any) => e.target.children[0].innerText = "Following"}
+                              onMouseEnter={(e: any) =>
+                                (e.target.children[0].innerText = "Unfollow")
+                              }
+                              onMouseLeave={(e: any) =>
+                                (e.target.children[0].innerText = "Following")
+                              }
                             >
                               Following
                             </Button>

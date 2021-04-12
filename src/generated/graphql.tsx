@@ -30,7 +30,7 @@ export type Post = {
   likeCount: Scalars['Int'];
   commentCount: Scalars['Int'];
   displayname: Scalars['String'];
-  avatar: Scalars['String'];
+  avatar?: Maybe<Scalars['String']>;
 };
 
 export type File = {
@@ -135,7 +135,7 @@ export type Follow = {
   username: Scalars['String'];
   createdAt: Scalars['String'];
   displayname: Scalars['String'];
-  avatar: Scalars['String'];
+  avatar?: Maybe<Scalars['String']>;
 };
 
 export type RegisterInput = {
@@ -180,7 +180,7 @@ export type QueryGetMyPostsArgs = {
 
 
 export type QueryGetChatArgs = {
-  roomId: Scalars['ID'];
+  roomId?: Maybe<Scalars['ID']>;
 };
 
 
@@ -436,7 +436,10 @@ export type FollowUserMutation = (
   { __typename?: 'Mutation' }
   & { following: (
     { __typename?: 'User' }
-    & RegularUserFragment
+    & { following?: Maybe<Array<(
+      { __typename?: 'Follow' }
+      & RegularFollowFragment
+    )>> }
   ) }
 );
 
@@ -757,10 +760,12 @@ export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMut
 export const FollowUserDocument = gql`
     mutation followUser($username: String) {
   following(username: $username) {
-    ...RegularUser
+    following {
+      ...RegularFollow
+    }
   }
 }
-    ${RegularUserFragmentDoc}`;
+    ${RegularFollowFragmentDoc}`;
 export type FollowUserMutationFn = Apollo.MutationFunction<FollowUserMutation, FollowUserMutationVariables>;
 
 /**

@@ -59,7 +59,7 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
         onClick={() => router.replace(`/posts/${props.id}`)}
       >
         <div className="post__avatar">
-          <Avatar src={props.avatar} />
+          <Avatar src={props.avatar || ""} />
         </div>
         <div className="post__body">
           <div className="post__header">

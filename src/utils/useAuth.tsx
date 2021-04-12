@@ -1,11 +1,6 @@
 import { createContext, useReducer } from "react";
 import LocalStorage from "./LocalStorage";
 
-function returnState(state: any) {
-  LocalStorage.set("user", state);
-  return { ...state };
-}
-
 const initState = {
   user: LocalStorage.get("user"),
   commentState: false,
@@ -39,9 +34,13 @@ const UserContext = createContext({
   closeComment: () => {},
   openListComment: (item: any) => {},
   closeListComment: () => {},
-  addUser: (user: any) => {},
+  addUser: (arrayUser: any) => {},
 });
 
+function returnState(state: any) {
+  LocalStorage.set("user", state.user);
+  return { ...state };
+}
 
 const userReducer = (state: any, action: any) => {
   switch (action.type) {
@@ -106,7 +105,7 @@ const userReducer = (state: any, action: any) => {
         ...state,
         user: {
           ...state.user,
-          following: [...state.user.following,action.payload]
+          following: action.payload.following
         }
       })
     default:
@@ -140,7 +139,6 @@ const UserProvider = (props: any) => {
   }
 
   function openMore(mousePos: any, item: any, isComment?: boolean) {
-    console.log(item)
     dispatch({ type: "OPEN_MORE", payload: { mousePos, item, isComment } });
   }
 
@@ -148,8 +146,8 @@ const UserProvider = (props: any) => {
     dispatch({ type: "CLOSE_MORE" });
   }
 
-  function addUser(user: any) {
-    dispatch({type: "ADD_USER",payload: user})
+  function addUser(arrayUser: any) {
+    dispatch({type: "ADD_USER",payload: arrayUser})
   }
 
   function openListComment(item: any) {

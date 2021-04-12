@@ -79,11 +79,11 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
                 <div
                   className="menu--item"
                   onClick={async () => {
-                    addUser(moreState.item);
                     closeMore();
-                    await followUser({ variables: {
+                    const data = await followUser({ variables: {
                       username: moreState.item.username
                     } });
+                    await addUser(data?.data?.following);
                   }}
                 >
                   <div className="menu--item__icon">

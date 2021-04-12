@@ -46,7 +46,7 @@ export const Profile: React.FC<ProfileProps> = () => {
               <div className="feed__header">
                 <ArrowBackIcon
                   className="feed__header--icon"
-                  onClick={() => router.replace("/")}
+                  onClick={() => router.replace("/home")}
                 />
                 <h2>{data?.getUser?.displayname}</h2>
               </div>

@@ -48,7 +48,7 @@ export const Follower: React.FC<any> = (props) => {
                 <div className="item">
                   <div className="item-left">
                     <div className="avatar">
-                      <Avatar src={f ? f.avatar : ""} />
+                      <Avatar src={f.avatar || ""} />
                     </div>
                   </div>
                   <div className="item-right">
@@ -61,7 +61,9 @@ export const Follower: React.FC<any> = (props) => {
                             </div>
                             <div className="username">
                               <span>@{f.username}</span>
-                              {user.follower.find((ele:Follow) => ele.username === f.username) ? (
+                              {user.follower.find(
+                                (ele: Follow) => ele.username === f.username
+                              ) ? (
                                 <span className="follow--me">Theo dõi bạn</span>
                               ) : null}
                             </div>
@@ -79,8 +81,12 @@ export const Follower: React.FC<any> = (props) => {
                             <Button
                               variant="contained"
                               className="btn-follow btn-following"
-                              onMouseEnter={(e : any) => e.target.children[0].innerText = "Unfollow"}
-                              onMouseLeave={(e : any) => e.target.children[0].innerText = "Following"}
+                              onMouseEnter={(e: any) =>
+                                (e.target.children[0].innerText = "Unfollow")
+                              }
+                              onMouseLeave={(e: any) =>
+                                (e.target.children[0].innerText = "Following")
+                              }
                             >
                               Following
                             </Button>
