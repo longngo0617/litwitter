@@ -28,7 +28,17 @@ html {
   margin-right: auto;
   padding: 0 10px;
 }
-
+.link {
+  background-color: rgba(0, 0, 0, 0);
+  color: inherit;
+  font: inherit;
+  list-style: none;
+  margin: 0px;
+  text-align: inherit;
+  text-decoration: none;
+  width: 100%;
+  display: flex;
+}
 .overflow {
   overflow: hidden;
 }
@@ -39,9 +49,9 @@ html {
   display: block;
 }
 .progress {
-  color:#fff !important;
-  &.blue{
-    color:$twitter-color !important;
+  color: #fff !important;
+  &.blue {
+    color: $twitter-color !important;
   }
 }
 .text__input {
@@ -56,22 +66,31 @@ html {
 }
 
 .btn-follow {
-  color:$twitter-color !important;
+  color: $twitter-color !important;
   border-radius: 9999px !important;
   text-transform: capitalize !important;
   border: 1px solid $twitter-color !important;
   min-width: 79px;
   &:hover {
-    background-color: rgba(29,161,242,0.1) !important;
+    background-color: rgba(29, 161, 242, 0.1) !important;
   }
 }
 .btn-following {
   background-color: $twitter-color !important;
-  color:#fff !important;
+  color: #fff !important;
   box-shadow: none !important;
   border: none !important;
   width: 100%;
-  &:hover{
+  .unfollow {
+    display: none;
+  }
+  &:hover {
     background-color: rgb(202, 32, 85) !important;
+    .unfollow {
+      display: block;
+    }
+    .following {
+      display: none;
+    }
   }
 }

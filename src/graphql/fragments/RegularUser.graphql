@@ -8,6 +8,7 @@ fragment RegularUser on User {
         dateOfBirth
         fullName
         story
+        coverImage
     }
     token
     displayname

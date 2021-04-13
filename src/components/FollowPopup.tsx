@@ -4,16 +4,25 @@ import ReactDOM from "react-dom";
 import CloseIcon from "@material-ui/icons/Close";
 import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../utils/useAuth";
+import { Follow, useFollowUserMutation } from "../generated/graphql";
+import { isNullableType } from "graphql";
 
-interface FollowPopupProps {}
+interface FollowPopupProps {
+  title: string;
+}
 
-export const FollowPopup: React.FC<FollowPopupProps> = () => {
+export const FollowPopup: React.FC<FollowPopupProps> = ({ title }) => {
   let router = useHistory();
-  const { listComment } = useContext(UserContext);
-  //arr.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i)
+  const { listComment, user, addUser } = useContext(UserContext);
+  const [followUser] = useFollowUserMutation();
+
   const unique = listComment.filter(
     (val, index, a) => a.findIndex((t) => t.username === val.username) === index
   );
+
+  const back = router.location.pathname.includes("/comments")
+    ? router.location.pathname.replace("/comments", "")
+    : router.location.pathname.replace("/likes", "");
 
   return ReactDOM.createPortal(
     <div className="follow-wrap">
@@ -25,20 +34,18 @@ export const FollowPopup: React.FC<FollowPopupProps> = () => {
               <IconButton
                 aria-label="close-icon"
                 color="primary"
-                onClick={() =>
-                  router.push(router.location.pathname.replace("/comments", ""))
-                }
+                onClick={() => router.push(back)}
               >
                 <CloseIcon />
               </IconButton>
             </div>
             <div className="follow-modal-top-text">
-              <h2 className="title">Commented by</h2>
+              <h2 className="title">{title} by</h2>
             </div>
           </div>
           <div className="follow-modal-bottom">
-            {unique.map((p) => (
-              <div key={p.id} className="follow-modal-bottom-itemWrap">
+            {unique.map((p, i) => (
+              <div key={i} className="follow-modal-bottom-itemWrap">
                 <div className="follow-modal-bottom-item">
                   <div className="item">
                     <div className="item-left">
@@ -60,11 +67,44 @@ export const FollowPopup: React.FC<FollowPopupProps> = () => {
                             </div>
                           </Link>
                         </div>
-                        <div className="item-right-top-button">
-                          <Button variant="outlined" color="primary">
-                            Follow
-                          </Button>
-                        </div>
+                        {user.username === p.username ? null : (
+                          <div className="item-right-top-button">
+                            {user.following.find(
+                              (ele: Follow) => ele.username === p.username
+                            ) ? (
+                              <Button
+                                variant="contained"
+                                className="btn-follow btn-following"
+                                onClick={async (e: any) => {
+                                  const data = await followUser({
+                                    variables: {
+                                      username: p.username,
+                                    },
+                                  });
+                                  await addUser(data?.data?.following);
+                                }}
+                              >
+                                <span className="following">Following</span>
+                                <span className="unfollow">Unfollow</span>
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="outlined"
+                                className="btn-follow"
+                                onClick={async () => {
+                                  const data = await followUser({
+                                    variables: {
+                                      username: p.username,
+                                    },
+                                  });
+                                  await addUser(data?.data?.following);
+                                }}
+                              >
+                                Follow
+                              </Button>
+                            )}
+                          </div>
+                        )}
                       </div>
                       <div className="item-right-bottom">
                         <span className="body">info user</span>

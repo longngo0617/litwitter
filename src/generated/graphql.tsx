@@ -127,6 +127,7 @@ export type Profile = {
   dateOfBirth?: Maybe<Scalars['String']>;
   fullName?: Maybe<Scalars['String']>;
   story?: Maybe<Scalars['String']>;
+  coverImage?: Maybe<Scalars['String']>;
 };
 
 export type Follow = {
@@ -136,6 +137,7 @@ export type Follow = {
   createdAt: Scalars['String'];
   displayname: Scalars['String'];
   avatar?: Maybe<Scalars['String']>;
+  story?: Maybe<Scalars['String']>;
 };
 
 export type RegisterInput = {
@@ -155,6 +157,7 @@ export type Query = {
   getChat?: Maybe<RoomChat>;
   getUsers?: Maybe<Array<Maybe<User>>>;
   getUser?: Maybe<User>;
+  getMyUser?: Maybe<User>;
   getRoomChat?: Maybe<Array<Maybe<RoomChat>>>;
   getGroups?: Maybe<Array<Maybe<GroupChat>>>;
   getGroup?: Maybe<GroupChat>;
@@ -297,10 +300,11 @@ export type MutationFollowingArgs = {
 
 
 export type MutationEditProfileArgs = {
-  avatar: Scalars['String'];
-  dateOfBirth: Scalars['String'];
+  avatar?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['String']>;
   fullName: Scalars['String'];
-  story: Scalars['String'];
+  story?: Maybe<Scalars['String']>;
+  coverImage?: Maybe<Scalars['String']>;
 };
 
 export type Subscription = {
@@ -324,12 +328,17 @@ export type RegularFollowFragment = (
   & Pick<Follow, 'id' | 'username' | 'createdAt' | 'displayname' | 'avatar'>
 );
 
+export type LikeSnippetFragment = (
+  { __typename?: 'Like' }
+  & Pick<Like, 'id' | 'avatar' | 'username' | 'displayname' | 'createdAt'>
+);
+
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
   & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'displayname' | 'verified' | 'image' | 'avatar' | 'likeCount' | 'commentCount'>
   & { likes: Array<Maybe<(
     { __typename?: 'Like' }
-    & Pick<Like, 'username'>
+    & LikeSnippetFragment
   )>>, comments: Array<Maybe<(
     { __typename?: 'Comment' }
     & CommentSnippetFragment
@@ -346,7 +355,7 @@ export type RegularUserFragment = (
   & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'token' | 'displayname'>
   & { profile?: Maybe<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'avatar' | 'dateOfBirth' | 'fullName' | 'story'>
+    & Pick<Profile, 'avatar' | 'dateOfBirth' | 'fullName' | 'story' | 'coverImage'>
   )>, following?: Maybe<Array<(
     { __typename?: 'Follow' }
     & RegularFollowFragment
@@ -527,6 +536,15 @@ export type UserQuery = (
   )> }
 );
 
+export const LikeSnippetFragmentDoc = gql`
+    fragment LikeSnippet on Like {
+  id
+  avatar
+  username
+  displayname
+  createdAt
+}
+    `;
 export const CommentSnippetFragmentDoc = gql`
     fragment CommentSnippet on Comment {
   id
@@ -549,14 +567,15 @@ export const PostSnippetFragmentDoc = gql`
   avatar
   likeCount
   likes {
-    username
+    ...LikeSnippet
   }
   commentCount
   comments {
     ...CommentSnippet
   }
 }
-    ${CommentSnippetFragmentDoc}`;
+    ${LikeSnippetFragmentDoc}
+${CommentSnippetFragmentDoc}`;
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
   field
@@ -583,6 +602,7 @@ export const RegularUserFragmentDoc = gql`
     dateOfBirth
     fullName
     story
+    coverImage
   }
   token
   displayname

@@ -18,8 +18,8 @@ export const WithSide: React.FC<{}> = (props) => {
       {props.children}
       <Widgets />
       <Switch>
-        <Route path={`${url}/comments`} exact component={FollowPopup}/>
-        <Route path={`${url}/likes`} exact component={FollowPopup}/>
+        <Route path={`${url}/comments`} exact render={() => <FollowPopup title={"Commented"}/>}/>
+        <Route path={`${url}/likes`} exact render={() => <FollowPopup title={"Liked"}/>}/>
       </Switch>
     </>
   );

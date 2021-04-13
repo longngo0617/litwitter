@@ -7,8 +7,10 @@ export const toErrorMap = (errors: FieldError[]) => {
   });
   return errorMap;
 };
+
 export const formatDate = (date: any) => {
   let d: any = new Date(date);
   d = `${d.getDate()} Tháng ${d.getMonth()} ${d.getFullYear()}`;
   return d;
 };
+

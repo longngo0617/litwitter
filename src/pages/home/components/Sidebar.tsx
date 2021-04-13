@@ -12,13 +12,14 @@ import { useState } from "react";
 import { Popover } from "./Popover";
 import SidebarOption from "./SidebarOption";
 
-function Sidebar(props : any) {
-  const [popState,setPopState] = useState(false);
+function Sidebar(props: any) {
+  const [popState, setPopState] = useState(false);
+
   return (
     <div className="sidebar">
       <TwitterIcon />
 
-      <SidebarOption active Icon={HomeIcon} text="Home" />
+      <SidebarOption Icon={HomeIcon} text="Home" />
       <SidebarOption Icon={SearchIcon} text="Explore" />
       <SidebarOption Icon={NotificationsNoneIcon} text="Notifications" />
       <SidebarOption Icon={MailOutlineIcon} text="Messages" />
@@ -53,8 +54,6 @@ function Sidebar(props : any) {
       </div>
 
       {popState && <Popover />}
-      
-
     </div>
   );
 }

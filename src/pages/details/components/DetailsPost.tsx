@@ -22,7 +22,6 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
   });
   const [likePost] = useLikeMutation();
 
-  console.log(!data?.getPost);
   return (
     <div className="feed">
       <div className="feed__header">
@@ -72,7 +71,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
                 <div className="postSingle__text">
                   <span>{data?.getPost.body}</span>
                 </div>
-                <Image image={data?.getPost.image} />
+                {data?.getPost.image ? <Image image={data?.getPost.image} /> : null}
                 <div className="postSingle__date">
                   <span>{formatDate(data?.getPost?.createdAt)}</span>
                   <span style={{ padding: "0 4px" }}>.</span>

@@ -9,7 +9,7 @@ fragment PostSnippet on Post {
     avatar
     likeCount
     likes {
-      username
+      ...LikeSnippet
     }
     commentCount
     comments {

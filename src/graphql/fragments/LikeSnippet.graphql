@@ -1,0 +1,7 @@
+fragment LikeSnippet on Like {
+  id
+  avatar
+  username
+  displayname
+  createdAt
+}

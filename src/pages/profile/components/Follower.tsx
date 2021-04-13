@@ -1,12 +1,14 @@
 import { Avatar, Button } from "@material-ui/core";
 import React, { useContext } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
-import { Follow } from "../../../generated/graphql";
+import { Follow, useFollowUserMutation } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
 
 export const Follower: React.FC<any> = (props) => {
   const { url } = useRouteMatch();
-  const { user } = useContext(UserContext);
+  const { user, addUser } = useContext(UserContext);
+  const [followUser] = useFollowUserMutation();
+
   return (
     <div className="profile__wrapper">
       <nav className="profile__nav">
@@ -81,17 +83,31 @@ export const Follower: React.FC<any> = (props) => {
                             <Button
                               variant="contained"
                               className="btn-follow btn-following"
-                              onMouseEnter={(e: any) =>
-                                (e.target.children[0].innerText = "Unfollow")
-                              }
-                              onMouseLeave={(e: any) =>
-                                (e.target.children[0].innerText = "Following")
-                              }
+                              onClick={async () => {
+                                const data = await followUser({
+                                  variables: {
+                                    username: f.username,
+                                  },
+                                });
+                                await addUser(data?.data?.following);
+                              }}
                             >
-                              Following
+                              <span className="following">Following</span>
+                              <span className="unfollow">Unfollow</span>
                             </Button>
                           ) : (
-                            <Button variant="outlined" className="btn-follow">
+                            <Button
+                              variant="outlined"
+                              className="btn-follow"
+                              onClick={async () => {
+                                const data = await followUser({
+                                  variables: {
+                                    username: f.username,
+                                  },
+                                });
+                                await addUser(data?.data?.following);
+                              }}
+                            >
                               Follow
                             </Button>
                           )}

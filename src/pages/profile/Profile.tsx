@@ -32,7 +32,7 @@ export const Profile: React.FC<ProfileProps> = () => {
       </div>
     );
   }
-
+  console.log(data?.getUser)
   return (
     <div className="wrapper">
       <WithSide>

@@ -1,13 +1,13 @@
-import React from "react";
+import { NavLink } from "react-router-dom";
 
-function SidebarOption({active,text,Icon}:any) {
+function SidebarOption({href,text,Icon}:any) {
   return (
-    <div>
-      <div className={`sidebarOption ${active && "sidebarOption--active"}`}>
+    <NavLink to="" className="link" activeClassName="sidebarOption--active">
+      <div className={`sidebarOption`}>
         <Icon />
         <h2>{text}</h2>
       </div>
-    </div>
+    </NavLink>
   );
 }
 

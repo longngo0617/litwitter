@@ -20,15 +20,15 @@ export const MainPage: React.FC<UserQuery> = (props) => {
               className="full-width overflow block"
               style={{ paddingBottom: "33.3333%" }}
             ></div>
-            {/* <div className="cover-image">
-                <div className="cover-image--big" style={{ marginBottom: "-21%" }}>
+            <div className="image">
+                <div className="image--big" style={{ marginBottom: "-21%" }}>
                   <div
-                    className="cover-image--background"
-                    style={{ backgroundImage: `url()` }}
+                    className="image--background"
+                    style={{ backgroundImage: `url(${props.getUser?.profile?.coverImage})` }}
                   ></div>
-                  <img src="" alt="" className="cover-image--hide" />
+                  <img src={`${props.getUser?.profile?.coverImage}`} alt="" className="image--hide" />
                 </div>
-              </div> */}
+              </div>
           </div>
           <div className="profile__top--bio">
             <div className="bio__avatar">
