@@ -47,7 +47,7 @@ export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
   return (
     <div className="tweetBox">
       <div className="tweetBox__avatar">
-        <Avatar src={user.profile.avatar || ""} />
+        <Avatar src={user.profile?.avatar || ""} />
       </div>
       <div className="tweetBox__form">
         <Formik

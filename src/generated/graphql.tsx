@@ -325,7 +325,7 @@ export type CommentSnippetFragment = (
 
 export type RegularFollowFragment = (
   { __typename?: 'Follow' }
-  & Pick<Follow, 'id' | 'username' | 'createdAt' | 'displayname' | 'avatar'>
+  & Pick<Follow, 'id' | 'username' | 'createdAt' | 'displayname' | 'avatar' | 'story'>
 );
 
 export type LikeSnippetFragment = (
@@ -589,6 +589,7 @@ export const RegularFollowFragmentDoc = gql`
   createdAt
   displayname
   avatar
+  story
 }
     `;
 export const RegularUserFragmentDoc = gql`

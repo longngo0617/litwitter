@@ -1,28 +1,37 @@
-import React, { useContext } from "react";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router";
-import { WithSide } from "../../components/WithSide";
-import { useIsAuth } from "../../utils/useIsAuth";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { UserContext } from "../../utils/useAuth";
-import { MainPage } from "./components/MainPage";
-import { Following } from "./components/Following";
-import { Follower } from "./components/Follower";
-import { useUserQuery } from "../../generated/graphql";
-import { Loading } from "../../components/Loading";
 import { Box } from "@material-ui/core";
-
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import React from "react";
+import {
+  Route,
+  Switch,
+  useHistory,
+  useRouteMatch,
+  useLocation,
+} from "react-router";
+import { Loading } from "../../components/Loading";
+import { useUserQuery } from "../../generated/graphql";
+import { useIsAuth } from "../../utils/useIsAuth";
+import { Follower } from "./components/Follower";
+import { Following } from "./components/Following";
+import { MainPage } from "./components/MainPage";
+import { WithSide } from "../../utils/withSide";
 interface ProfileProps {}
 
 export const Profile: React.FC<ProfileProps> = () => {
   useIsAuth();
   const router = useHistory();
+  let location = useLocation();
   const { url, params }: any = useRouteMatch();
-  const { user } = useContext(UserContext);
   const { data, error, loading, variables } = useUserQuery({
     variables: {
       username: params.username,
     },
   });
+  const backUrl =
+    location.pathname.includes("/following") ||
+    location.pathname.includes("/follower")
+      ? `/${data?.getUser?.username}`
+      : `/home`;
 
   if (!loading && !data) {
     return (
@@ -32,45 +41,43 @@ export const Profile: React.FC<ProfileProps> = () => {
       </div>
     );
   }
-  console.log(data?.getUser)
+
   return (
-    <div className="wrapper">
-      <WithSide>
-        <div className="feed">
-          {!data && loading ? (
-            <Box display="flex" justifyContent="center" marginTop="20px">
-              <Loading blue />
-            </Box>
-          ) : (
-            <>
-              <div className="feed__header">
-                <ArrowBackIcon
-                  className="feed__header--icon"
-                  onClick={() => router.replace("/home")}
-                />
-                <h2>{data?.getUser?.displayname}</h2>
-              </div>
-              <Switch>
-                <Route
-                  path={`${url}`}
-                  exact
-                  render={() => <MainPage {...data} />}
-                />
-                <Route
-                  path={`${url}/followers`}
-                  exact
-                  render={() => <Follower props={data?.getUser} />}
-                />
-                <Route
-                  path={`${url}/following`}
-                  exact
-                  render={() => <Following props={data?.getUser} />}
-                />
-              </Switch>
-            </>
-          )}
-        </div>
-      </WithSide>
-    </div>
+    <WithSide>
+      <div className="feed">
+        {!data && loading ? (
+          <Box display="flex" justifyContent="center" marginTop="20px">
+            <Loading blue />
+          </Box>
+        ) : (
+          <>
+            <div className="feed__header">
+              <ArrowBackIcon
+                className="feed__header--icon"
+                onClick={() => router.replace(backUrl)}
+              />
+              <h2>{data?.getUser?.displayname}</h2>
+            </div>
+            <Switch>
+              <Route
+                path={`${url}`}
+                exact
+                render={() => <MainPage {...data} />}
+              />
+              <Route
+                path={`${url}/followers`}
+                exact
+                render={() => <Follower props={data?.getUser} />}
+              />
+              <Route
+                path={`${url}/following`}
+                exact
+                render={() => <Following props={data?.getUser} />}
+              />
+            </Switch>
+          </>
+        )}
+      </div>
+    </WithSide>
   );
 };

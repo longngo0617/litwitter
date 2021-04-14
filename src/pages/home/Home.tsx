@@ -1,16 +1,15 @@
-import { WithSide } from "../../components/WithSide";
+import React from "react";
 import { useIsAuth } from "../../utils/useIsAuth";
+import { WithSide } from "../../utils/withSide";
 import Feed from "./components/Feed";
 
 const Home = () => {
   useIsAuth();
 
   return (
-    <div className="wrapper">
-      <WithSide>
-        <Feed />
-      </WithSide>
-    </div>
+    <WithSide>
+      <Feed />
+    </WithSide>
   );
 };
 

@@ -113,7 +113,7 @@ export const Following: React.FC<any> = (props) => {
                       )}
                     </div>
                     <div className="item-right-bottom">
-                      <span className="body">info user</span>
+                      <span className="body">{f.story}</span>
                     </div>
                   </div>
                 </div>

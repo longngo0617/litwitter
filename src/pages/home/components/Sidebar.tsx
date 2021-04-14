@@ -1,32 +1,34 @@
 import { Avatar, Button } from "@material-ui/core";
-import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
+import GroupIcon from '@material-ui/icons/Group';
 import HomeIcon from "@material-ui/icons/Home";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import NotificationsNoneIcon from "@material-ui/icons/Notifications";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
-import SearchIcon from "@material-ui/icons/Search";
 import TwitterIcon from "@material-ui/icons/Twitter";
-import { useState } from "react";
+import StorefrontIcon from '@material-ui/icons/Storefront';
+import { useContext, useState } from "react";
+import { UserContext } from "../../../utils/useAuth";
 import { Popover } from "./Popover";
 import SidebarOption from "./SidebarOption";
+import { useOutside } from "@pacote/react-use-outside";
 
 function Sidebar(props: any) {
   const [popState, setPopState] = useState(false);
-
+  const { user } = useContext(UserContext);
   return (
     <div className="sidebar">
       <TwitterIcon />
 
-      <SidebarOption Icon={HomeIcon} text="Home" />
-      <SidebarOption Icon={SearchIcon} text="Explore" />
-      <SidebarOption Icon={NotificationsNoneIcon} text="Notifications" />
-      <SidebarOption Icon={MailOutlineIcon} text="Messages" />
-      <SidebarOption Icon={BookmarkBorderIcon} text="Bookmarks" />
-      <SidebarOption Icon={ListAltIcon} text="Lists" />
-      <SidebarOption Icon={PermIdentityIcon} text="Profile" />
-      <SidebarOption Icon={MoreHorizIcon} text="More" />
+      <SidebarOption href="/home" Icon={HomeIcon} text="Home" />
+      <SidebarOption href="/market" Icon={StorefrontIcon} text="Market" />
+      <SidebarOption href="/notifications" Icon={NotificationsNoneIcon} text="Notifications" />
+      <SidebarOption href="/messsage" Icon={MailOutlineIcon} text="Messages" />
+      <SidebarOption href="/groups" Icon={GroupIcon} text="Groups" />
+      <SidebarOption href="/lists" Icon={ListAltIcon} text="Lists" />
+      <SidebarOption href={`/${user.username}`} Icon={PermIdentityIcon} text="Profile" />
+      <SidebarOption href="/more" Icon={MoreHorizIcon} text="More" />
 
       <Button variant="outlined" className="sidebar__tweet" fullWidth>
         Tweet

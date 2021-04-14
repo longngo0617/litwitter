@@ -5,9 +5,9 @@ import { UserContext } from "./useAuth";
 export const useIsAuth = () => {
     const {user} = useContext(UserContext);
     const router = useHistory();
-
+    
     useEffect(() => {
-      if(!user.id){
+      if(!user.username){
         router.replace("/login?next=" + router.location.pathname);
       }
     }, [user,router])
