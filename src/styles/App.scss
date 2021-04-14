@@ -39,6 +39,9 @@ html {
   width: 100%;
   display: flex;
 }
+.link--none {
+  display: unset;
+}
 .overflow {
   overflow: hidden;
 }
@@ -70,6 +73,7 @@ html {
   border-radius: 9999px !important;
   text-transform: capitalize !important;
   border: 1px solid $twitter-color !important;
+  width: 100%;
   min-width: 79px;
   &:hover {
     background-color: rgba(29, 161, 242, 0.1) !important;

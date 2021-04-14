@@ -25,7 +25,7 @@ export const CommentPost: React.FC<CommentPostProps> = () => {
             <div className="box__comment--body">
               <div className="box__comment--content">
                 <div className="avartar">
-                  <Avatar src="" style={{ marginBottom: "10px" }} />
+                  <Avatar src={commentItem?.avatar} style={{ marginBottom: "10px" }} />
                   <div className="bar">
                     <p></p>
                   </div>

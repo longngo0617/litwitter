@@ -6,8 +6,6 @@ import gql from "graphql-tag";
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import {
-  Like,
-  LikeMutation,
   PostSnippetFragment,
   useLikeMutation
 } from "../generated/graphql";
@@ -19,38 +17,6 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
   const router = useHistory();
   const [likePost] = useLikeMutation();
   const { user, openMore } = useContext(UserContext);
-
-  const updateAfterLike = (
-    value: string,
-    postId: string,
-    cache: ApolloCache<LikeMutation>
-  ) => {
-    const data = cache.readFragment<{
-      id: number;
-      username: string;
-      likes: [Like];
-    }>({
-      id: "Post:" + postId,
-      fragment: gql`
-        fragment _ on Post {
-          id
-          likes
-        }
-      `,
-    });
-
-    if (data) {
-      cache.writeFragment({
-        id: "Post:" + postId,
-        fragment: gql`
-          fragment __ on Post {
-            likes
-          }
-        `,
-        data: [...data.likes, value],
-      });
-    }
-  };
 
   return (
     <>
@@ -101,8 +67,6 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
               likePost={async () =>
                 await likePost({
                   variables: { id: props.id },
-                  update: (cache) =>
-                    updateAfterLike(user.username, props.id, cache),
                 })
               }
             />

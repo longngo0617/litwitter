@@ -12,12 +12,7 @@ const initState = {
 const UserContext = createContext({
   user: LocalStorage.get("user"),
   commentState: false,
-  commentItem: {
-    id: "",
-    username: null,
-    displayname: null,
-    body: null,
-  },
+  commentItem: {} as any,
   moreState: {
     item: {} as any,
     xPos: "0px",

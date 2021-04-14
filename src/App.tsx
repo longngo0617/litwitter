@@ -15,23 +15,11 @@ import { UserContext, UserProvider } from "./utils/useAuth";
 
 const App = () => {
   const routes = [
-    {
-      path: "/posts/:id/comments",
-      name: "PopupComment",
-      Component: FollowPopup,
-      title: "Commented",
-    },
-    {
-      path: "/posts/:id/likes",
-      name: "PopupLike",
-      Component: FollowPopup,
-      title: "Liked",
-    },
+    { path: "/home", name: "Home", Component: Home },
     { path: "/posts/:id", name: "Details", Component: Details },
     { path: "/register", name: "Register", Component: Register },
     { path: "/login", name: "Login", Component: Login },
     { path: "/logout", name: "Logout", Component: Login },
-    { path: "/home", name: "Home", Component: Home },
     { path: "/:username", name: "Profile", Component: Profile },
   ];
   const { user } = useContext(UserContext);

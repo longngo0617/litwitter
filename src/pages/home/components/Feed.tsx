@@ -10,7 +10,7 @@ const Feed = () => {
 
   const { data, error, loading, fetchMore, variables } = usePostsQuery({
     variables: {
-      limit: 10,
+      limit: 6,
       cursor: "",
     },
     notifyOnNetworkStatusChange: true,
@@ -56,22 +56,6 @@ const Feed = () => {
                     data?.getPosts?.posts[data.getPosts?.posts.length - 1]
                       ?.createdAt,
                 },
-                // updateQuery: (previousValue, {fetchMoreResult}) : PostsQuery => {
-                //     if(!fetchMoreResult) {
-                //         return previousValue as PostsQuery;
-                //     }
-                //     return {
-                //         __typename: 'Query',
-                //         getPosts : {
-                //             __typename: 'PaginatedPost',
-                //             hasMore: (fetchMoreResult as PostsQuery).getPosts?.hasMore,
-                //             posts: [
-                //                 ...(previousValue as PostsQuery).getPosts.posts,
-                //                 ...(fetchMoreResult as PostsQuery).getPosts?.posts
-                //             ]
-                //         }
-                //     }
-                // },
               });
             }}
           >
