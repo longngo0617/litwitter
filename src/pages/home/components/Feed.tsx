@@ -4,10 +4,8 @@ import { Post } from "../../../components/Post";
 import Box from "@material-ui/core/Box";
 import { Button } from "@material-ui/core";
 import { Loading } from "../../../components/Loading";
-import { useIsAuth } from "../../../utils/useIsAuth";
 
 const Feed = () => {
-
   const { data, error, loading, fetchMore, variables } = usePostsQuery({
     variables: {
       limit: 6,
@@ -15,7 +13,7 @@ const Feed = () => {
     },
     notifyOnNetworkStatusChange: true,
   });
-  
+
   if (!loading && !data) {
     return (
       <div>
@@ -32,21 +30,19 @@ const Feed = () => {
       </div>
       <TweetBox />
       {!data && loading ? (
-        <Box display="flex" justifyContent="center" marginTop="20px"><Loading blue/></Box>
+        <Box display="flex" justifyContent="center" marginTop="20px">
+          <Loading blue />
+        </Box>
       ) : (
-        data!.getPosts?.posts.map((p,index) =>
-          !p ? null : (
-            <Post
-              key={index}
-              {...p}
-            />
-          )
+        data!.getPosts?.posts.map((p, index) =>
+          !p ? null : <Post key={index} {...p} />
         )
       )}
       {data && data.getPosts?.hasMore ? (
         <Box display="flex" p={1} m={1} justifyContent="center">
           <Button
             size="large"
+            style={{minWidth:"101px"}}
             className="sidebar__tweet"
             onClick={() => {
               fetchMore({
@@ -60,7 +56,7 @@ const Feed = () => {
             }}
           >
             {" "}
-            Load more
+            {loading ? <Loading /> : "Load more"}
           </Button>
         </Box>
       ) : null}

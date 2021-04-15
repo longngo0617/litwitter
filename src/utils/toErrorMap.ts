@@ -14,3 +14,8 @@ export const formatDate = (date: any) => {
   return d;
 };
 
+export const formatDate2 = (text: string) => {
+  let d = text.split('/');
+  return [d[2], d[1], d[0]].join('-');
+};
+

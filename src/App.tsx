@@ -1,13 +1,11 @@
 import React, { useContext } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { CommentPost } from "./components/CommentPost";
-import { FollowPopup } from "./components/FollowPopup";
 import { PopupMore } from "./components/PopupMore";
 import { Details } from "./pages/details/Details";
-import Sidebar from "./pages/home/components/Sidebar";
-import Widgets from "./pages/home/components/Widgets";
 import Home from "./pages/home/Home";
 import { Login } from "./pages/login/Login";
+import { PopupEdit } from "./pages/profile/components/PopupEdit";
 import { Profile } from "./pages/profile/Profile";
 import { Register } from "./pages/register/Register";
 import "./styles/App.scss";
@@ -29,6 +27,7 @@ const App = () => {
         <Router>
           <PopupMore />
           <CommentPost />
+          <PopupEdit/>
           <Switch>
             {routes.map((e: any) => (
               <Route key={e.path} path={e.path}>

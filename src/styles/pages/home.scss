@@ -128,21 +128,49 @@
 }
 .widgets {
   flex: 0.3;
-  &__input {
+  &__wrap {
     display: flex;
     align-items: center;
-    background-color: $twitter-background;
-    padding: 10px;
-    border-radius: 20px;
-    margin-top: 10px;
-    margin-left: 20px;
-    > input {
+    background-color: rgb(235, 238, 240);
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 9999px;
+    margin: 12px;
+    max-width: 350px;
+  }
+  &__input {
+    display: flex;
+    flex-grow: 1;
+    .MuiAutocomplete-root {
+      width: 100%;
+    }
+    .MuiFormControl-marginNormal {
+      margin: 0;
+    }
+    .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"]
+      .MuiAutocomplete-input {
+      padding: 12px;
+    }
+    .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] {
+      padding: 0;
+    }
+    .MuiAutocomplete-hasClearIcon
+      .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] {
+      padding-right: 0;
+    }
+    .MuiOutlinedInput-notchedOutline{
       border: none;
-      background-color: $twitter-background;
     }
   }
   &__searchIcon {
     color: gray;
+    display: flex;
+    justify-content: center;
+    flex-grow: 0;
+    box-sizing: border-box;
+    .MuiSvgIcon-root{
+      padding-left: 12px;
+      min-width: 39px;
+    }
   }
   &__widgetContainer {
     margin-top: 15px;

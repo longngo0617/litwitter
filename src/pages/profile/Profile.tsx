@@ -15,6 +15,7 @@ import { Follower } from "./components/Follower";
 import { Following } from "./components/Following";
 import { MainPage } from "./components/MainPage";
 import { WithSide } from "../../utils/withSide";
+import { PopupEdit } from "./components/PopupEdit";
 interface ProfileProps {}
 
 export const Profile: React.FC<ProfileProps> = () => {

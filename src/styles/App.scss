@@ -98,3 +98,29 @@ html {
     }
   }
 }
+.btn-save {
+  background-color: $twitter-color !important;
+  color: #fff !important;
+  max-height: 32px;
+  min-width: 32px !important;
+  margin-left: 16px !important;
+  border-radius: 9999px !important;
+  padding: 0 1em !important;
+  font-weight: 700 !important;
+}
+.btn-add,.btn-close {
+  .MuiIconButton-root {
+    color:rgb(255, 255, 255);
+    opacity: 0.75;
+  }
+}
+.btn-close {
+  margin-left: 32px;
+}
+
+.MuiAutocomplete-popper {
+  left:-10px !important;
+  width: 350px !important;
+  min-height: 100px !important;
+  max-height: calc(80vh - 53px) !important;
+}

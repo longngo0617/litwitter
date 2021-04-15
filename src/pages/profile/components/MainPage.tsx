@@ -45,11 +45,11 @@ export const MainPage: React.FC<UserQuery> = (props) => {
                     <div
                       className="image--background"
                       style={{
-                        backgroundImage: `url(${props.getUser?.profile?.avatar})`,
+                        backgroundImage: `url(${props.getUser?.profile?.avatar || "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"})`,
                       }}
                     ></div>
                     <img
-                      src={`${props.getUser?.profile?.avatar}`}
+                      src={`${props.getUser?.profile?.avatar || "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"}`}
                       alt=""
                       className="image--hide"
                     />
