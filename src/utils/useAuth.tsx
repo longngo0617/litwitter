@@ -7,12 +7,14 @@ const initState = {
   commentItem: {},
   moreState: { xPos: "0px", yPos: "0px", showMenu: false },
   listComment: [] as any[],
+  editState: false,
 };
 
 const UserContext = createContext({
   user: LocalStorage.get("user"),
   commentState: false,
   commentItem: {} as any,
+  editState: false,
   moreState: {
     item: {} as any,
     xPos: "0px",
@@ -30,6 +32,9 @@ const UserContext = createContext({
   openListComment: (item: any) => {},
   closeListComment: () => {},
   addUser: (arrayUser: any) => {},
+  openEdit: () => {},
+  closeEdit: () => {},
+  cacheProfile: (data: any) => {},
 });
 
 function returnState(state: any) {
@@ -100,9 +105,27 @@ const userReducer = (state: any, action: any) => {
         ...state,
         user: {
           ...state.user,
-          following: action.payload.following
-        }
-      })
+          following: action.payload.following,
+        },
+      });
+    case "OPEN_EDIT_PROFILE":
+      return {
+        ...state,
+        editState: true,
+      };
+    case "CLOSE_EDIT_PROFILE":
+      return {
+        ...state,
+        editState: false,
+      };
+    case "UPDATE_EDIT_PROFILE":
+      return returnState({
+        ...state,
+        user: {
+          ...state.user,
+          profile: action.payload,
+        },
+      });
     default:
       return state;
   }
@@ -141,8 +164,20 @@ const UserProvider = (props: any) => {
     dispatch({ type: "CLOSE_MORE" });
   }
 
+  function openEdit() {
+    dispatch({ type: "OPEN_EDIT_PROFILE" });
+  }
+
+  function closeEdit() {
+    dispatch({ type: "CLOSE_EDIT_PROFILE" });
+  }
+
+  function cacheProfile(data: any) {
+    dispatch({ type: "UPDATE_EDIT_PROFILE", payload: data });
+  }
+
   function addUser(arrayUser: any) {
-    dispatch({type: "ADD_USER",payload: arrayUser})
+    dispatch({ type: "ADD_USER", payload: arrayUser });
   }
 
   function openListComment(item: any) {
@@ -159,6 +194,7 @@ const UserProvider = (props: any) => {
     commentItem: state.commentItem,
     moreState: state.moreState,
     listComment: state.listComment,
+    editState: state.editState,
     login,
     logout,
     openComment,
@@ -168,6 +204,9 @@ const UserProvider = (props: any) => {
     openListComment,
     closeListComment,
     addUser,
+    openEdit,
+    closeEdit,
+    cacheProfile,
   };
   return <UserContext.Provider value={values} {...props} />;
 };

@@ -23,7 +23,7 @@ export const Profile: React.FC<ProfileProps> = () => {
   const router = useHistory();
   let location = useLocation();
   const { url, params }: any = useRouteMatch();
-  const { data, error, loading, variables } = useUserQuery({
+  const { data, error, loading } = useUserQuery({
     variables: {
       username: params.username,
     },

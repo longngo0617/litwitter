@@ -6,10 +6,9 @@ import { Link, useRouteMatch } from "react-router-dom";
 import { UserContext } from "../../../utils/useAuth";
 import { UserQuery } from "../../../generated/graphql";
 
-
 export const MainPage: React.FC<UserQuery> = (props) => {
   const { url } = useRouteMatch();
-  const { user } = useContext(UserContext);
+  const { openEdit, user } = useContext(UserContext);
 
   return (
     <div className="profile__wrapper">
@@ -21,14 +20,20 @@ export const MainPage: React.FC<UserQuery> = (props) => {
               style={{ paddingBottom: "33.3333%" }}
             ></div>
             <div className="image">
-                <div className="image--big" style={{ marginBottom: "-21%" }}>
-                  <div
-                    className="image--background"
-                    style={{ backgroundImage: `url(${props.getUser?.profile?.coverImage})` }}
-                  ></div>
-                  <img src={`${props.getUser?.profile?.coverImage}`} alt="" className="image--hide" />
-                </div>
+              <div className="image--big" style={{ marginBottom: "-21%" }}>
+                <div
+                  className="image--background"
+                  style={{
+                    backgroundImage: `url(${props.getUser?.profile?.coverImage})`,
+                  }}
+                ></div>
+                <img
+                  src={`${props.getUser?.profile?.coverImage}`}
+                  alt=""
+                  className="image--hide"
+                />
               </div>
+            </div>
           </div>
           <div className="profile__top--bio">
             <div className="bio__avatar">
@@ -45,22 +50,30 @@ export const MainPage: React.FC<UserQuery> = (props) => {
                     <div
                       className="image--background"
                       style={{
-                        backgroundImage: `url(${props.getUser?.profile?.avatar || "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"})`,
+                        backgroundImage: `url(${
+                          props.getUser?.profile?.avatar ||
+                          "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
+                        })`,
                       }}
                     ></div>
                     <img
-                      src={`${props.getUser?.profile?.avatar || "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"}`}
+                      src={`${
+                        props.getUser?.profile?.avatar ||
+                        "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
+                      }`}
                       alt=""
                       className="image--hide"
                     />
                   </div>
                 </div>
               </div>
-              <div className="button">
-                <Button variant="outlined" color="primary">
-                  Edit profile
-                </Button>
-              </div>
+              {user.username === props.getUser?.username ? (
+                <div className="button">
+                  <Button variant="outlined" color="primary" onClick={openEdit}>
+                    Edit profile
+                  </Button>
+                </div>
+              ) : null}
             </div>
             <div className="bio__name">
               <div className="name">
@@ -86,13 +99,17 @@ export const MainPage: React.FC<UserQuery> = (props) => {
             <div className="bio__follow">
               <div className="bio__follow--item">
                 <Link to={`${url}/following`}>
-                  <span className="number">{props.getUser?.following?.length}</span>
+                  <span className="number">
+                    {props.getUser?.following?.length}
+                  </span>
                   <span className="title">Following</span>
                 </Link>
               </div>
               <div className="bio__follow--item">
                 <Link to={`${url}/followers`}>
-                  <span className="number">{props.getUser?.follower?.length}</span>
+                  <span className="number">
+                    {props.getUser?.follower?.length}
+                  </span>
                   <span className="title">Follower</span>
                 </Link>
               </div>

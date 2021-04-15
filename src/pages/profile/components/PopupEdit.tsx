@@ -1,21 +1,24 @@
 import { Button, IconButton } from "@material-ui/core";
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
+import CloseIcon from "@material-ui/icons/Close";
+import { Field, Form, Formik } from "formik";
 import React, { useContext, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import CloseIcon from "@material-ui/icons/Close";
-import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
-import { UserContext } from "../../../utils/useAuth";
-import { Field, Form, Formik } from "formik";
 import { TextFormField } from "../../../components/TextFormField";
+import {
+  useEditProfileMutation,
+  UserDocument,
+  UserQuery,
+} from "../../../generated/graphql";
 import { formatDate2 } from "../../../utils/toErrorMap";
-import { useHistory } from "react-router";
+import { UserContext } from "../../../utils/useAuth";
 interface PopupEditProps {}
 
 export const PopupEdit: React.FC<PopupEditProps> = () => {
-  const { user } = useContext(UserContext);
+  const { user, closeEdit, cacheProfile, editState } = useContext(UserContext);
   const inputImageCover: any = useRef(null);
   const [selectedImageCover, setSelectedImageCover] = useState("");
   const [previewImageCover, setPreviewImageCover] = useState<any>("");
-  const router = useHistory();
   const inputImage: any = useRef(null);
   const [selectedImage, setSelectedImage] = useState("");
   const [previewImage, setPreviewImage] = useState<any>("");
@@ -50,6 +53,10 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
     };
   };
 
+  const [editProfile] = useEditProfileMutation();
+  if (!editState) {
+    return null;
+  }
   return ReactDOM.createPortal(
     <div className="follow-wrap">
       <div className="follow-overlay"></div>
@@ -57,12 +64,31 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
         <Formik
           initialValues={{
             fullName: user.profile.fullName,
-            dateOfBirth: formatDate2(user.profile.dateOfBirth),
+            dateOfBirth: user.profile.dateOfBirth,
             avatar: user.profile.avatar,
-            coverImage: user.profile.coverImage,
+            imageCover: user.profile.coverImage,
             story: user.profile.story,
           }}
-          onSubmit={async (values, { setErrors }) => {}}
+          onSubmit={async (values, { setErrors }) => {
+            if (previewImageCover !== "") {
+              values.imageCover = previewImageCover as string;
+            }
+            if (previewImage !== "") {
+              values.avatar = previewImage as string;
+            }
+            const data = await editProfile({
+              variables: values,
+              refetchQueries: [
+                { query: UserDocument, variables: { username: user.username } },
+              ],
+            });
+            cacheProfile(data.data?.editProfile.profile);
+            closeEdit();
+            setPreviewImageCover("");
+            setPreviewImage("");
+            setSelectedImageCover("");
+            setSelectedImage("");
+          }}
         >
           {({ isSubmitting }) => (
             <Form>
@@ -72,7 +98,7 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
                     <IconButton
                       aria-label="close-icon"
                       color="primary"
-                      onClick={() => router.push(`/${user.username}`)}
+                      onClick={closeEdit}
                     >
                       <CloseIcon />
                     </IconButton>
@@ -140,17 +166,19 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
                                 onChange={handleImageCoverChange}
                               />
                             </div>
-                            {selectedImageCover ? <div className="btn-close">
-                              <IconButton
-                                aria-label="remove banner photo"
-                                onClick={() => {
-                                  setPreviewImageCover("");
-                                  setSelectedImageCover("");
-                                }}
-                              >
-                                <CloseIcon />
-                              </IconButton>
-                            </div> : null}
+                            {selectedImageCover ? (
+                              <div className="btn-close">
+                                <IconButton
+                                  aria-label="remove banner photo"
+                                  onClick={() => {
+                                    setPreviewImageCover("");
+                                    setSelectedImageCover("");
+                                  }}
+                                >
+                                  <CloseIcon />
+                                </IconButton>
+                              </div>
+                            ) : null}
                           </div>
                         </div>
                         <div className="profile__top--bio">

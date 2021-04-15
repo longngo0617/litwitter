@@ -20,7 +20,7 @@ const App = () => {
     { path: "/logout", name: "Logout", Component: Login },
     { path: "/:username", name: "Profile", Component: Profile },
   ];
-  const { user } = useContext(UserContext);
+
   return (
     <>
       <UserProvider>

@@ -5,7 +5,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../utils/useAuth";
 import { Follow, useFollowUserMutation } from "../generated/graphql";
-import { isNullableType } from "graphql";
+
 
 interface FollowPopupProps {
   title: string;
