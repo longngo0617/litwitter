@@ -15,6 +15,7 @@ export const formatDate = (date: any) => {
 };
 
 export const formatDate2 = (text: string) => {
+  // if(text.includes())
   let d = text.split('/');
   return [d[2], d[1], d[0]].join('-');
 };

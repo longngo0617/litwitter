@@ -13,7 +13,7 @@ import { UserContext, UserProvider } from "./utils/useAuth";
 
 const App = () => {
   const routes = [
-    { path: "/home", name: "Home", Component: Home },
+    { path: "/", name: "Home", Component: Home },
     { path: "/posts/:id", name: "Details", Component: Details },
     { path: "/register", name: "Register", Component: Register },
     { path: "/login", name: "Login", Component: Login },
