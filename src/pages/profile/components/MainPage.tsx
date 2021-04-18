@@ -4,11 +4,13 @@ import { formatDate } from "../../../utils/toErrorMap";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import { Link, useRouteMatch } from "react-router-dom";
 import { UserContext } from "../../../utils/useAuth";
-import { UserQuery } from "../../../generated/graphql";
+import { Follow, useFollowUserMutation, UserQuery } from "../../../generated/graphql";
 
 export const MainPage: React.FC<UserQuery> = (props) => {
   const { url } = useRouteMatch();
-  const { openEdit, user } = useContext(UserContext);
+  const { openEdit, user,addUser } = useContext(UserContext);
+  const [followUser] = useFollowUserMutation();
+
 
   return (
     <div className="profile__wrapper">
@@ -73,7 +75,44 @@ export const MainPage: React.FC<UserQuery> = (props) => {
                     Edit profile
                   </Button>
                 </div>
-              ) : null}
+              ) : (
+                <div className="button">
+                  {user.following.find(
+                    (ele: Follow) => ele.username === props.getUser?.username
+                  ) ? (
+                    <Button
+                      variant="contained"
+                      className="btn-follow btn-following"
+                      onClick={async () => {
+                        const data = await followUser({
+                          variables: {
+                            username: props.getUser?.username,
+                          },
+                        });
+                        await addUser(data?.data?.following);
+                      }}
+                    >
+                      <span className="following">Following</span>
+                      <span className="unfollow">Unfollow</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outlined"
+                      className="btn-follow"
+                      onClick={async () => {
+                        const data = await followUser({
+                          variables: {
+                            username: props.getUser?.username,
+                          },
+                        });
+                        await addUser(data?.data?.following);
+                      }}
+                    >
+                      Follow
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
             <div className="bio__name">
               <div className="name">
