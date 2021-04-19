@@ -27,7 +27,7 @@ const Widgets = () => {
             getOptionLabel={(option: any) => ``}
             renderOption={(option) => (
               <div className="follow-modal-bottom-itemWrap full-width">
-                <Link to={`/${option.username}`} className="link link--none">
+                <Link to={`/users/${option.username}`} className="link link--none">
                   <div className="follow-modal-bottom-item">
                     <div className="item">
                       <div className="item-left">

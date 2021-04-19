@@ -24,10 +24,10 @@ function Sidebar(props: any) {
       <SidebarOption href="/home" Icon={HomeIcon} text="Home" />
       <SidebarOption href="/market" Icon={StorefrontIcon} text="Market" />
       <SidebarOption href="/notifications" Icon={NotificationsNoneIcon} text="Notifications" />
-      <SidebarOption href="/messsage" Icon={MailOutlineIcon} text="Messages" />
+      <SidebarOption href="/messages" Icon={MailOutlineIcon} text="Messages" />
       <SidebarOption href="/groups" Icon={GroupIcon} text="Groups" />
       <SidebarOption href="/lists" Icon={ListAltIcon} text="Lists" />
-      <SidebarOption href={`/${user.username}`} Icon={PermIdentityIcon} text="Profile" />
+      <SidebarOption href={`/users/${user.username}`} Icon={PermIdentityIcon} text="Profile" />
       <SidebarOption href="/more" Icon={MoreHorizIcon} text="More" />
 
       <Button variant="outlined" className="sidebar__tweet" fullWidth>

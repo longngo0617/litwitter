@@ -46,7 +46,7 @@ export const Follower: React.FC<any> = (props) => {
         ) : (
           props?.props?.follower.map((f: Follow, index: number) => (
             <div key={index} className="follow-modal-bottom-itemWrap">
-              <Link to={`/${f.username}`} className="link link--none">
+              <Link to={`/users/${f.username}`} className="link link--none">
               <div className="follow-modal-bottom-item">
                 <div className="item">
                   <div className="item-left">
