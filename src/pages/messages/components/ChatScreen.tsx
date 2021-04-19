@@ -1,11 +1,12 @@
 import { Avatar } from "@material-ui/core";
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { SnippetUser } from "./SnippetUser";
 import { useChatQuery } from "../../../generated/graphql";
 import { Loading } from "../../../components/Loading";
 import { Message } from "./Message";
+import { UserContext } from "../../../utils/useAuth";
 interface ChatScreenProps {
   id: string;
 }
@@ -14,6 +15,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
   const { data, loading } = useChatQuery({
     variables: { roomId: id },
   });
+  const { user } = useContext(UserContext);
   if (!data && loading) {
     return <Loading />;
   }
@@ -28,14 +30,21 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
       ));
     }
   };
+
+  const TypeUser = () => {
+    if (data) {
+      return data.getChat?.members.find((m) => m?.username !== user.username);
+    }
+  };
+
   return (
     <Container>
       <Header>
         <HeaderInfomation>
-          <UserAvatar />
+          <UserAvatar src={TypeUser()?.profile?.avatar || ""} />
           <UserInfo>
-            <Name>Abc</Name>
-            <Username>@aaaa</Username>
+            <Name>{TypeUser()?.username || "abc"}</Name>
+            <Username>@{TypeUser()?.displayname || "aaaa"}</Username>
           </UserInfo>
         </HeaderInfomation>
         <HeaderIcon>
@@ -45,7 +54,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
       <Main>
         <MessageContainer>
           <MessageWrap>
-            <SnippetUser user={data?.getChat?.members[0]} />
+            <SnippetUser user={TypeUser()} />
           </MessageWrap>
           {showMessages()}
           {/* show messages */}

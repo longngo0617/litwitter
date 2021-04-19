@@ -17,11 +17,11 @@ export const SnippetUser: React.FC<SnippetProps> = ({user}) => {
       </Wrap>
       <Wrap>
         <FollowItem>
-          <Name>{user.following}</Name>
+          <Name>{user.following.length}</Name>
           <Username>Following</Username>
         </FollowItem>
         <FollowItem>
-          <Name>{user.follower}</Name>
+          <Name>{user.follower.length}</Name>
           <Username>Followers</Username>
         </FollowItem>
       </Wrap>
