@@ -3,10 +3,10 @@ import React from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 
-export const Chat: React.FC<any> = ({user,lastContent,id}) => {
-    const router = useHistory();
+export const Chat: React.FC<any> = ({ user, lastContent, id }) => {
+  const router = useHistory();
   return (
-    <Container onClick={()=> router.replace(`/messages/${id}`)}>
+    <Container onClick={() => router.replace(`/messages/${id}`)}>
       <Item>
         <UserAvatar src={user.profile.avatar} />
         <UserInfo>
@@ -16,7 +16,7 @@ export const Chat: React.FC<any> = ({user,lastContent,id}) => {
               <Username>@{user.username}</Username>
             </NameWrap>
             <ContentWrap>
-                <LastContent>{lastContent}</LastContent>
+              <LastContent>{lastContent}</LastContent>
             </ContentWrap>
           </UserInfoLeft>
         </UserInfo>
@@ -55,7 +55,9 @@ const UserInfo = styled.div`
   align-items: center;
 `;
 
-const UserInfoLeft = styled.div``;
+const UserInfoLeft = styled.div`
+  display: grid;
+`;
 
 const NameWrap = styled.div``;
 const Name = styled.span`
@@ -81,6 +83,7 @@ const Username = styled.span`
 const ContentWrap = styled.div`
   max-height: 40px;
   overflow: hidden;
+  display:inherit;
 `;
 const LastContent = styled.span`
   font-weight: 400;
