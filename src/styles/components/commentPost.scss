@@ -448,6 +448,8 @@
 
     background-color: rgb(29, 161, 242) !important;
     border-radius: 9999px !important;
-    width: 133px;
+    width: max-content;
+    font-weight: 800 !important;
+    text-transform:unset !important;
   }
 }

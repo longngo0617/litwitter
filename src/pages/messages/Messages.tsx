@@ -55,7 +55,7 @@ export const Messages: React.FC<MessagesProps> = ({}) => {
                 variant="contained"
                 className="empty--link"
               >
-                Link
+                Tin nhắn mới
               </Button>
             </ButtonLink>
           </div>
@@ -170,5 +170,5 @@ const ButtonLink = styled.div`
   margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
-  width:133px;
+  width:max-content;
 `;
