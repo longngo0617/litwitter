@@ -66,9 +66,8 @@ export type Like = {
 export type RoomChat = {
   __typename?: 'RoomChat';
   id: Scalars['ID'];
-  from: User;
-  to: User;
   content: Array<Maybe<Chat>>;
+  members: Array<Maybe<User>>;
 };
 
 export type GroupChat = {
@@ -140,6 +139,25 @@ export type Follow = {
   story?: Maybe<Scalars['String']>;
 };
 
+export type Notification = {
+  __typename?: 'Notification';
+  id: Scalars['ID'];
+  type: Scalars['String'];
+  title: Scalars['String'];
+  createdAt: Scalars['String'];
+  displayname: Scalars['String'];
+  username: Scalars['String'];
+  avatar: Scalars['String'];
+  whose: Scalars['String'];
+  watched: Scalars['Boolean'];
+};
+
+export type Notifications = {
+  __typename?: 'Notifications';
+  count: Scalars['String'];
+  notifications?: Maybe<Array<Maybe<Notification>>>;
+};
+
 export type RegisterInput = {
   username: Scalars['String'];
   password: Scalars['String'];
@@ -158,10 +176,12 @@ export type Query = {
   getUsers?: Maybe<Array<Maybe<User>>>;
   getUser?: Maybe<User>;
   getMyUser?: Maybe<User>;
+  getUserFollowing?: Maybe<Array<Maybe<User>>>;
   getRoomChat?: Maybe<Array<Maybe<RoomChat>>>;
   getGroups?: Maybe<Array<Maybe<GroupChat>>>;
   getGroup?: Maybe<GroupChat>;
   getGroupChat?: Maybe<Array<Maybe<GroupChat>>>;
+  getNotification?: Maybe<Notifications>;
 };
 
 
@@ -318,6 +338,11 @@ export enum CacheControlScope {
 }
 
 
+export type ChatSnippetFragment = (
+  { __typename?: 'Chat' }
+  & Pick<Chat, 'id' | 'username' | 'displayname' | 'createdAt' | 'content'>
+);
+
 export type CommentSnippetFragment = (
   { __typename?: 'Comment' }
   & Pick<Comment, 'id' | 'avatar' | 'username' | 'displayname' | 'createdAt' | 'body'>
@@ -348,6 +373,18 @@ export type PostSnippetFragment = (
 export type RegularErrorFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
+);
+
+export type RegularRoomChatFragment = (
+  { __typename?: 'RoomChat' }
+  & Pick<RoomChat, 'id'>
+  & { content: Array<Maybe<(
+    { __typename?: 'Chat' }
+    & ChatSnippetFragment
+  )>>, members: Array<Maybe<(
+    { __typename?: 'User' }
+    & RegularUserFragment
+  )>> }
 );
 
 export type RegularUserFragment = (
@@ -512,6 +549,30 @@ export type RegisterMutation = (
   ) }
 );
 
+export type ChatQueryVariables = Exact<{
+  roomId?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type ChatQuery = (
+  { __typename?: 'Query' }
+  & { getChat?: Maybe<(
+    { __typename?: 'RoomChat' }
+    & RegularRoomChatFragment
+  )> }
+);
+
+export type ChatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ChatsQuery = (
+  { __typename?: 'Query' }
+  & { getRoomChat?: Maybe<Array<Maybe<(
+    { __typename?: 'RoomChat' }
+    & RegularRoomChatFragment
+  )>>> }
+);
+
 export type PostQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -607,10 +668,13 @@ export const PostSnippetFragmentDoc = gql`
 }
     ${LikeSnippetFragmentDoc}
 ${CommentSnippetFragmentDoc}`;
-export const RegularErrorFragmentDoc = gql`
-    fragment RegularError on FieldError {
-  field
-  message
+export const ChatSnippetFragmentDoc = gql`
+    fragment ChatSnippet on Chat {
+  id
+  username
+  displayname
+  createdAt
+  content
 }
     `;
 export const RegularFollowFragmentDoc = gql`
@@ -646,6 +710,24 @@ export const RegularUserFragmentDoc = gql`
   }
 }
     ${RegularFollowFragmentDoc}`;
+export const RegularRoomChatFragmentDoc = gql`
+    fragment RegularRoomChat on RoomChat {
+  id
+  content {
+    ...ChatSnippet
+  }
+  members {
+    ...RegularUser
+  }
+}
+    ${ChatSnippetFragmentDoc}
+${RegularUserFragmentDoc}`;
+export const RegularErrorFragmentDoc = gql`
+    fragment RegularError on FieldError {
+  field
+  message
+}
+    `;
 export const RegularUserResponseFragmentDoc = gql`
     fragment RegularUserResponse on UserResponse {
   error {
@@ -993,6 +1075,75 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const ChatDocument = gql`
+    query Chat($roomId: ID) {
+  getChat(roomId: $roomId) {
+    ...RegularRoomChat
+  }
+}
+    ${RegularRoomChatFragmentDoc}`;
+
+/**
+ * __useChatQuery__
+ *
+ * To run a query within a React component, call `useChatQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChatQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useChatQuery({
+ *   variables: {
+ *      roomId: // value for 'roomId'
+ *   },
+ * });
+ */
+export function useChatQuery(baseOptions?: Apollo.QueryHookOptions<ChatQuery, ChatQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ChatQuery, ChatQueryVariables>(ChatDocument, options);
+      }
+export function useChatLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChatQuery, ChatQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ChatQuery, ChatQueryVariables>(ChatDocument, options);
+        }
+export type ChatQueryHookResult = ReturnType<typeof useChatQuery>;
+export type ChatLazyQueryHookResult = ReturnType<typeof useChatLazyQuery>;
+export type ChatQueryResult = Apollo.QueryResult<ChatQuery, ChatQueryVariables>;
+export const ChatsDocument = gql`
+    query Chats {
+  getRoomChat {
+    ...RegularRoomChat
+  }
+}
+    ${RegularRoomChatFragmentDoc}`;
+
+/**
+ * __useChatsQuery__
+ *
+ * To run a query within a React component, call `useChatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useChatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useChatsQuery(baseOptions?: Apollo.QueryHookOptions<ChatsQuery, ChatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ChatsQuery, ChatsQueryVariables>(ChatsDocument, options);
+      }
+export function useChatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChatsQuery, ChatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ChatsQuery, ChatsQueryVariables>(ChatsDocument, options);
+        }
+export type ChatsQueryHookResult = ReturnType<typeof useChatsQuery>;
+export type ChatsLazyQueryHookResult = ReturnType<typeof useChatsLazyQuery>;
+export type ChatsQueryResult = Apollo.QueryResult<ChatsQuery, ChatsQueryVariables>;
 export const PostDocument = gql`
     query Post($id: ID!) {
   getPost(postId: $id) {

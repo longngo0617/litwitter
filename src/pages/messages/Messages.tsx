@@ -5,13 +5,18 @@ import styled from "styled-components";
 import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 import { Chat } from "./components/Chat";
-import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
+import { useChatsQuery } from "../../generated/graphql";
+import { ChatScreen } from "./components/ChatScreen";
+import { useParams } from "react-router";
+import { Loading } from "../../components/Loading";
 
 interface MessagesProps {}
 
-export const Messages: React.FC<MessagesProps> = ({}) => {
+export const Messages: React.FC<MessagesProps> = (props) => {
   const { user } = useContext(UserContext);
+  const { data, loading } = useChatsQuery();
+  const params: any = useParams();
 
   return (
     <div className="wrapper">
@@ -33,32 +38,58 @@ export const Messages: React.FC<MessagesProps> = ({}) => {
               <SearchIcon />
               <SearchInput placeholder="Tìm kiếm mọi người hoặc nhóm" />
             </Search>
-            <Chats>
-              <Chat />
-            </Chats>
+            {!data && loading ? (<Loading/>) : (
+              <Chats>
+                {data?.getRoomChat
+                  ? data.getRoomChat.map((r: any, index: number) =>
+                      r.members[0].username !== user.username ? (
+                        <Chat
+                          key={index}
+                          id={r.id}
+                          user={r.members[0]}
+                          lastContent={r.content[r.content.length - 1].content}
+                        />
+                      ) : (
+                        <Chat
+                          key={index}
+                          id={r.id}
+                          user={r.members[1]}
+                          lastContent={r.content[r.content.length - 1].content}
+                        />
+                      )
+                    )
+                  : null}
+              </Chats>
+            )}
           </Bottom>
         </ChatContainer>
         <MessagesContainer>
-          <div className="empty">
-            <div className="empty--text">
-              <span className="title">Bạn chưa chọn tin nhắn nào</span>
-            </div>
-            <div className="empty--text empty--info">
-              <span className="info">
-                Chọn 1 từ những tin nhắn đã tồn tại,hoặc bắt đầu 1 cái mới.
-              </span>
-            </div>
-            <ButtonLink>
-              <Button
-                href="/messages/compose"
-                color="primary"
-                variant="contained"
-                className="empty--link"
-              >
-                Tin nhắn mới
-              </Button>
-            </ButtonLink>
-          </div>
+          {!params.id ? (
+            <Empty>
+              <div className="empty">
+                <div className="empty--text">
+                  <span className="title">Bạn chưa chọn tin nhắn nào</span>
+                </div>
+                <div className="empty--text empty--info">
+                  <span className="info">
+                    Chọn 1 từ những tin nhắn đã tồn tại,hoặc bắt đầu 1 cái mới.
+                  </span>
+                </div>
+                <ButtonLink>
+                  <Button
+                    href="/messages/compose"
+                    color="primary"
+                    variant="contained"
+                    className="empty--link"
+                  >
+                    Tin nhắn mới
+                  </Button>
+                </ButtonLink>
+              </div>
+            </Empty>
+          ) : (
+            <ChatScreen id={params?.id} />
+          )}
         </MessagesContainer>
       </Main>
     </div>
@@ -81,6 +112,8 @@ const ChatContainer = styled.div`
   border-style: solid;
   border-color: rgb(235, 238, 240);
   flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 `;
 const Head = styled.div`
   z-index: 1;
@@ -98,6 +131,7 @@ const Head = styled.div`
   justify-content: center;
   padding-left: 16px;
   padding-right: 16px;
+  background-color: rgb(255, 255, 255);
 `;
 const HeadWrap = styled.div`
   display: flex;
@@ -131,14 +165,16 @@ const MessagesContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
   border-right-width: 1px;
-  overflow: hidden;
+  overflow-y: auto;
   border-style: solid;
   border-color: rgb(235, 238, 240);
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
-
+const Empty = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`;
 const ButtonWrap = styled.div`
   margin-left: 16px;
   min-height: 32px;
@@ -170,5 +206,5 @@ const ButtonLink = styled.div`
   margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
-  width:max-content;
+  width: max-content;
 `;

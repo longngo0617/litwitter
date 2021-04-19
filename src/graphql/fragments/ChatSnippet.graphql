@@ -1,0 +1,7 @@
+fragment ChatSnippet on Chat {
+    id
+    username
+    displayname
+    createdAt
+    content
+}

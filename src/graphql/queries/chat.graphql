@@ -1,0 +1,5 @@
+query Chat($roomId:ID){
+  getChat(roomId:$roomId){
+    ...RegularRoomChat
+  }
+}

@@ -20,6 +20,7 @@ const App = () => {
     { path: "/login", name: "Login", Component: Login },
     { path: "/logout", name: "Logout", Component: Login },
     { path: "/home", name: "Home", Component: Home },
+    { path: "/messages/:id", name: "Messages", Component: Messages },
     { path: "/messages", name: "Messages", Component: Messages },
     { path: "/", name: "Home", Component: Home },
   ];

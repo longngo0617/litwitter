@@ -1,0 +1,9 @@
+fragment RegularRoomChat on RoomChat {
+  id
+  content {
+    ...ChatSnippet
+  }
+  members {
+    ...RegularUser
+  }
+}

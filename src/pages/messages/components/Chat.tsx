@@ -1,17 +1,23 @@
 import { Avatar } from "@material-ui/core";
 import React from "react";
+import { useHistory } from "react-router";
 import styled from "styled-components";
-interface ChatProps {}
 
-export const Chat: React.FC<ChatProps> = () => {
+export const Chat: React.FC<any> = ({user,lastContent,id}) => {
+    const router = useHistory();
   return (
-    <Container>
+    <Container onClick={()=> router.replace(`/messages/${id}`)}>
       <Item>
-        <UserAvatar />
+        <UserAvatar src={user.profile.avatar} />
         <UserInfo>
           <UserInfoLeft>
-            <Name>Vỹ</Name>
-            <Username>@vyhungle</Username>
+            <NameWrap>
+              <Name>{user.displayname}</Name>
+              <Username>@{user.username}</Username>
+            </NameWrap>
+            <ContentWrap>
+                <LastContent>{lastContent}</LastContent>
+            </ContentWrap>
           </UserInfoLeft>
         </UserInfo>
       </Item>
@@ -26,23 +32,23 @@ const Container = styled.div`
   padding: 16px;
   border-bottom: 1px solid rgb(235, 238, 240);
   word-break: break-word;
-  transitions: 0.2s background-color;
+  transition: 0.2s background-color;
   &:hover {
     background-color: rgb(247, 249, 250);
   }
 `;
 const Item = styled.div`
   display: flex;
+  width: 100%;
+  height: 100%;
   align-items: center;
 `;
 const UserAvatar = styled(Avatar)`
-  flex-basic: 48px;
   margin-right: 12px;
   -webkit-box-flex: 0;
   flex-grow: 0;
 `;
 const UserInfo = styled.div`
-  flex-basic: 0px;
   flex-grow: 1;
   -webkit-box-flex: 1;
   display: flex;
@@ -51,6 +57,7 @@ const UserInfo = styled.div`
 
 const UserInfoLeft = styled.div``;
 
+const NameWrap = styled.div``;
 const Name = styled.span`
   white-space: nowrap;
   font-size: 15px;
@@ -60,7 +67,6 @@ const Name = styled.span`
   line-height: 20px;
   overflow-wrap: break-word;
 `;
-
 const Username = styled.span`
   color: rgb(91, 112, 131);
   white-space: nowrap;
@@ -71,4 +77,21 @@ const Username = styled.span`
   line-height: 20px;
   overflow-wrap: break-word;
   margin-left: 4px;
+`;
+const ContentWrap = styled.div`
+  max-height: 40px;
+  overflow: hidden;
+`;
+const LastContent = styled.span`
+  font-weight: 400;
+  font-size: 15px;
+  color: rgb(91, 112, 131);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  line-height: 20px;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
