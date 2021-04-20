@@ -15,7 +15,7 @@ interface MessagesProps {}
 
 export const Messages: React.FC<MessagesProps> = (props) => {
   const { user } = useContext(UserContext);
-  const { data, loading } = useChatsQuery();
+  const { data, loading } = useChatsQuery({});
   const params: any = useParams();
 
   return (
@@ -38,7 +38,9 @@ export const Messages: React.FC<MessagesProps> = (props) => {
               <SearchIcon />
               <SearchInput placeholder="Tìm kiếm mọi người hoặc nhóm" />
             </Search>
-            {!data && loading ? (<Loading/>) : (
+            {!data && loading ? (
+              <Loading />
+            ) : (
               <Chats>
                 {data?.getRoomChat
                   ? data.getRoomChat.map((r: any, index: number) =>
@@ -47,14 +49,14 @@ export const Messages: React.FC<MessagesProps> = (props) => {
                           key={index}
                           id={r.id}
                           user={r.members[0]}
-                          lastContent={r.content[0].content}
+                          lastContent={r.content[r.content.length - 1].content}
                         />
                       ) : (
                         <Chat
                           key={index}
                           id={r.id}
                           user={r.members[1]}
-                          lastContent={r.content[0].content}
+                          lastContent={r.content[r.content.length - 1].content}
                         />
                       )
                     )

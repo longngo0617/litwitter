@@ -1,9 +1,10 @@
 import { Avatar, IconButton } from "@material-ui/core";
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import styled from "styled-components";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { SnippetUser } from "./SnippetUser";
 import {
+  ChatDocument,
   useChatQuery,
   useSendMessageMutation,
 } from "../../../generated/graphql";
@@ -18,12 +19,19 @@ interface ChatScreenProps {
 }
 
 export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
+  const endOfMessageRef: any = useRef<any>(null);
+  const { user } = useContext(UserContext);
+  const [sendMessage] = useSendMessageMutation();
+  const ScrollToBottom = () => {
+    endOfMessageRef.current?.scrollIntoView();
+  };
   const { data, loading } = useChatQuery({
     variables: { roomId: id },
   });
-  const { user } = useContext(UserContext);
-  const [sendMessage] = useSendMessageMutation();
-  const endOfMessageRef: any = useRef<any>(null);
+
+  useEffect(() => {
+    ScrollToBottom();
+  }, [data?.getChat?.content]);
 
   if (!data && loading) {
     return <Loading />;
@@ -31,14 +39,15 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
 
   const showMessages = () => {
     if (data) {
-      return data.getChat?.content.map((message: any) => (
-        <Message
-          key={message.id}
-          u={message.username}
-          message={message.content}
-          time={message.createdAt}
-        />
-      ));
+      const arr = Object.assign([], data.getChat?.content).reverse();
+      return arr.map((message: any) => (
+          <Message
+            key={message.id}
+            u={message.username}
+            message={message.content}
+            time={message.createdAt}
+          />
+        ));
     }
   };
 
@@ -48,12 +57,6 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
     }
   };
 
-  const ScrollToBottom = () => {
-    endOfMessageRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
   return (
     <Container>
       <Header>
@@ -70,11 +73,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
       </Header>
       <Main>
         <MessageContainer>
-          <MessageWrap>
-            <SnippetUser user={TypeUser()} />
-          </MessageWrap>
+          <SnippetUser user={TypeUser()} />
           <MessageWrap>{showMessages()}</MessageWrap>
-          {/* show messages */}
           <EndOfMessage ref={endOfMessageRef} />
         </MessageContainer>
         <InputContainer>
@@ -88,7 +88,6 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
                 },
               });
               values.content = "";
-               ScrollToBottom();
             }}
           >
             {({ isSubmitting, handleChange, values }) => (
@@ -170,7 +169,7 @@ const InfoIcon = styled(InfoOutlinedIcon)`
 `;
 const Main = styled.div``;
 const MessageContainer = styled.div`
-  padding: 20px 16px;
+  padding: 20px 16px 0;
   overflow: hidden;
   max-height: 100%;
   height: 100%;
@@ -179,8 +178,6 @@ const EndOfMessage = styled.div`
   margin-bottom: 50px;
 `;
 const MessageWrap = styled.div`
-  display: flex;
-  flex-direction: column;
 `;
 const InputContainer = styled.div`
   position: sticky;
