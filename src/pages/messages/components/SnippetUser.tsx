@@ -8,7 +8,7 @@ interface SnippetProps {
 }
 
 export const SnippetUser: React.FC<SnippetProps> = ({user}) => {
-  console.log(user)
+
   return (
     <Container>
       <Wrap>

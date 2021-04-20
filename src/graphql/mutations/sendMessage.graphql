@@ -1,0 +1,5 @@
+mutation SendMessage($content:String!,$roomId: String!) {
+  createContentChat(content:$content,roomId:$roomId){
+    ...RegularRoomChat
+  }
+}
