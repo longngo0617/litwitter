@@ -13,7 +13,7 @@ import { Loading } from "../../components/Loading";
 
 interface MessagesProps {}
 
-export const Messages: React.FC<MessagesProps> = (props) => {
+export const Messages: React.FC<MessagesProps> = () => {
   const { user } = useContext(UserContext);
   const { data, loading } = useChatsQuery({});
   const params: any = useParams();
@@ -49,14 +49,14 @@ export const Messages: React.FC<MessagesProps> = (props) => {
                           key={index}
                           id={r.id}
                           user={r.members[0]}
-                          lastContent={r.content[r.content.length - 1].content}
+                          // lastContent={r.content[r.content.length - 1].content}
                         />
                       ) : (
                         <Chat
                           key={index}
                           id={r.id}
                           user={r.members[1]}
-                          lastContent={r.content[r.content.length - 1].content}
+                          // lastContent={r.content[r.content.length - 1].content}
                         />
                       )
                     )

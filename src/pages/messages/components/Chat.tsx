@@ -3,7 +3,7 @@ import React from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 
-export const Chat: React.FC<any> = ({ user, lastContent, id }) => {
+export const Chat: React.FC<any> = ({ user, id }) => {
   const router = useHistory();
   return (
     <Container onClick={() => router.replace(`/messages/${id}`)}>
@@ -16,7 +16,7 @@ export const Chat: React.FC<any> = ({ user, lastContent, id }) => {
               <Username>@{user.username}</Username>
             </NameWrap>
             <ContentWrap>
-              <LastContent>{lastContent}</LastContent>
+              <LastContent>.</LastContent>
             </ContentWrap>
           </UserInfoLeft>
         </UserInfo>

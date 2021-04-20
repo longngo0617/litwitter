@@ -4,7 +4,6 @@ import styled from "styled-components";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { SnippetUser } from "./SnippetUser";
 import {
-  ChatDocument,
   useChatQuery,
   useSendMessageMutation,
 } from "../../../generated/graphql";
@@ -29,27 +28,27 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
     variables: { roomId: id },
   });
 
+  const showMessages = () => {
+    if (data) {
+      const arr = Object.assign([], data.getChat?.content);
+      return arr.map((message: any) => (
+        <Message
+          key={message.id}
+          u={message.username}
+          message={message.content}
+          time={message.createdAt}
+        />
+      ));
+    }
+  };
+
   useEffect(() => {
     ScrollToBottom();
-  }, [data?.getChat?.content]);
+  }, [data?.getChat?.content,id]);
 
   if (!data && loading) {
     return <Loading />;
   }
-
-  const showMessages = () => {
-    if (data) {
-      const arr = Object.assign([], data.getChat?.content).reverse();
-      return arr.map((message: any) => (
-          <Message
-            key={message.id}
-            u={message.username}
-            message={message.content}
-            time={message.createdAt}
-          />
-        ));
-    }
-  };
 
   const TypeUser = () => {
     if (data) {
@@ -88,6 +87,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
                 },
               });
               values.content = "";
+              ScrollToBottom();
             }}
           >
             {({ isSubmitting, handleChange, values }) => (
@@ -178,6 +178,8 @@ const EndOfMessage = styled.div`
   margin-bottom: 50px;
 `;
 const MessageWrap = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
 `;
 const InputContainer = styled.div`
   position: sticky;
