@@ -1,6 +1,7 @@
 import { Avatar, IconButton } from "@material-ui/core";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
+import moment from "moment";
 import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { PostSnippetFragment, useLikeMutation } from "../generated/graphql";
@@ -30,7 +31,11 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
           <div className="post__header">
             <div className="post__headerText">
               <h3>
-                <Link to={`/users/${props.username}`} className="link link--none" onClick={(e) => e.stopPropagation()}>
+                <Link
+                  to={`/users/${props.username}`}
+                  className="link link--none"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   {props.displayname}
                   <span className="post__headerSpecial">
                     {props.verified && (
@@ -39,6 +44,7 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
                     @{props.username}
                   </span>
                 </Link>
+                <time className="post__time">{moment(props.createdAt).format('l')}</time>
               </h3>
 
               <IconButton

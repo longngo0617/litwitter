@@ -50,7 +50,7 @@ export const FollowPopup: React.FC<FollowPopupProps> = ({ title }) => {
                   <div className="item">
                     <div className="item-left">
                       <div className="avatar">
-                        <Avatar src={p.avatar ? p.avatar : ""} />
+                        <Avatar src={p.avatar || ""} />
                       </div>
                     </div>
                     <div className="item-right">

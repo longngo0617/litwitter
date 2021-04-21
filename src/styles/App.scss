@@ -108,9 +108,10 @@ html {
   padding: 0 1em !important;
   font-weight: 700 !important;
 }
-.btn-add,.btn-close {
+.btn-add,
+.btn-close {
   .MuiIconButton-root {
-    color:rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
     opacity: 0.75;
   }
 }
@@ -119,8 +120,9 @@ html {
 }
 
 .MuiAutocomplete-popper {
-  left:-10px !important;
+  left: -10px !important;
   width: 350px !important;
   min-height: 100px !important;
   max-height: calc(80vh - 53px) !important;
 }
+

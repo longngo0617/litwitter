@@ -12,6 +12,7 @@ const Feed = () => {
       cursor: "",
     },
     notifyOnNetworkStatusChange: true,
+    pollInterval: 1000,
   });
 
   if (!loading && !data) {

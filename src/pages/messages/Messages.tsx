@@ -41,7 +41,9 @@ export const Messages: React.FC<MessagesProps> = () => {
               <SearchInput placeholder="Tìm kiếm mọi người hoặc nhóm" />
             </Search>
             {!data && loading ? (
-              <Loading />
+              <WrapLoading>
+                <Loading blue />
+              </WrapLoading>
             ) : !data?.getRoomChat.length ? (
               <Empty>
                 <div className="empty">
@@ -236,4 +238,11 @@ const ButtonLink = styled.div`
   margin-left: auto;
   margin-right: auto;
   width: max-content;
+`;
+
+const WrapLoading = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height:80vh;
 `;

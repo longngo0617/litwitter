@@ -7,9 +7,10 @@ import ReactDOM from "react-dom";
 import { TextFormField } from "../../../components/TextFormField";
 import {
   useEditProfileMutation,
-  UserDocument
+  UserDocument,
 } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
+import styled from "styled-components";
 interface PopupEditProps {}
 
 export const PopupEdit: React.FC<PopupEditProps> = () => {
@@ -88,7 +89,7 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
             setSelectedImage("");
           }}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, values }) => (
             <Form>
               <div className="follow-modal">
                 <div className="follow-modal-top">
@@ -105,14 +106,25 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
                     <h2 className="title">Edit Profile</h2>
                   </div>
                   <div className="follow-modal-top-icon">
-                    <Button
-                      aria-label="close-icon"
-                      color="primary"
-                      className="btn-save"
-                      type="submit"
-                    >
-                      Save
-                    </Button>
+                    {!values.fullName ? (
+                      <ButtonDisable
+                        aria-label="save"
+                        color="primary"
+                        className="btn-save"
+                      >
+                        Save{" "}
+                      </ButtonDisable>
+                    ) : (
+                      <Button
+                        aria-label="save"
+                        color="primary"
+                        className="btn-save"
+                        type="submit"
+                        disabled={!values.fullName}
+                      >
+                        Save
+                      </Button>
+                    )}
                   </div>
                 </div>
                 <div className="follow-modal-bottom">
@@ -237,17 +249,20 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
                           <Field
                             label="fullName"
                             name="fullName"
+                            value={values.fullName}
                             component={TextFormField}
                           />
                           <Field
                             label="Bio"
                             name="story"
+                            value={values.story}
                             component={TextFormField}
                           />
                           <Field
                             label="Date Of Birth"
                             name="dateOfBirth"
                             type="date"
+                            value={values.dateOfBirth}
                             component={TextFormField}
                           />
                         </div>
@@ -264,3 +279,7 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
     document.getElementById("react-root") as HTMLElement
   );
 };
+
+const ButtonDisable = styled(Button)`
+  opacity: 0.7;
+`;

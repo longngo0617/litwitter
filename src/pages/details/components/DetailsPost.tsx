@@ -10,7 +10,7 @@ import { useLikeMutation, usePostQuery } from "../../../generated/graphql";
 import { formatDate } from "../../../utils/toErrorMap";
 import { UserContext } from "../../../utils/useAuth";
 import { Comment } from "./Comment";
-
+import moment from 'moment';
 interface DetailsPostProps {}
 
 export const DetailsPost: React.FC<DetailsPostProps> = () => {
@@ -73,9 +73,9 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
                 </div>
                 {data?.getPost.image ? <Image image={data?.getPost.image} /> : null}
                 <div className="postSingle__date">
-                  <span>{formatDate(data?.getPost?.createdAt)}</span>
+                  <span>{moment(data?.getPost?.createdAt).fromNow()}</span>
                   <span style={{ padding: "0 4px" }}>.</span>
-                  <span>Twitter for website</span>
+                  <span>Twitter for website</span>o
                 </div>
                 {data?.getPost.commentCount || data?.getPost.likeCount ? (
                   <div className="postSingle__bar">

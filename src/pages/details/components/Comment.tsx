@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { formatDate } from "../../../utils/toErrorMap";
 import { UserContext } from "../../../utils/useAuth";
-
+import moment from 'moment';
 interface CommentProps {
   id?:string;
   username?: string;
@@ -40,7 +40,7 @@ export const Comment: React.FC<CommentProps> = ({
                 <div className="username">@{username}</div>
               </Link>
               <span className="dot">.</span>
-              <span className="day">{formatDate(createdAt)}</span>
+              <span className="day">{moment(createdAt).fromNow()}</span>
             </div>
             <IconButton
               aria-label="button delete comment"

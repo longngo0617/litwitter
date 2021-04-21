@@ -47,7 +47,11 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
   }, [data?.getChat?.content, id]);
 
   if (!data && loading) {
-    return <Loading />;
+    return (
+      <WrapLoading>
+        <Loading blue />
+      </WrapLoading>
+    );
   }
 
   const TypeUser = () => {
@@ -216,4 +220,10 @@ const SendButton = styled(SendIcon)`
 `;
 const SendButtonDisable = styled(SendButton)`
   opacity: 0.7;
+`;
+const WrapLoading = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
 `;
