@@ -7,10 +7,8 @@ import ReactDOM from "react-dom";
 import { TextFormField } from "../../../components/TextFormField";
 import {
   useEditProfileMutation,
-  UserDocument,
-  UserQuery,
+  UserDocument
 } from "../../../generated/graphql";
-import { formatDate2 } from "../../../utils/toErrorMap";
 import { UserContext } from "../../../utils/useAuth";
 interface PopupEditProps {}
 

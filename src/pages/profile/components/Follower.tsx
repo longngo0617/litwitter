@@ -1,7 +1,7 @@
 import { Avatar, Button } from "@material-ui/core";
 import React, { useContext } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
-import { Follow, useFollowUserMutation } from "../../../generated/graphql";
+import { Follow, PostsDocument, useFollowUserMutation } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
 
 export const Follower: React.FC<any> = (props) => {
@@ -89,6 +89,9 @@ export const Follower: React.FC<any> = (props) => {
                                   variables: {
                                     username: f.username,
                                   },
+                                  refetchQueries :[
+                                    { query: PostsDocument},
+                                  ]
                                 });
                                 await addUser(data?.data?.following);
                               }}

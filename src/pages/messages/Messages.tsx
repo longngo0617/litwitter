@@ -14,8 +14,10 @@ import { Loading } from "../../components/Loading";
 interface MessagesProps {}
 
 export const Messages: React.FC<MessagesProps> = () => {
-  const { user } = useContext(UserContext);
-  const { data, loading } = useChatsQuery({});
+  const { user, openMessage } = useContext(UserContext);
+  const { data, loading }: any = useChatsQuery({
+    pollInterval: 500,
+  });
   const params: any = useParams();
 
   return (
@@ -28,7 +30,7 @@ export const Messages: React.FC<MessagesProps> = () => {
               <FullHeight>
                 <Title>Messages</Title>
                 <ButtonWrap>
-                  <ButtonAdd />
+                  <ButtonAdd onClick={openMessage} />
                 </ButtonWrap>
               </FullHeight>
             </HeadWrap>
@@ -40,6 +42,31 @@ export const Messages: React.FC<MessagesProps> = () => {
             </Search>
             {!data && loading ? (
               <Loading />
+            ) : !data?.getRoomChat.length ? (
+              <Empty>
+                <div className="empty">
+                  <div className="empty--text">
+                    <span className="title">Gửi tin nhắn , nhận tin nhắn</span>
+                  </div>
+                  <div className="empty--text empty--info">
+                    <span className="info">
+                      Tin nhắn trực tiếp là các cuộc trò chuyện riêng tư giữa
+                      bạn và những người khác trên Li Twitter. Chia sẻ Tweet,
+                      phương tiện và hơn thế nữa!
+                    </span>
+                  </div>
+                  <ButtonLink>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      className="empty--link"
+                      onClick={openMessage}
+                    >
+                      Bắt đầu 1 cuộc trò chuyện
+                    </Button>
+                  </ButtonLink>
+                </div>
+              </Empty>
             ) : (
               <Chats>
                 {data?.getRoomChat
@@ -79,10 +106,10 @@ export const Messages: React.FC<MessagesProps> = () => {
                 </div>
                 <ButtonLink>
                   <Button
-                    href="/messages/compose"
                     color="primary"
                     variant="contained"
                     className="empty--link"
+                    onClick={openMessage}
                   >
                     Tin nhắn mới
                   </Button>

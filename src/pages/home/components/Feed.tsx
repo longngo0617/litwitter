@@ -33,12 +33,7 @@ const Feed = () => {
         <Box display="flex" justifyContent="center" marginTop="20px">
           <Loading blue />
         </Box>
-      ) : (
-        data!.getPosts?.posts.map((p, index) =>
-          !p ? null : <Post key={index} {...p} />
-        )
-      )}
-      {!data?.getPosts.posts.length && (
+      ) : !data?.getPosts.posts.length ? (
         <Empty>
           <div className="empty">
             <div className="empty--text">
@@ -63,7 +58,12 @@ const Feed = () => {
             </ButtonLink>
           </div>
         </Empty>
+      ) : (
+        data!.getPosts?.posts.map((p, index) =>
+          !p ? null : <Post key={index} {...p} />
+        )
       )}
+
       {data && data.getPosts?.hasMore ? (
         <Box display="flex" p={1} m={1} justifyContent="center">
           <Button

@@ -5,7 +5,7 @@ import DateRangeIcon from "@material-ui/icons/DateRange";
 import { Link, useRouteMatch } from "react-router-dom";
 import { UserContext } from "../../../utils/useAuth";
 import { Follow, useFollowUserMutation, UserQuery } from "../../../generated/graphql";
-
+import moment from 'moment';
 export const MainPage: React.FC<UserQuery> = (props) => {
   const { url } = useRouteMatch();
   const { openEdit, user,addUser } = useContext(UserContext);
@@ -131,7 +131,7 @@ export const MainPage: React.FC<UserQuery> = (props) => {
               <div className="date-join">
                 <span>
                   <DateRangeIcon />
-                  Tham gia {formatDate(props.getUser?.createdAt)}
+                  Tham gia {moment(props.getUser?.createdAt).format('LL')}
                 </span>
               </div>
             </div>

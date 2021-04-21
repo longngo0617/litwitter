@@ -114,6 +114,24 @@ export type UserResponse = {
   user: User;
 };
 
+export type Product = {
+  __typename?: 'Product';
+  id: Scalars['ID'];
+  price: Scalars['String'];
+  body: Scalars['String'];
+  address: Scalars['String'];
+  createdAt: Scalars['String'];
+  image: Scalars['String'];
+  category: Scalars['String'];
+  seller: User;
+};
+
+export type ProductResponse = {
+  __typename?: 'ProductResponse';
+  error?: Maybe<Array<FieldError>>;
+  product?: Maybe<Product>;
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
@@ -147,7 +165,7 @@ export type Notification = {
   createdAt: Scalars['String'];
   displayname: Scalars['String'];
   username: Scalars['String'];
-  avatar: Scalars['String'];
+  avatar?: Maybe<Scalars['String']>;
   whose: Scalars['String'];
   watched: Scalars['Boolean'];
 };
@@ -182,6 +200,7 @@ export type Query = {
   getGroup?: Maybe<GroupChat>;
   getGroupChat?: Maybe<Array<Maybe<GroupChat>>>;
   getNotification?: Maybe<Notifications>;
+  getProducts?: Maybe<Array<Maybe<Product>>>;
 };
 
 
@@ -234,6 +253,7 @@ export type Mutation = {
   createMember: GroupChat;
   following: User;
   editProfile: User;
+  createProduct: ProductResponse;
 };
 
 
@@ -325,6 +345,15 @@ export type MutationEditProfileArgs = {
   fullName: Scalars['String'];
   story?: Maybe<Scalars['String']>;
   coverImage?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCreateProductArgs = {
+  image: Scalars['String'];
+  price: Scalars['String'];
+  address: Scalars['String'];
+  body: Scalars['String'];
+  category: Scalars['String'];
 };
 
 export type Subscription = {
@@ -442,6 +471,19 @@ export type CreatePostMutation = (
   & { createPost: (
     { __typename?: 'Post' }
     & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'image' | 'likeCount' | 'commentCount'>
+  ) }
+);
+
+export type CreateRoomChatMutationVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type CreateRoomChatMutation = (
+  { __typename?: 'Mutation' }
+  & { createRoomChat: (
+    { __typename?: 'RoomChat' }
+    & RegularRoomChatFragment
   ) }
 );
 
@@ -833,6 +875,39 @@ export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const CreateRoomChatDocument = gql`
+    mutation createRoomChat($userId: String!) {
+  createRoomChat(userId: $userId) {
+    ...RegularRoomChat
+  }
+}
+    ${RegularRoomChatFragmentDoc}`;
+export type CreateRoomChatMutationFn = Apollo.MutationFunction<CreateRoomChatMutation, CreateRoomChatMutationVariables>;
+
+/**
+ * __useCreateRoomChatMutation__
+ *
+ * To run a mutation, you first call `useCreateRoomChatMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateRoomChatMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createRoomChatMutation, { data, loading, error }] = useCreateRoomChatMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useCreateRoomChatMutation(baseOptions?: Apollo.MutationHookOptions<CreateRoomChatMutation, CreateRoomChatMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateRoomChatMutation, CreateRoomChatMutationVariables>(CreateRoomChatDocument, options);
+      }
+export type CreateRoomChatMutationHookResult = ReturnType<typeof useCreateRoomChatMutation>;
+export type CreateRoomChatMutationResult = Apollo.MutationResult<CreateRoomChatMutation>;
+export type CreateRoomChatMutationOptions = Apollo.BaseMutationOptions<CreateRoomChatMutation, CreateRoomChatMutationVariables>;
 export const DeleteCommentDocument = gql`
     mutation deleteComment($id: ID!, $commentId: ID!) {
   deleteComment(postId: $id, commentId: $commentId) {

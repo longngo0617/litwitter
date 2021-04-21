@@ -8,6 +8,7 @@ const initState = {
   moreState: { xPos: "0px", yPos: "0px", showMenu: false },
   listComment: [] as any[],
   editState: false,
+  messState: false,
 };
 
 const UserContext = createContext({
@@ -22,6 +23,7 @@ const UserContext = createContext({
     showMenu: false,
     isComment: false,
   },
+  messState: false,
   listComment: [] as any[],
   openMore: (mousePos: any, item: any, isComment?: boolean) => {},
   closeMore: () => {},
@@ -34,6 +36,8 @@ const UserContext = createContext({
   addUser: (arrayUser: any) => {},
   openEdit: () => {},
   closeEdit: () => {},
+  openMessage: () => {},
+  closeMessage: () => {},
   cacheProfile: (data: any) => {},
 });
 
@@ -126,6 +130,16 @@ const userReducer = (state: any, action: any) => {
           profile: action.payload,
         },
       });
+    case "OPEN_MESSAGE":
+      return {
+        ...state,
+        messState: true,
+      };
+    case "CLOSE_MESSAGE":
+      return {
+        ...state,
+        messState: false,
+      };
     default:
       return state;
   }
@@ -188,6 +202,14 @@ const UserProvider = (props: any) => {
     dispatch({ type: "CLOSE_LIST_COMMENTS" });
   }
 
+  function openMessage() {
+    dispatch({ type: "OPEN_MESSAGE" });
+  }
+
+  function closeMessage() {
+    dispatch({ type: "CLOSE_MESSAGE" });
+  }
+
   const values = {
     user: state.user,
     commentState: state.commentState,
@@ -195,6 +217,7 @@ const UserProvider = (props: any) => {
     moreState: state.moreState,
     listComment: state.listComment,
     editState: state.editState,
+    messState: state.messState,
     login,
     logout,
     openComment,
@@ -207,6 +230,8 @@ const UserProvider = (props: any) => {
     openEdit,
     closeEdit,
     cacheProfile,
+    openMessage,
+    closeMessage,
   };
   return <UserContext.Provider value={values} {...props} />;
 };

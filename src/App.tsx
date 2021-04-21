@@ -5,6 +5,7 @@ import { PopupMore } from "./components/PopupMore";
 import { Details } from "./pages/details/Details";
 import Home from "./pages/home/Home";
 import { Login } from "./pages/login/Login";
+import { PopupMess } from "./pages/messages/components/PopupMess";
 import { Messages } from "./pages/messages/Messages";
 import { PopupEdit } from "./pages/profile/components/PopupEdit";
 import { Profile } from "./pages/profile/Profile";
@@ -32,6 +33,7 @@ const App = () => {
           <PopupMore />
           <CommentPost />
           <PopupEdit/>
+          <PopupMess/>
           <Switch>
             {routes.map((e: any) => (
               <Route key={e.path} path={e.path}>

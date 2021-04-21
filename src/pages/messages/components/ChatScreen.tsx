@@ -26,12 +26,12 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
   };
   const { data, loading } = useChatQuery({
     variables: { roomId: id },
+    pollInterval: 500,
   });
 
   const showMessages = () => {
     if (data) {
-      const arr = Object.assign([], data.getChat?.content);
-      return arr.map((message: any) => (
+      return data.getChat?.content.map((message: any) => (
         <Message
           key={message.id}
           u={message.username}
@@ -44,7 +44,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
 
   useEffect(() => {
     ScrollToBottom();
-  }, [data?.getChat?.content,id]);
+  }, [data?.getChat?.content, id]);
 
   if (!data && loading) {
     return <Loading />;
@@ -52,7 +52,13 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
 
   const TypeUser = () => {
     if (data) {
-      return data.getChat?.members.find((m) => m?.username !== user.username);
+      const member = data.getChat?.members.find(
+        (m) => m?.username !== user.username
+      );
+      if (member) {
+        return member;
+      }
+      return data.getChat?.members[0];
     }
   };
 
@@ -87,11 +93,10 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
                 },
               });
               values.content = "";
-              ScrollToBottom();
             }}
           >
-            {({ isSubmitting, handleChange, values }) => (
-              <FormSubmit>
+            {({ handleChange, values }) => (
+              <FormSubmit autoComplete="off">
                 <Input
                   onChange={handleChange}
                   value={values.content}
@@ -171,16 +176,12 @@ const Main = styled.div``;
 const MessageContainer = styled.div`
   padding: 20px 16px 0;
   overflow: hidden;
-  max-height: 100%;
-  height: 100%;
+  min-height: 80vh;
 `;
 const EndOfMessage = styled.div`
   margin-bottom: 50px;
 `;
-const MessageWrap = styled.div`
-  display: flex;
-  flex-direction: column-reverse;
-`;
+const MessageWrap = styled.div``;
 const InputContainer = styled.div`
   position: sticky;
   bottom: 0;
