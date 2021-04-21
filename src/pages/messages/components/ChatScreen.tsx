@@ -12,26 +12,28 @@ import { Message } from "./Message";
 import { UserContext } from "../../../utils/useAuth";
 import { Formik, Form } from "formik";
 import SendIcon from "@material-ui/icons/Send";
-
+import { useHistory } from "react-router-dom";
 interface ChatScreenProps {
   id: string;
+  url:string;
 }
 
-export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
+export const ChatScreen: React.FC<ChatScreenProps> = ({ id,url }) => {
   const endOfMessageRef: any = useRef<any>(null);
   const { user } = useContext(UserContext);
   const [sendMessage] = useSendMessageMutation();
   const ScrollToBottom = () => {
     endOfMessageRef.current?.scrollIntoView();
   };
-  const { data, loading } = useChatQuery({
+  const { data, loading }: any = useChatQuery({
     variables: { roomId: id },
     pollInterval: 500,
   });
+  const router = useHistory();
 
   const showMessages = () => {
     if (data) {
-      return data.getChat?.content.map((message: any) => (
+      return data.getChat?.content.map((message: any, index: number) => (
         <Message
           key={message.id}
           u={message.username}
@@ -57,7 +59,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
   const TypeUser = () => {
     if (data) {
       const member = data.getChat?.members.find(
-        (m) => m?.username !== user.username
+        (m: any) => m?.username !== user.username
       );
       if (member) {
         return member;
@@ -77,7 +79,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id }) => {
           </UserInfo>
         </HeaderInfomation>
         <HeaderIcon>
-          <InfoIcon />
+          <IconButton color="primary" aria-label="info user" onClick={() => router.push(`${url}/info`)}>
+            <InfoIcon />
+          </IconButton>
         </HeaderIcon>
       </Header>
       <Main>
@@ -191,7 +195,7 @@ const InputContainer = styled.div`
   bottom: 0;
   border-top: 1px solid rgb(235, 238, 240);
   padding: 4px;
-  width: 100%;
+  max-width: 100%;
   display: flex;
   align-items: center;
   background-color: #fff;

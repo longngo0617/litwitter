@@ -8,8 +8,10 @@ import { Chat } from "./components/Chat";
 import { Button } from "@material-ui/core";
 import { useChatsQuery } from "../../generated/graphql";
 import { ChatScreen } from "./components/ChatScreen";
-import { useParams } from "react-router";
+import { Route, useParams, useRouteMatch } from "react-router";
 import { Loading } from "../../components/Loading";
+import { Switch } from "react-router-dom";
+import { InfoMessage } from "./components/InfoMessage";
 
 interface MessagesProps {}
 
@@ -19,7 +21,7 @@ export const Messages: React.FC<MessagesProps> = () => {
     pollInterval: 500,
   });
   const params: any = useParams();
-
+  const { url }: any = useRouteMatch();
   return (
     <div className="wrapper">
       <Sidebar {...user} />
@@ -78,14 +80,24 @@ export const Messages: React.FC<MessagesProps> = () => {
                           key={index}
                           id={r.id}
                           user={r.members[0]}
-                          // lastContent={r.content[r.content.length - 1].content}
+                          lastContent={
+                            r?.content[r?.content.length - 1]?.content
+                          }
+                          createdAt={
+                            r.content[r?.content.length - 1]?.createdAt
+                          }
                         />
                       ) : (
                         <Chat
                           key={index}
                           id={r.id}
                           user={r.members[1]}
-                          // lastContent={r.content[r.content.length - 1].content}
+                          lastContent={
+                            r?.content[r?.content.length - 1]?.content
+                          }
+                          createdAt={
+                            r.content[r?.content.length - 1]?.createdAt
+                          }
                         />
                       )
                     )
@@ -119,7 +131,14 @@ export const Messages: React.FC<MessagesProps> = () => {
               </div>
             </Empty>
           ) : (
-            <ChatScreen id={params?.id} />
+            <Switch>
+              <Route exact path={url}>
+                <ChatScreen id={params?.id} url={url} />
+              </Route>
+              <Route exact path={`${url}/info`}>
+                <InfoMessage id={params?.id} url={url} />
+              </Route>
+            </Switch>
           )}
         </MessagesContainer>
       </Main>
@@ -244,5 +263,5 @@ const WrapLoading = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height:80vh;
+  height: 80vh;
 `;

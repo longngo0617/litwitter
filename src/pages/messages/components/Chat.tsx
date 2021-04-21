@@ -2,8 +2,9 @@ import { Avatar } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
+import moment from "moment";
 
-export const Chat: React.FC<any> = ({ user, id }) => {
+export const Chat: React.FC<any> = ({ user, id, lastContent, createdAt }) => {
   const router = useHistory();
   return (
     <Container onClick={() => router.replace(`/messages/${id}`)}>
@@ -14,9 +15,12 @@ export const Chat: React.FC<any> = ({ user, id }) => {
             <NameWrap>
               <Name>{user.displayname}</Name>
               <Username>@{user.username}</Username>
+              <Time>
+                <Username>{createdAt ? moment(createdAt).fromNow() : null}</Username>
+              </Time>
             </NameWrap>
             <ContentWrap>
-              <LastContent>.</LastContent>
+              <LastContent>{lastContent}</LastContent>
             </ContentWrap>
           </UserInfoLeft>
         </UserInfo>
@@ -56,10 +60,14 @@ const UserInfo = styled.div`
 `;
 
 const UserInfoLeft = styled.div`
-  display: grid;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 `;
 
-const NameWrap = styled.div``;
+const NameWrap = styled.div`
+  display: flex;
+`;
 const Name = styled.span`
   white-space: nowrap;
   font-size: 15px;
@@ -70,10 +78,10 @@ const Name = styled.span`
   overflow-wrap: break-word;
 `;
 const Username = styled.span`
+  flex: 1;
   color: rgb(91, 112, 131);
   white-space: nowrap;
   font-size: 15px;
-  font-weight: 700;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
   line-height: 20px;
@@ -83,7 +91,7 @@ const Username = styled.span`
 const ContentWrap = styled.div`
   max-height: 40px;
   overflow: hidden;
-  display:inherit;
+  display: inherit;
 `;
 const LastContent = styled.span`
   font-weight: 400;
@@ -98,3 +106,4 @@ const LastContent = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
+const Time = styled.div``;
