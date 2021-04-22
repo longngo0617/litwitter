@@ -7,26 +7,15 @@ import styled from "styled-components";
 import { Loading } from "../../../components/Loading";
 import {
   Follow,
-  PostsDocument,
+  useFollowUserMutation,
   useUsersQuery,
 } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
 
 const Widgets = () => {
   const { data, loading }: any = useUsersQuery();
-  const arrRandom: any = [];
-  const { user, followUser, addUser }: any = useContext(UserContext);
-
-  if (data) {
-    for (let i = 0; i < 3; i++) {
-      const u = data.getUsers[Math.floor(Math.random() * data.getUsers.length)];
-      if (u.username !== user.username) {
-        arrRandom.push(u);
-      } else {
-        i--;
-      }
-    }
-  }
+  const { user, addUser }: any = useContext(UserContext);
+  const [followUser] = useFollowUserMutation();
 
   return (
     <div className="widgets">
@@ -89,9 +78,10 @@ const Widgets = () => {
               <Head>Who to follow</Head>
             </Header>
             <Main>
-              {arrRandom.map((f: any) => (
-                <div key={f.id} className="follow-modal-bottom-itemWrap">
-                  <Link to={`/users/${f.username}`} className="link link--none">
+              {data.getUsers
+                .filter((f: any, index: number) => index < 3)
+                .map((f: any) => (
+                  <div key={f.id} className="follow-modal-bottom-itemWrap">
                     <div className="follow-modal-bottom-item">
                       <div className="item">
                         <div className="item-left">
@@ -102,7 +92,7 @@ const Widgets = () => {
                         <div className="item-right">
                           <div className="item-right-top">
                             <div className="item-right-top-text">
-                              <Link to="">
+                              <Link to={`/users/${f.username}`}>
                                 <div className="name-wrap">
                                   <div className="name">
                                     <span>{f.displayname}</span>
@@ -132,14 +122,12 @@ const Widgets = () => {
                                   <Button
                                     variant="contained"
                                     className="btn-follow btn-following"
-                                    onClick={async () => {
+                                    onClick={async (e) => {
+                                      e.stopPropagation();
                                       const data = await followUser({
                                         variables: {
                                           username: f.username,
                                         },
-                                        refetchQueries: [
-                                          { query: PostsDocument },
-                                        ],
                                       });
                                       await addUser(data?.data?.following);
                                     }}
@@ -151,7 +139,8 @@ const Widgets = () => {
                                   <Button
                                     variant="outlined"
                                     className="btn-follow"
-                                    onClick={async () => {
+                                    onClick={async (e) => {
+                                      e.stopPropagation();
                                       const data = await followUser({
                                         variables: {
                                           username: f.username,
@@ -172,9 +161,8 @@ const Widgets = () => {
                         </div>
                       </div>
                     </div>
-                  </Link>
-                </div>
-              ))}
+                  </div>
+                ))}
             </Main>
             <Footer to="/connect">
               <TextLink>Show more</TextLink>

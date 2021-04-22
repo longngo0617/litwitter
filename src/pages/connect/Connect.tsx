@@ -55,7 +55,7 @@ export const Connect: React.FC<ConnectProps> = () => {
                             <div className="item-right">
                               <div className="item-right-top">
                                 <div className="item-right-top-text">
-                                  <Link to="">
+                                  <Link to={`/users/${f.username}`}>
                                     <div className="name-wrap">
                                       <div className="name">
                                         <span>{f.displayname}</span>
@@ -86,7 +86,8 @@ export const Connect: React.FC<ConnectProps> = () => {
                                       <Button
                                         variant="contained"
                                         className="btn-follow btn-following"
-                                        onClick={async () => {
+                                        onClick={async (e) => {
+                                          e.stopPropagation();
                                           const data = await followUser({
                                             variables: {
                                               username: f.username,
@@ -109,7 +110,8 @@ export const Connect: React.FC<ConnectProps> = () => {
                                       <Button
                                         variant="outlined"
                                         className="btn-follow"
-                                        onClick={async () => {
+                                        onClick={async (e) => {
+                                          e.stopPropagation();
                                           const data = await followUser({
                                             variables: {
                                               username: f.username,

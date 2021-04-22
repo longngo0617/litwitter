@@ -7,7 +7,8 @@ import { Loading } from "../../../components/Loading";
 import {
   Follow,
   PostsDocument,
-  useChatQuery, useFollowUserMutation
+  useChatQuery,
+  useFollowUserMutation,
 } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
 import { PopupLeave } from "./PopupLeave";
@@ -96,7 +97,8 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                             <Button
                               variant="contained"
                               className="btn-follow btn-following"
-                              onClick={async () => {
+                              onClick={async (e) => {
+                                e.stopPropagation();
                                 const data = await followUser({
                                   variables: {
                                     username: f.username,
@@ -113,7 +115,8 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                             <Button
                               variant="outlined"
                               className="btn-follow"
-                              onClick={async () => {
+                              onClick={async (e) => {
+                                e.stopPropagation();
                                 const data = await followUser({
                                   variables: {
                                     username: f.username,
