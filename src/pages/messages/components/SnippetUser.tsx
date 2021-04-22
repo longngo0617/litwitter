@@ -1,16 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 import DateRangeIcon from "@material-ui/icons/DateRange";
-import { formatDate } from "../../../utils/toErrorMap";
+import moment from 'moment';
+import { useHistory } from "react-router-dom";
 
 interface SnippetProps {
-  user:any
+  user: any;
 }
 
-export const SnippetUser: React.FC<SnippetProps> = ({user}) => {
-
+export const SnippetUser: React.FC<SnippetProps> = ({ user }) => {
+  const router = useHistory();
   return (
-    <Container>
+    <Container onClick={() => router.push(`/users/${user.username}`)}>
       <Wrap>
         <Name>{user.displayname}</Name>
         <Username>@{user.username}</Username>
@@ -28,7 +29,7 @@ export const SnippetUser: React.FC<SnippetProps> = ({user}) => {
       <Wrap>
         <DateWrap>
           <IconDate />
-          Tham gia {formatDate(user.createdAt)}
+          Tham gia {moment(user.createdAt).format('l')}
         </DateWrap>
       </Wrap>
     </Container>
@@ -57,7 +58,7 @@ const Wrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom:5px;
+  margin-bottom: 5px;
 `;
 const DateWrap = styled.div`
   color: rgb(91, 112, 131);
@@ -67,7 +68,7 @@ const DateWrap = styled.div`
   line-height: 20px;
   overflow-wrap: break-word;
   text-align: center;
-  margin-right:12px;
+  margin-right: 12px;
 `;
 const Name = styled.h2`
   white-space: nowrap;

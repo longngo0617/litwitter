@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { CommentPost } from "./components/CommentPost";
 import { PopupMore } from "./components/PopupMore";
+import { Connect } from "./pages/connect/Connect";
 import { Details } from "./pages/details/Details";
 import Home from "./pages/home/Home";
 import { Login } from "./pages/login/Login";
@@ -21,6 +22,7 @@ const App = () => {
     { path: "/login", name: "Login", Component: Login },
     { path: "/logout", name: "Logout", Component: Login },
     { path: "/home", name: "Home", Component: Home },
+    { path: "/connect", name: "Connect Users", Component: Connect },
     { path: "/messages/:id", name: "Messages", Component: Messages },
     { path: "/messages", name: "Messages", Component: Messages },
     { path: "/", name: "Home", Component: Home },

@@ -128,6 +128,7 @@
 }
 .widgets {
   flex: 0.3;
+  padding: 0 16px;
   &__wrap {
     display: flex;
     align-items: center;
@@ -157,7 +158,7 @@
       .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] {
       padding-right: 0;
     }
-    .MuiOutlinedInput-notchedOutline{
+    .MuiOutlinedInput-notchedOutline {
       border: none;
     }
   }
@@ -167,7 +168,7 @@
     justify-content: center;
     flex-grow: 0;
     box-sizing: border-box;
-    .MuiSvgIcon-root{
+    .MuiSvgIcon-root {
       padding-left: 12px;
       min-width: 39px;
     }

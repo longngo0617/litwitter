@@ -49,7 +49,7 @@ const Feed = () => {
             </div>
             <ButtonLink>
               <Button
-                href="/home"
+                href="/connect"
                 color="primary"
                 variant="contained"
                 className="empty--link"

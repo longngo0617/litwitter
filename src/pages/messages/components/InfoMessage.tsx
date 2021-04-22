@@ -1,16 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import styled from "styled-components";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { Link, useHistory } from "react-router-dom";
 import { Avatar, Button, IconButton } from "@material-ui/core";
-import { UserContext } from "../../../utils/useAuth";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import styled from "styled-components";
+import { Loading } from "../../../components/Loading";
 import {
-  useFollowUserMutation,
   Follow,
   PostsDocument,
-  useChatQuery,
+  useChatQuery, useFollowUserMutation
 } from "../../../generated/graphql";
-import { Loading } from "../../../components/Loading";
+import { UserContext } from "../../../utils/useAuth";
 import { PopupLeave } from "./PopupLeave";
 interface InfoMessageProps {
   id: string;

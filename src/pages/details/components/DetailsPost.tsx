@@ -7,7 +7,6 @@ import { Image } from "../../../components/Image";
 import { InteractiveBar } from "../../../components/InteractiveBar";
 import { Loading } from "../../../components/Loading";
 import { useLikeMutation, usePostQuery } from "../../../generated/graphql";
-import { formatDate } from "../../../utils/toErrorMap";
 import { UserContext } from "../../../utils/useAuth";
 import { Comment } from "./Comment";
 import moment from 'moment';
