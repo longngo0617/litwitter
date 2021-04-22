@@ -1,16 +1,30 @@
 import React, { useContext } from "react";
-import { Button } from "@material-ui/core";
-import { formatDate } from "../../../utils/toErrorMap";
+import { Box, Button } from "@material-ui/core";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import { Link, useRouteMatch } from "react-router-dom";
 import { UserContext } from "../../../utils/useAuth";
-import { Follow, useFollowUserMutation, UserQuery } from "../../../generated/graphql";
-import moment from 'moment';
+import {
+  Follow,
+  useFollowUserMutation,
+  useMyPostsQuery,
+  UserQuery,
+} from "../../../generated/graphql";
+import moment from "moment";
+import { Loading } from "../../../components/Loading";
+import { Post } from "../../../components/Post";
 export const MainPage: React.FC<UserQuery> = (props) => {
+  const { openEdit, user, addUser } = useContext(UserContext);
+  const { data, loading, fetchMore, variables } = useMyPostsQuery({
+    variables: {
+      limit: 10,
+      cursor: "",
+      username: user.username,
+    },
+    notifyOnNetworkStatusChange: true,
+    pollInterval: 1000,
+  });
   const { url } = useRouteMatch();
-  const { openEdit, user,addUser } = useContext(UserContext);
   const [followUser] = useFollowUserMutation();
-
 
   return (
     <div className="profile__wrapper">
@@ -131,7 +145,7 @@ export const MainPage: React.FC<UserQuery> = (props) => {
               <div className="date-join">
                 <span>
                   <DateRangeIcon />
-                  Tham gia {moment(props.getUser?.createdAt).format('LL')}
+                  Tham gia {moment(props.getUser?.createdAt).format("LL")}
                 </span>
               </div>
             </div>
@@ -185,7 +199,40 @@ export const MainPage: React.FC<UserQuery> = (props) => {
             </Link>
           </div>
         </nav>
-        <div className="profile__bottom"></div>
+        <div className="profile__bottom">
+          {!data && loading ? (
+            <Box display="flex" justifyContent="center" marginTop="20px">
+              <Loading blue />
+            </Box>
+          ) : (
+            data!.getMyPosts?.posts.map((p: any, index: number) =>
+              !p ? null : <Post key={index} {...p} />
+            )
+          )}
+
+          {data && data.getMyPosts?.hasMore ? (
+            <Box display="flex" p={1} m={1} justifyContent="center">
+              <Button
+                size="large"
+                style={{ minWidth: "101px" }}
+                className="sidebar__tweet"
+                onClick={() => {
+                  fetchMore({
+                    variables: {
+                      limit: variables?.limit,
+                      cursor:
+                        data?.getMyPosts?.posts[
+                          data.getMyPosts?.posts.length - 1
+                        ]?.createdAt,
+                    },
+                  });
+                }}
+              >
+                {loading ? <Loading /> : "Load more"}
+              </Button>
+            </Box>
+          ) : null}
+        </div>
       </div>
     </div>
   );

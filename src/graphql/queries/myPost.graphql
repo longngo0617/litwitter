@@ -1,0 +1,8 @@
+query myPosts($username: String!, $cursor: String, $limit: Int!) {
+  getMyPosts(username: $username, cursor: $cursor, limit: $limit) {
+    hasMore
+    posts {
+      ...PostSnippet
+    }
+  }
+}

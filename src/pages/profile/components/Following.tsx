@@ -17,7 +17,10 @@ export const Following: React.FC<any> = (props) => {
     <div className="profile__wrapper">
       <nav className="profile__nav">
         <div className="profile__nav--item">
-          <Link to={`/users/${props?.props?.username}/followers`} className="link ">
+          <Link
+            to={`/users/${props?.props?.username}/followers`}
+            className="link "
+          >
             <div className="link--title">
               <span>Followers</span>
             </div>
@@ -48,87 +51,83 @@ export const Following: React.FC<any> = (props) => {
         ) : (
           props?.props?.following.map((f: Follow, index: number) => (
             <div key={index} className="follow-modal-bottom-itemWrap">
-              <Link to={`/users/${f.username}`} className="link link--none">
-                <div className="follow-modal-bottom-item">
-                  <div className="item">
-                    <div className="item-left">
-                      <div className="avatar">
-                        <Avatar src={f.avatar || ""} />
-                      </div>
+              <div className="follow-modal-bottom-item">
+                <div className="item">
+                  <div className="item-left">
+                    <div className="avatar">
+                      <Avatar src={f.avatar || ""} />
                     </div>
-                    <div className="item-right">
-                      <div className="item-right-top">
-                        <div className="item-right-top-text">
-                          <Link to="">
-                            <div className="name-wrap">
-                              <div className="name">
-                                <span>{f.displayname}</span>
-                              </div>
-                              <div className="username">
-                                <span>@{f.username}</span>
-                                {user.follower.find(
-                                  (ele: Follow) => ele.username === f.username
-                                ) ? (
-                                  <span className="follow--me">
-                                    Theo dõi bạn
-                                  </span>
-                                ) : null}
-                              </div>
+                  </div>
+                  <div className="item-right">
+                    <div className="item-right-top">
+                      <div className="item-right-top-text">
+                        <Link to="">
+                          <div className="name-wrap">
+                            <div className="name">
+                              <span>{f.displayname}</span>
                             </div>
-                          </Link>
-                        </div>
-                        {user.username === f.username ? null : (
-                          <div
-                            className="item-right-top-button"
-                            style={{ minWidth: "102px" }}
-                          >
-                            {user.following.find(
-                              (ele: Follow) => ele.username === f.username
-                            ) ? (
-                              <Button
-                                variant="contained"
-                                className="btn-follow btn-following"
-                                onClick={async (e) => {
-                                  e.stopPropagation();
-                                  const data = await followUser({
-                                    variables: {
-                                      username: f.username,
-                                    },
-                                    refetchQueries: [{ query: PostsDocument }],
-                                  });
-                                  await addUser(data?.data?.following);
-                                }}
-                              >
-                                <span className="following">Following</span>
-                                <span className="unfollow">Unfollow</span>
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="outlined"
-                                className="btn-follow"
-                                onClick={async (e) => {
-                                  e.stopPropagation();
-                                  const data = await followUser({
-                                    variables: {
-                                      username: f.username,
-                                    },
-                                  });
-                                  await addUser(data?.data?.following);
-                                }}
-                              >
-                                Follow
-                              </Button>
-                            )}
+                            <div className="username">
+                              <span>@{f.username}</span>
+                              {user.follower.find(
+                                (ele: Follow) => ele.username === f.username
+                              ) ? (
+                                <span className="follow--me">Theo dõi bạn</span>
+                              ) : null}
+                            </div>
                           </div>
-                        )}
+                        </Link>
                       </div>
-                      <div className="item-right-bottom">
-                        <span className="body">{f.story}</span>
-                      </div>
+                      {user.username === f.username ? null : (
+                        <div
+                          className="item-right-top-button"
+                          style={{ minWidth: "102px" }}
+                        >
+                          {user.following.find(
+                            (ele: Follow) => ele.username === f.username
+                          ) ? (
+                            <Button
+                              variant="contained"
+                              className="btn-follow btn-following"
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                const data = await followUser({
+                                  variables: {
+                                    username: f.username,
+                                  },
+                                  refetchQueries: [{ query: PostsDocument }],
+                                });
+                                await addUser(data?.data?.following);
+                              }}
+                            >
+                              <span className="following">Following</span>
+                              <span className="unfollow">Unfollow</span>
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outlined"
+                              className="btn-follow"
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                const data = await followUser({
+                                  variables: {
+                                    username: f.username,
+                                  },
+                                });
+                                await addUser(data?.data?.following);
+                              }}
+                            >
+                              Follow
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <div className="item-right-bottom">
+                      <span className="body">{f.story}</span>
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             </div>
           ))
         )}
