@@ -1,0 +1,3 @@
+mutation deleteRoomChat($id:ID!) {
+  deleteRoomChat(roomId:$id)
+}

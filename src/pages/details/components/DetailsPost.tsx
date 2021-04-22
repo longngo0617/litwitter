@@ -75,7 +75,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
                 <div className="postSingle__date">
                   <span>{moment(data?.getPost?.createdAt).fromNow()}</span>
                   <span style={{ padding: "0 4px" }}>.</span>
-                  <span>Twitter for website</span>o
+                  <span>Twitter for website</span>
                 </div>
                 {data?.getPost.commentCount || data?.getPost.likeCount ? (
                   <div className="postSingle__bar">

@@ -11,6 +11,7 @@ import {
   useChatQuery,
 } from "../../../generated/graphql";
 import { Loading } from "../../../components/Loading";
+import { PopupLeave } from "./PopupLeave";
 interface InfoMessageProps {
   id: string;
   url: string;
@@ -19,6 +20,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
   const { user, addUser } = useContext(UserContext);
   const [followUser] = useFollowUserMutation();
   const [f, setF] = useState<any>({});
+  const [openPopup, setOpenPopup] = useState<boolean>(false);
   const { data, loading }: any = useChatQuery({
     variables: { roomId: id },
   });
@@ -28,7 +30,11 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
       const member = data.getChat?.members.find(
         (m: any) => m?.username !== user.username
       );
-      setF(member);
+      if (member) {
+        setF(member);
+      } else {
+        setF(data.getChat?.members[0]);
+      }
     }
   }, [id]);
 
@@ -80,7 +86,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                           </div>
                         </Link>
                       </div>
-                      {user.username === f.username ? null : (
+                      {user.username === f?.username ? null : (
                         <div
                           className="item-right-top-button"
                           style={{ minWidth: "102px" }}
@@ -144,13 +150,14 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
               <Text>Report @{f.username}</Text>
             </Item>
           </ControlItem>
-          <ControlItemLeave>
+          <ControlItemLeave onClick={() => setOpenPopup(!openPopup)}>
             <ItemLeave>
               <Text>Rời khỏi cuộc trò chuyện</Text>
             </ItemLeave>
           </ControlItemLeave>
         </Control>
       </Main>
+      {openPopup && <PopupLeave fc={() => setOpenPopup(false)} id={id} />}
     </Container>
   );
 };

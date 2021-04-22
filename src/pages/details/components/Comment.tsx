@@ -12,7 +12,7 @@ interface CommentProps {
   displayname?: string;
   createdAt?: string;
   postOwner?: string;
-  avatar?: string;
+  avatar?: any;  
   postId?: string;
 }
 

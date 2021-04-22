@@ -51,7 +51,7 @@ export type Comment = {
   username: Scalars['String'];
   displayname: Scalars['String'];
   body: Scalars['String'];
-  avatar: Scalars['String'];
+  avatar?: Maybe<Scalars['String']>;
 };
 
 export type Like = {
@@ -60,7 +60,7 @@ export type Like = {
   createdAt: Scalars['String'];
   username: Scalars['String'];
   displayname: Scalars['String'];
-  avatar: Scalars['String'];
+  avatar?: Maybe<Scalars['String']>;
 };
 
 export type RoomChat = {
@@ -191,6 +191,7 @@ export type Query = {
   getMyPosts: PaginatedPost;
   getChats?: Maybe<Array<Maybe<RoomChat>>>;
   getChat?: Maybe<RoomChat>;
+  getChatReverse?: Maybe<RoomChat>;
   getUsers?: Maybe<Array<Maybe<User>>>;
   getUser?: Maybe<User>;
   getMyUser?: Maybe<User>;
@@ -216,12 +217,18 @@ export type QueryGetPostArgs = {
 
 
 export type QueryGetMyPostsArgs = {
+  username: Scalars['String'];
   cursor?: Maybe<Scalars['String']>;
   limit: Scalars['Int'];
 };
 
 
 export type QueryGetChatArgs = {
+  roomId?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryGetChatReverseArgs = {
   roomId?: Maybe<Scalars['ID']>;
 };
 
@@ -247,6 +254,7 @@ export type Mutation = {
   deleteComment: Post;
   likePost: Post;
   createRoomChat: RoomChat;
+  deleteRoomChat?: Maybe<Scalars['String']>;
   createContentChat: RoomChat;
   createGroupChat: GroupChat;
   createContentGroupChat: GroupChat;
@@ -308,6 +316,11 @@ export type MutationLikePostArgs = {
 
 export type MutationCreateRoomChatArgs = {
   userId: Scalars['String'];
+};
+
+
+export type MutationDeleteRoomChatArgs = {
+  roomId: Scalars['ID'];
 };
 
 
@@ -513,6 +526,16 @@ export type DeletePostMutationVariables = Exact<{
 export type DeletePostMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deletePost'>
+);
+
+export type DeleteRoomChatMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteRoomChatMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteRoomChat'>
 );
 
 export type EditProfileMutationVariables = Exact<{
@@ -980,6 +1003,37 @@ export function useDeletePostMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>;
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
+export const DeleteRoomChatDocument = gql`
+    mutation deleteRoomChat($id: ID!) {
+  deleteRoomChat(roomId: $id)
+}
+    `;
+export type DeleteRoomChatMutationFn = Apollo.MutationFunction<DeleteRoomChatMutation, DeleteRoomChatMutationVariables>;
+
+/**
+ * __useDeleteRoomChatMutation__
+ *
+ * To run a mutation, you first call `useDeleteRoomChatMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRoomChatMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRoomChatMutation, { data, loading, error }] = useDeleteRoomChatMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteRoomChatMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRoomChatMutation, DeleteRoomChatMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRoomChatMutation, DeleteRoomChatMutationVariables>(DeleteRoomChatDocument, options);
+      }
+export type DeleteRoomChatMutationHookResult = ReturnType<typeof useDeleteRoomChatMutation>;
+export type DeleteRoomChatMutationResult = Apollo.MutationResult<DeleteRoomChatMutation>;
+export type DeleteRoomChatMutationOptions = Apollo.BaseMutationOptions<DeleteRoomChatMutation, DeleteRoomChatMutationVariables>;
 export const EditProfileDocument = gql`
     mutation EditProfile($avatar: String, $dateOfBirth: String, $fullName: String!, $story: String, $imageCover: String) {
   editProfile(
