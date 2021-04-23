@@ -13,12 +13,13 @@ import { UserContext } from "../../../utils/useAuth";
 import { Formik, Form } from "formik";
 import SendIcon from "@material-ui/icons/Send";
 import { useHistory } from "react-router-dom";
+import moment from "moment";
 interface ChatScreenProps {
   id: string;
-  url:string;
+  url: string;
 }
 
-export const ChatScreen: React.FC<ChatScreenProps> = ({ id,url }) => {
+export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
   const endOfMessageRef: any = useRef<any>(null);
   const { user } = useContext(UserContext);
   const [sendMessage] = useSendMessageMutation();
@@ -38,7 +39,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id,url }) => {
           key={message.id}
           u={message.username}
           message={message.content}
-          time={message.createdAt}
+          time={message.username !== data.getChat?.content[index+1]?.username ? message.createdAt : ""}
         />
       ));
     }
@@ -79,7 +80,11 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id,url }) => {
           </UserInfo>
         </HeaderInfomation>
         <HeaderIcon>
-          <IconButton color="primary" aria-label="info user" onClick={() => router.push(`${url}/info`)}>
+          <IconButton
+            color="primary"
+            aria-label="info user"
+            onClick={() => router.push(`${url}/info`)}
+          >
             <InfoIcon />
           </IconButton>
         </HeaderIcon>

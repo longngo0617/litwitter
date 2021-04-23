@@ -15,7 +15,7 @@ export const Message: React.FC<MessageProps> = ({ u, message, time }) => {
   return (
     <Container>
       <TypeOfMessage>{message}</TypeOfMessage>
-      <TypeOfTime>{moment(time).format("LT")}</TypeOfTime>
+      <TypeOfTime>{!time ? null : moment(time).format("LT")}</TypeOfTime>
     </Container>
   );
 };
@@ -28,7 +28,7 @@ const MessageElement = styled.p`
   border-color: rgb(29, 161, 242);
   border-radius: 16px;
   position: relative;
-  margin: 10px;
+  margin: 2px;
   text-align: right;
   color: #fff;
   font-weight: 400;
