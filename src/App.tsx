@@ -6,6 +6,7 @@ import { Connect } from "./pages/connect/Connect";
 import { Details } from "./pages/details/Details";
 import Home from "./pages/home/Home";
 import { Login } from "./pages/login/Login";
+import { Market } from "./pages/market/Market";
 import { PopupMess } from "./pages/messages/components/PopupMess";
 import { Messages } from "./pages/messages/Messages";
 import { PopupEdit } from "./pages/profile/components/PopupEdit";
@@ -23,6 +24,7 @@ const App = () => {
     { path: "/logout", name: "Logout", Component: Login },
     { path: "/home", name: "Home", Component: Home },
     { path: "/connect", name: "Connect Users", Component: Connect },
+    { path: "/market", name: "Marketplace", Component: Market },
     { path: "/messages/:id", name: "Messages", Component: Messages },
     { path: "/messages", name: "Messages", Component: Messages },
     { path: "/", name: "Home", Component: Home },

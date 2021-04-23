@@ -126,3 +126,11 @@ html {
   max-height: calc(80vh - 53px) !important;
 }
 
+.activeLink {
+  background-color: rgba(45, 156, 255, 0.1);
+  border-radius: 8px;
+  .icon {
+    background-color: #1877f2;
+    color: #fff;
+  }
+}
