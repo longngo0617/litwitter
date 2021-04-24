@@ -68,11 +68,6 @@ export const Bar: React.FC<BarProps> = () => {
               IconN={BuildIcon}
             />
             <ItemOption
-              href="/market/category/home-improvements"
-              text="Dụng cụ sửa chữa nhà cửa "
-              IconN={BuildIcon}
-            />
-            <ItemOption
               href="/market/category/family"
               text="Gia Đình"
               IconN={FavoriteIcon}
@@ -109,7 +104,7 @@ export const Bar: React.FC<BarProps> = () => {
   );
 };
 const FilterBarContainer = styled.div`
-  width: 360px;
+  min-width: 360px;
   z-index: 1;
   position: relative;
   box-sizing: border-box;
@@ -125,13 +120,14 @@ const FilterBar = styled.div`
   flex-direction: column;
   box-sizing: content-box;
   top: 0;
+  box-shadow: 4px 2px 5px 0px rgba(0, 0, 0, 0.22);
 `;
 const Header = styled.div`
   padding: 12px 16px;
   position: relative;
 `;
 const Head = styled.h2`
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 800;
   line-height: 24px;
   color: rgb(15, 20, 25);
@@ -190,6 +186,7 @@ const Button = styled.div`
   height: 36px;
   padding: 0 12px;
   border-radius: 12px;
+  cursor: pointer;
 `;
 const IconAdd = styled(AddIcon)`
   color: #1877f2;

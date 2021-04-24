@@ -37,6 +37,10 @@ const Item = styled.div`
   display: flex;
   flex-shrink: 1;
   flex-grow: 1;
+  transition: 0.2s background-color;
+  &:hover {
+    background-color: #f0f2f5;
+  }
 `;
 
 const Link = styled(NavLink)`

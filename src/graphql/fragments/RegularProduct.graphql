@@ -1,0 +1,13 @@
+fragment RegularProduct on Product {
+  id
+  price
+  body
+  address
+  createdAt
+  image
+  category
+  seller{
+    ...RegularUser
+  }
+  describe
+}
