@@ -13,10 +13,11 @@ import BuildIcon from "@material-ui/icons/Build";
 import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import DeckIcon from "@material-ui/icons/Deck";
-interface BarProps {}
+interface BarProps {
+  fc: () => void;
+}
 
-export const Bar: React.FC<BarProps> = () => {
-  const [display, setDisplay] = useState(false);
+export const Bar: React.FC<BarProps> = ({ fc }) => {
   const [value, setValue] = useState("");
   return (
     <FilterBarContainer>
@@ -33,7 +34,7 @@ export const Bar: React.FC<BarProps> = () => {
               placeholder="Search people"
               onChange={(e) => setValue(e.target.value)}
               value={value}
-              onClick={() => setDisplay(!display)}
+              // onClick={fc}
             />
           </InputContainer>
           <ArrayHintWrap></ArrayHintWrap>
@@ -51,7 +52,7 @@ export const Bar: React.FC<BarProps> = () => {
               IconN={PersonIcon}
             />
             <ButtonWrap>
-              <Button>
+              <Button onClick={fc}>
                 <IconAdd />
                 <Text>Tạo bài niêm yết mới</Text>
               </Button>
