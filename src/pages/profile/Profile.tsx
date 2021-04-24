@@ -31,7 +31,7 @@ export const Profile: React.FC<ProfileProps> = () => {
   const backUrl =
     location.pathname.includes("/following") ||
     location.pathname.includes("/follower")
-      ? `/${data?.getUser?.username}`
+      ? `/users/${data?.getUser?.username}`
       : `/home`;
 
   if (!loading && !data) {
