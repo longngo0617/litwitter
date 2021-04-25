@@ -1,4 +1,10 @@
-import { Avatar, Button, IconButton, TextField } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  IconButton,
+  MenuItem,
+  TextField,
+} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { Field, Form, Formik } from "formik";
 import React, { useContext, useRef, useState } from "react";
@@ -12,25 +18,32 @@ interface PopupAddProductProps {
 }
 
 export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
-  const { user } = useContext(UserContext);
+  const { user, addresses } = useContext(UserContext);
   const inputImage: any = useRef(null);
-  const [selectedImage, setSelectedImage] = useState("");
-  const [previewImage, setPreviewImage] = useState<any>("");
-
+  const [arrImage, setArrImage] = useState<string[]>([]);
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
     previewFile(file);
-    setSelectedImage(e.target.value);
   };
 
+  const addImage = (image: string) => {
+     setArrImage([...arrImage, image]);
+  };
+
+  const removeItem = (image: string) => {
+    const filtered = arrImage.filter((x: any) => x !== image);
+    setArrImage(filtered);
+  };
   const previewFile = (file: any) => {
     if (!file) return;
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setPreviewImage(reader.result);
+      addImage(reader.result as string);
     };
   };
+
+
   return (
     <Container>
       <Overlay />
@@ -104,27 +117,39 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
                             </div>
                           </div>
                         </div>
-                        {previewImage ? (
+                        <Note>
+                          Ảnh
+                          <span style={{ margin: "0px 4px" }}>
+                            <span>&nbsp;</span>
+                            <span>.</span>
+                          </span>
+                          {`${arrImage.length} / 10`}
+                          <span
+                            style={{ fontWeight: "normal", marginLeft: "4px" }}
+                          >
+                            - Bạn có thể thêm tối đa 10 ảnh
+                          </span>
+                        </Note>
+                        {arrImage.length ? (
                           <ListImageSelected>
+                            {arrImage.map((m: string, i: number) => (
+                              <ImageSelected key={i} style={{ width: "104px" }}>
+                                <Image>
+                                  <ImageP>
+                                    <ImageM src={m} />
+                                  </ImageP>
+                                  <ImageC>
+                                    <CloseIcon
+                                    onClick={() => removeItem(m)}
+                                    />
+                                  </ImageC>
+                                </Image>
+                              </ImageSelected>
+                            ))}
+
                             <ImageSelected style={{ width: "104px" }}>
-                              <Image>
-                                <ImageP>
-                                  <ImageM src={previewImage} />
-                                </ImageP>
-                                <ImageC>
-                                  <CloseIcon
-                                    onClick={() => {
-                                      setPreviewImage("");
-                                      setSelectedImage("");
-                                    }}
-                                  />
-                                </ImageC>
-                              </Image>
-                            </ImageSelected>
-                            <ImageSelected style={{ width: "104px" }}>
-                              <Div>
+                              <Center>
                                 <Button
-                                  variant="contained"
                                   color="default"
                                   aria-label="add product photo"
                                   startIcon={<AddAPhotoIcon />}
@@ -137,11 +162,10 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
                                   multiple
                                   type="file"
                                   className="input-file"
-                                //   ref={inputImage}
-                                //   value={selectedImage}
-                                //   onChange={handleImageChange}
+                                  ref={inputImage}
+                                  onChange={handleImageChange}
                                 />
-                              </Div>
+                              </Center>
                             </ImageSelected>
                           </ListImageSelected>
                         ) : (
@@ -162,7 +186,6 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
                                 type="file"
                                 className="input-file"
                                 ref={inputImage}
-                                value={selectedImage}
                                 onChange={handleImageChange}
                               />
                             </Div>
@@ -204,11 +227,11 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
                             onChange={handleChange}
                             variant="outlined"
                           >
-                            {/* {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))} */}
+                            {addresses.map((option, index) => (
+                              <MenuItem key={index} value={option}>
+                                {option}
+                              </MenuItem>
+                            ))}
                           </TextField>
                         </WrapText>
 
@@ -321,4 +344,25 @@ const ImageC = styled.div`
   top: 8px;
   right: 8px;
   cursor: pointer;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const Center = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: #e4e6eb;
+  height: 100%;
+`;
+const Note = styled.span`
+  color: #65676b;
+  font-weight: 600;
+  line-height: 12px;
+  word-break: break-word;
+  font-size: 12px;
+  margin-top: 12px;
 `;

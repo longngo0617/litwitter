@@ -50,7 +50,7 @@ export const Collection: React.FC<CollectionProps> = () => {
           </Header>
           <ListProduct>
             {data?.getProducts.map((product: any) => (
-              <Product {...product} />
+              <Product key={product.id} {...product} />
             ))}
           </ListProduct>
         </Wrap>
