@@ -24,6 +24,7 @@ const App = () => {
     { path: "/logout", name: "Logout", Component: Login },
     { path: "/home", name: "Home", Component: Home },
     { path: "/connect", name: "Connect Users", Component: Connect },
+    { path: "/market/:slug?", name: "Marketplace", Component: Market },
     { path: "/market", name: "Marketplace", Component: Market },
     { path: "/messages/:id", name: "Messages", Component: Messages },
     { path: "/messages", name: "Messages", Component: Messages },

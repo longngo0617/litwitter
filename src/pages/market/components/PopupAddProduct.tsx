@@ -18,7 +18,7 @@ interface PopupAddProductProps {
 }
 
 export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
-  const { user, addresses } = useContext(UserContext);
+  const { user, addresses,categories } = useContext(UserContext);
   const inputImage: any = useRef(null);
   const [arrImage, setArrImage] = useState<string[]>([]);
   const handleImageChange = (e: any) => {
@@ -53,6 +53,8 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
             title: "",
             price: "",
             mota: "",
+            hangmuc:"",
+            diachi:"",
           }}
           onSubmit={async (values) => {}}
         >
@@ -206,24 +208,24 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
                           <TextField
                             style={{ width: "100%" }}
                             select
+                            name="hangmuc"
                             label="Hạng mục"
-                            //   value={currency}
                             onChange={handleChange}
                             variant="outlined"
                           >
-                            {/* {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
+                            {categories.map((option) => (
+                            <MenuItem key={option} value={option}>
+                              {option}
                             </MenuItem>
-                          ))} */}
+                          ))}
                           </TextField>
                         </WrapText>
                         <WrapText>
                           <TextField
                             style={{ width: "100%" }}
                             select
+                            name="diachi"
                             label="Địa chỉ"
-                            //   value={currency}
                             onChange={handleChange}
                             variant="outlined"
                           >

@@ -38,7 +38,8 @@ const Feed = () => {
           <div className="empty">
             <div className="empty--text">
               <span className="title">
-                Bạn chưa theo dõi ai nên không thấy những bài post của họ
+                Bạn chưa theo dõi ai nên không thấy những bài post của họ hoặc
+                là những người bạn theo dõi chưa có những bài post nào
               </span>
             </div>
             <div className="empty--text empty--info">
