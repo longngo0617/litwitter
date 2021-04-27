@@ -3,10 +3,10 @@ import React from "react";
 import styled from "styled-components";
 
 interface ProductProps {
-  price?: string;
-  body?: string;
-  address?: string;
-  image?: string;
+  price: string;
+  body: string;
+  address: any;
+  image: string[];
 }
 
 export const Product: React.FC<ProductProps> = ({
@@ -20,7 +20,7 @@ export const Product: React.FC<ProductProps> = ({
       <Link href="#" color="inherit">
         <Wrap>
           <ImageWrap>
-            <Image src={image}></Image>
+            <Image src={image[0]}></Image>
           </ImageWrap>
           <InfoWrap>
             <MarginTop>

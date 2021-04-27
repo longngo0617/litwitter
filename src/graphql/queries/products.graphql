@@ -1,5 +1,5 @@
-query Products {
-  getProducts {
+query Products($category:String = "" ,$address:String = "",$sort:Int = 0) {
+  getProducts(category:$category,address:$address,sort:$sort) {
     ...RegularProduct
   }
 }

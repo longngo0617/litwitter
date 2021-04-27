@@ -1,5 +1,0 @@
-query increaseProducts {
-    getIncreasedProducts{
-        ...RegularProduct
-    }
-}

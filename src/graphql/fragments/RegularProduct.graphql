@@ -2,10 +2,18 @@ fragment RegularProduct on Product {
   id
   price
   body
-  address
+  address{
+    id
+    location
+    zipcode
+  }
   createdAt
   image
-  category
+  category{
+    id
+    name
+    slug
+  }
   seller{
     ...RegularUser
   }

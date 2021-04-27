@@ -14,6 +14,7 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
   const [likePost] = useLikeMutation();
   const { user, openMore } = useContext(UserContext);
 
+  console.log(props.image)
   return (
     <>
       <div
@@ -67,7 +68,7 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
               <p>{props.body}</p>
             </div>
           </div>
-          {props?.image ? <Image image={props.image} /> : null}
+          {props?.image?.length ? <Image image={props.image[0]} /> : null}
           <div className="post__footer">
             <InteractiveBar
               commentCount={props.commentCount}

@@ -119,12 +119,26 @@ export type Product = {
   id: Scalars['ID'];
   price: Scalars['String'];
   body: Scalars['String'];
-  address: Scalars['String'];
+  address?: Maybe<Location>;
   createdAt: Scalars['String'];
-  image?: Maybe<Scalars['String']>;
-  category: Scalars['String'];
+  image?: Maybe<Array<Maybe<Scalars['String']>>>;
+  category?: Maybe<Category>;
   seller: User;
   describe?: Maybe<Scalars['String']>;
+};
+
+export type Category = {
+  __typename?: 'Category';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  slug: Scalars['String'];
+};
+
+export type Location = {
+  __typename?: 'Location';
+  id: Scalars['ID'];
+  location: Scalars['String'];
+  zipcode: Scalars['String'];
 };
 
 export type ProductResponse = {
@@ -202,14 +216,11 @@ export type Query = {
   getGroup?: Maybe<GroupChat>;
   getGroupChat?: Maybe<Array<Maybe<GroupChat>>>;
   getNotification?: Maybe<Notifications>;
-  getProducts?: Maybe<Array<Maybe<Product>>>;
   getProduct?: Maybe<Product>;
   getMyProducts?: Maybe<Array<Maybe<Product>>>;
-  getIncreasedProducts?: Maybe<Array<Maybe<Product>>>;
-  getDecreasedProducts?: Maybe<Array<Maybe<Product>>>;
-  FilterProducts?: Maybe<Array<Maybe<Product>>>;
-  FilterProductsByCategory?: Maybe<Array<Maybe<Product>>>;
-  FilterProductsByAddress?: Maybe<Array<Maybe<Product>>>;
+  getProducts?: Maybe<Array<Maybe<Product>>>;
+  getCategories?: Maybe<Array<Maybe<Category>>>;
+  getLocations?: Maybe<Array<Maybe<Location>>>;
 };
 
 
@@ -256,19 +267,10 @@ export type QueryGetProductArgs = {
 };
 
 
-export type QueryFilterProductsArgs = {
-  category: Scalars['String'];
-  address: Scalars['String'];
-};
-
-
-export type QueryFilterProductsByCategoryArgs = {
-  category: Scalars['String'];
-};
-
-
-export type QueryFilterProductsByAddressArgs = {
-  address: Scalars['String'];
+export type QueryGetProductsArgs = {
+  category?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  sort?: Maybe<Scalars['Int']>;
 };
 
 export type Mutation = {
@@ -393,7 +395,7 @@ export type MutationEditProfileArgs = {
 
 
 export type MutationCreateProductArgs = {
-  image: Scalars['String'];
+  image: Array<Maybe<Scalars['String']>>;
   price: Scalars['String'];
   address: Scalars['String'];
   body: Scalars['String'];
@@ -456,8 +458,14 @@ export type RegularErrorFragment = (
 
 export type RegularProductFragment = (
   { __typename?: 'Product' }
-  & Pick<Product, 'id' | 'price' | 'body' | 'address' | 'createdAt' | 'image' | 'category' | 'describe'>
-  & { seller: (
+  & Pick<Product, 'id' | 'price' | 'body' | 'createdAt' | 'image' | 'describe'>
+  & { address?: Maybe<(
+    { __typename?: 'Location' }
+    & Pick<Location, 'id' | 'location' | 'zipcode'>
+  )>, category?: Maybe<(
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name' | 'slug'>
+  )>, seller: (
     { __typename?: 'User' }
     & RegularUserFragment
   ) }
@@ -698,28 +706,6 @@ export type ChatsQuery = (
   )>>> }
 );
 
-export type DecreaseProductsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type DecreaseProductsQuery = (
-  { __typename?: 'Query' }
-  & { getDecreasedProducts?: Maybe<Array<Maybe<(
-    { __typename?: 'Product' }
-    & RegularProductFragment
-  )>>> }
-);
-
-export type IncreaseProductsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type IncreaseProductsQuery = (
-  { __typename?: 'Query' }
-  & { getIncreasedProducts?: Maybe<Array<Maybe<(
-    { __typename?: 'Product' }
-    & RegularProductFragment
-  )>>> }
-);
-
 export type MyPostsQueryVariables = Exact<{
   username: Scalars['String'];
   cursor?: Maybe<Scalars['String']>;
@@ -770,7 +756,11 @@ export type PostsQuery = (
   ) }
 );
 
-export type ProductsQueryVariables = Exact<{ [key: string]: never; }>;
+export type ProductsQueryVariables = Exact<{
+  category?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  sort?: Maybe<Scalars['Int']>;
+}>;
 
 
 export type ProductsQuery = (
@@ -883,10 +873,18 @@ export const RegularProductFragmentDoc = gql`
   id
   price
   body
-  address
+  address {
+    id
+    location
+    zipcode
+  }
   createdAt
   image
-  category
+  category {
+    id
+    name
+    slug
+  }
   seller {
     ...RegularUser
   }
@@ -1434,74 +1432,6 @@ export function useChatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Chat
 export type ChatsQueryHookResult = ReturnType<typeof useChatsQuery>;
 export type ChatsLazyQueryHookResult = ReturnType<typeof useChatsLazyQuery>;
 export type ChatsQueryResult = Apollo.QueryResult<ChatsQuery, ChatsQueryVariables>;
-export const DecreaseProductsDocument = gql`
-    query decreaseProducts {
-  getDecreasedProducts {
-    ...RegularProduct
-  }
-}
-    ${RegularProductFragmentDoc}`;
-
-/**
- * __useDecreaseProductsQuery__
- *
- * To run a query within a React component, call `useDecreaseProductsQuery` and pass it any options that fit your needs.
- * When your component renders, `useDecreaseProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useDecreaseProductsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useDecreaseProductsQuery(baseOptions?: Apollo.QueryHookOptions<DecreaseProductsQuery, DecreaseProductsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DecreaseProductsQuery, DecreaseProductsQueryVariables>(DecreaseProductsDocument, options);
-      }
-export function useDecreaseProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DecreaseProductsQuery, DecreaseProductsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DecreaseProductsQuery, DecreaseProductsQueryVariables>(DecreaseProductsDocument, options);
-        }
-export type DecreaseProductsQueryHookResult = ReturnType<typeof useDecreaseProductsQuery>;
-export type DecreaseProductsLazyQueryHookResult = ReturnType<typeof useDecreaseProductsLazyQuery>;
-export type DecreaseProductsQueryResult = Apollo.QueryResult<DecreaseProductsQuery, DecreaseProductsQueryVariables>;
-export const IncreaseProductsDocument = gql`
-    query increaseProducts {
-  getIncreasedProducts {
-    ...RegularProduct
-  }
-}
-    ${RegularProductFragmentDoc}`;
-
-/**
- * __useIncreaseProductsQuery__
- *
- * To run a query within a React component, call `useIncreaseProductsQuery` and pass it any options that fit your needs.
- * When your component renders, `useIncreaseProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useIncreaseProductsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useIncreaseProductsQuery(baseOptions?: Apollo.QueryHookOptions<IncreaseProductsQuery, IncreaseProductsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<IncreaseProductsQuery, IncreaseProductsQueryVariables>(IncreaseProductsDocument, options);
-      }
-export function useIncreaseProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IncreaseProductsQuery, IncreaseProductsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<IncreaseProductsQuery, IncreaseProductsQueryVariables>(IncreaseProductsDocument, options);
-        }
-export type IncreaseProductsQueryHookResult = ReturnType<typeof useIncreaseProductsQuery>;
-export type IncreaseProductsLazyQueryHookResult = ReturnType<typeof useIncreaseProductsLazyQuery>;
-export type IncreaseProductsQueryResult = Apollo.QueryResult<IncreaseProductsQuery, IncreaseProductsQueryVariables>;
 export const MyPostsDocument = gql`
     query myPosts($username: String!, $cursor: String, $limit: Int!) {
   getMyPosts(username: $username, cursor: $cursor, limit: $limit) {
@@ -1617,8 +1547,8 @@ export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>;
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>;
 export type PostsQueryResult = Apollo.QueryResult<PostsQuery, PostsQueryVariables>;
 export const ProductsDocument = gql`
-    query Products {
-  getProducts {
+    query Products($category: String = "", $address: String = "", $sort: Int = 0) {
+  getProducts(category: $category, address: $address, sort: $sort) {
     ...RegularProduct
   }
 }
@@ -1636,6 +1566,9 @@ export const ProductsDocument = gql`
  * @example
  * const { data, loading, error } = useProductsQuery({
  *   variables: {
+ *      category: // value for 'category'
+ *      address: // value for 'address'
+ *      sort: // value for 'sort'
  *   },
  * });
  */

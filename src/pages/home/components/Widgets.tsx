@@ -33,7 +33,7 @@ const Widgets = () => {
               <Autocomplete
                 id="free-solo-demo"
                 freeSolo
-                options={data!.getUsers}
+                options={data?.getUsers}
                 renderInput={(params) => (
                   <TextField {...params} margin="normal" variant="outlined" />
                 )}
@@ -78,7 +78,7 @@ const Widgets = () => {
               <Head>Who to follow</Head>
             </Header>
             <Main>
-              {data.getUsers
+              {data?.getUsers
                 .filter((f: any, index: number) => index < 3)
                 .map((f: any) => (
                   <div key={f.id} className="follow-modal-bottom-itemWrap">
