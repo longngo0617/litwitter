@@ -9,6 +9,7 @@ const initState = {
   listComment: [] as any[],
   editState: false,
   messState: false,
+  urlState: "",
 };
 
 const UserContext = createContext({
@@ -139,6 +140,16 @@ const userReducer = (state: any, action: any) => {
       return {
         ...state,
         messState: false,
+      };
+    case "GET_URL":
+      return {
+        ...state,
+        urlState: action.payload,
+      };
+    case "DELETE_URL":
+      return {
+        ...state,
+        urlState: "",
       };
     default:
       return state;

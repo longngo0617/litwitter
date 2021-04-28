@@ -1,13 +1,14 @@
 import { Link } from "@material-ui/core";
-import React from "react";
+import React, { useContext } from "react";
 import { useRouteMatch } from "react-router";
 import styled from "styled-components";
+import { UserContext } from "../../../utils/useAuth";
 
 interface ProductProps {
   price: string;
   body: string;
   address: any;
-  id:string;
+  id: string;
   image: string[];
 }
 
@@ -22,11 +23,11 @@ export const Product: React.FC<ProductProps> = ({
   body,
   address,
   image,
-  id
+  id,
 }) => {
   return (
     <Box>
-      <Link href={`/market/item/${id}`} color="inherit">
+      <Link href={`/market/item/${id}`} color="inherit" >
         <Wrap>
           <ImageWrap>
             <Image src={image[0]}></Image>

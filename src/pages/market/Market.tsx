@@ -33,7 +33,7 @@ export const Market: React.FC<MarketProps> = () => {
   return (
     <Container>
       <Bar fc={() => setDisplay(!display)} />
-      <Collection collection={products?.data} sortNumber={sort} />
+      <Collection collection={products?.data} sortNumber={sort} loading={products?.loading} />
       {display && (
         <PopupAddProduct fc={() => setDisplay(!display)} data={data} />
       )}

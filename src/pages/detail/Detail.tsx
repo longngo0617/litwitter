@@ -1,14 +1,17 @@
+import { Avatar } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import SendIcon from "@material-ui/icons/Send";
 import CloseIcon from "@material-ui/icons/Close";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import SendIcon from "@material-ui/icons/Send";
+import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useParams } from "react-router";
-import styled from "styled-components";
-import { useProductQuery } from "../../generated/graphql";
-import { Avatar } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+import { Loading } from "../../components/Loading";
+import { useProductQuery } from "../../generated/graphql";
 interface DetailProps {}
 
 function currencyFormat(num: number) {
@@ -33,7 +36,11 @@ export const Detail: React.FC<DetailProps> = () => {
   }
 
   if (!data && loading) {
-    return null;
+    return (
+      <WrapLoading>
+        <Loading blue />
+      </WrapLoading>
+    );
   }
 
   return (
@@ -45,84 +52,97 @@ export const Detail: React.FC<DetailProps> = () => {
           }}
         />
         <Main>
-          <CloseButton>
+          <CloseButton onClick={() => router.goBack()}>
             <CloseIcon style={{ color: "#fff" }} />
           </CloseButton>
-          <PrevButton
-            onClick={() => {
-              if (crIndex - 1 < 0) {
-                SetCrIndex(imageLength - 1);
-              } else {
-                SetCrIndex(crIndex - 1);
-              }
-            }}
-          >
-            <NavigateBeforeIcon />
-          </PrevButton>
-          <NextButton
-            onClick={() => {
-              if (crIndex + 1 > imageLength - 1) {
-                SetCrIndex(0);
-              } else {
-                SetCrIndex(crIndex + 1);
-              }
-            }}
-          >
-            <NavigateNextIcon />
-          </NextButton>
+          {imageLength > 1 && (
+            <>
+              <PrevButton
+                onClick={() => {
+                  if (crIndex - 1 < 0) {
+                    SetCrIndex(imageLength - 1);
+                  } else {
+                    SetCrIndex(crIndex - 1);
+                  }
+                }}
+              >
+                <NavigateBeforeIcon />
+              </PrevButton>
+              <NextButton
+                onClick={() => {
+                  if (crIndex + 1 > imageLength - 1) {
+                    SetCrIndex(0);
+                  } else {
+                    SetCrIndex(crIndex + 1);
+                  }
+                }}
+              >
+                <NavigateNextIcon />
+              </NextButton>
+            </>
+          )}
           <ImageMain>
             <Img src={data?.getProduct?.image[crIndex]} alt="" />
           </ImageMain>
-          <ListImage>
-            {data?.getProduct?.image.map((image: string, index: number) => (
-              <BorderImg
-                key={index}
-                className={`${crIndex === index ? "activeImage" : ""}`}
-              >
-                <Img src={image} />
-              </BorderImg>
-            ))}
-          </ListImage>
+          {imageLength > 1 && (
+            <ListImage>
+              {data?.getProduct?.image.map((image: string, index: number) => (
+                <BorderImg
+                  key={index}
+                  className={`${crIndex === index ? "activeImage" : ""}`}
+                  onClick={() => SetCrIndex(index)}
+                >
+                  <Img src={image} />
+                </BorderImg>
+              ))}
+            </ListImage>
+          )}
         </Main>
       </Left>
       <Right>
-        <NoiDung>
-          <Title>{data?.getProduct?.body}</Title>
-          <Price>{currencyFormat(parseInt(data?.getProduct?.price))} đ</Price>
-          <HangMuc>{data?.getProduct.category.name}</HangMuc>
-          <DiaDiem>{data?.getProduct.address.location}</DiaDiem>
-          <WrapButton>
-            <SendButton variant="contained" startIcon={<SendIcon />}>
-              Nhắn tin
-            </SendButton>
-          </WrapButton>
-          <Mota>
-            <Price>Mô tả của người bán</Price>
-            <Content>{data?.getProduct.describe}</Content>
-          </Mota>
-        </NoiDung>
-        <InfoUser>
-          <Price>Thông tin về người bán</Price>
-          <div className="follow-modal-bottom-itemWrap">
-            <div
-              className="follow-modal-bottom-item"
-              onClick={() => router.replace(`/users/${data?.getProduct.seller.username}`)}
-            >
-              <div className="item">
-                <div className="item-left">
-                  <div className="avatar">
-                    <Avatar src={data?.getProduct.seller.profile.avatar || ""} />
+        <RightTop>
+          <NoiDung>
+            <Title>{data?.getProduct?.body}</Title>
+            <Price>{currencyFormat(parseInt(data?.getProduct?.price))} đ</Price>
+            <HangMuc>{data?.getProduct.category.name}</HangMuc>
+            <DiaDiem>{data?.getProduct.address.location}</DiaDiem>
+            <WrapButton>
+              <SendButtonn variant="contained" startIcon={<SendIcon />}>
+                Nhắn tin
+              </SendButtonn>
+            </WrapButton>
+            <Mota>
+              <Price>Mô tả của người bán</Price>
+              <Content>{data?.getProduct.describe}</Content>
+            </Mota>
+          </NoiDung>
+          <InfoUser>
+            <Price>Thông tin về người bán</Price>
+            <div className="follow-modal-bottom-itemWrap">
+              <div
+                className="follow-modal-bottom-item"
+                onClick={() =>
+                  router.replace(`/users/${data?.getProduct.seller.username}`)
+                }
+              >
+                <div className="item">
+                  <div className="item-left">
+                    <div className="avatar">
+                      <Avatar
+                        src={data?.getProduct.seller.profile.avatar || ""}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="item-right">
-                  <div className="item-right-top">
-                    <div className="item-right-top-text">
-                      <div className="name-wrap">
-                        <div className="name">
-                          <span>{data?.getProduct.seller.displayname}</span>
-                        </div>
-                        <div className="username">
-                          <span>@{data?.getProduct.seller.username}</span>
+                  <div className="item-right">
+                    <div className="item-right-top">
+                      <div className="item-right-top-text">
+                        <div className="name-wrap">
+                          <div className="name">
+                            <span>{data?.getProduct.seller.displayname}</span>
+                          </div>
+                          <div className="username">
+                            <span>@{data?.getProduct.seller.username}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -130,8 +150,47 @@ export const Detail: React.FC<DetailProps> = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </InfoUser>
+          </InfoUser>
+        </RightTop>
+        <RightBottom>
+          <Line>
+            <MailOutlineIcon />
+            <span style={{ marginLeft: "20px" }}>
+              Gửi tin nhắn cho người bán{" "}
+            </span>
+          </Line>
+          <Formik
+            initialValues={{ content: "Mặt hàng này còn chứ?" }}
+            onSubmit={async (values) => {}}
+          >
+            {({ handleChange, values }) => (
+              <FormSubmit autoComplete="off">
+                <Input
+                  onChange={handleChange}
+                  value={values.content}
+                  name="content"
+                />
+                {values.content ? (
+                  <SendButton
+                    variant="contained"
+                    type="submit"
+                    startIcon={<SendIcon />}
+                  >
+                    Gửi tin nhắn
+                  </SendButton>
+                ) : (
+                  <SendButtonDisable
+                    variant="contained"
+                    type="submit"
+                    startIcon={<SendIcon />}
+                  >
+                    Gửi tin nhắn
+                  </SendButtonDisable>
+                )}
+              </FormSubmit>
+            )}
+          </Formik>
+        </RightBottom>
       </Right>
     </Wrap>
   );
@@ -164,10 +223,12 @@ const Right = styled.div`
   position: relative;
   background-color: #fff;
   padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
 `;
 const NoiDung = styled.div`
   padding-bottom: 12px;
-  border-bottom: 1px solid #EBEEF0;
+  border-bottom: 1px solid #ebeef0;
 `;
 const Title = styled.h2`
   font-size: 26px;
@@ -198,7 +259,16 @@ const HangMuc = styled.div`
     Arial, sans-serif;
   overflow-wrap: break-word;
 `;
-
+const RightTop = styled.div`
+  overflow-y: scroll;
+  overflow-x: hidden;
+`;
+const RightBottom = styled.div`
+  padding: 8px;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+`;
 const DiaDiem = styled.div`
   font-size: 12px;
   font-weight: normal;
@@ -215,7 +285,7 @@ const Main = styled.div`
 const WrapButton = styled.div`
   padding-top: 15px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #EBEEF0;
+  border-bottom: 1px solid #ebeef0;
   margin-bottom: 15px;
 `;
 const Buttonn = styled.div`
@@ -228,7 +298,7 @@ const Buttonn = styled.div`
   background-color: #fff;
   cursor: pointer;
 `;
-const SendButton = styled(Button)`
+const SendButtonn = styled(Button)`
   box-shadow: none !important;
   text-transform: none !important;
 `;
@@ -256,9 +326,9 @@ const PrevButton = styled(Buttonn)`
 `;
 const ImageMain = styled.div`
   position: absolute;
-  top: 50%;
+  top: 30%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -30%);
 `;
 const Img = styled.img`
   display: block;
@@ -291,6 +361,12 @@ const BorderImg = styled.div`
   }
 `;
 
+const Line = styled.div`
+  margin-top: 6px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+`;
 const Overlay = styled.div`
   filter: blur(8px) drop-shadow(8px 8px 10px black);
   -webkit-filter: blur(6px) drop-shadow(8px 8px 10px black);
@@ -298,4 +374,38 @@ const Overlay = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+`;
+const FormSubmit = styled(Form)`
+  width: 100%;
+`;
+
+const SendButton = styled(SendButtonn)`
+  background-color: rgb(29, 161, 242) !important;
+  color: #fff !important;
+  width: 100%;
+`;
+const SendButtonDisable = styled(SendButton)`
+  opacity: 0.7;
+`;
+const Input = styled.input`
+  padding: 0 10px;
+  width: 95%;
+  margin-bottom: 10px;
+  height: 36px;
+  background-color: rgb(235, 238, 240);
+  border-radius: 16px;
+  flex: 1;
+  outline: 0;
+  border: 0;
+  &:focus {
+    border: 1px solid rgb(29, 161, 242);
+    background-color: rgb(255, 255, 255);
+  }
+`;
+const WrapLoading = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
 `;

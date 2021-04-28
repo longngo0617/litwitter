@@ -1,16 +1,30 @@
 import { FormControlLabel, Radio, RadioGroup } from "@material-ui/core";
 import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
+import { Loading } from "../../../components/Loading";
 import { Product } from "./Product";
 
 interface CollectionProps {
   collection: any;
-  sortNumber:string;
+  sortNumber: string;
+  loading:boolean;
 }
 
-export const Collection: React.FC<CollectionProps> = ({collection,sortNumber}) => {
+export const Collection: React.FC<CollectionProps> = ({
+  collection,
+  sortNumber,
+  loading
+}) => {
   const router = useHistory();
+
+  if (!collection && loading) {
+    return (
+      <WrapLoading>
+        <Loading blue />
+      </WrapLoading>
+    );
+  }
 
   return (
     <Container>
@@ -66,6 +80,7 @@ const Container = styled.div`
   box-sizing: border-box;
   height: 100%;
   flex-direction: column;
+  height:100vh;
 `;
 const Main = styled.div`
   padding-left: 26px;
@@ -101,4 +116,12 @@ const ListProduct = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+`;
+
+const WrapLoading = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width:100%;
 `;
