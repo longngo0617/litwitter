@@ -1,11 +1,13 @@
 import { Link } from "@material-ui/core";
 import React from "react";
+import { useRouteMatch } from "react-router";
 import styled from "styled-components";
 
 interface ProductProps {
   price: string;
   body: string;
   address: any;
+  id:string;
   image: string[];
 }
 
@@ -20,10 +22,11 @@ export const Product: React.FC<ProductProps> = ({
   body,
   address,
   image,
+  id
 }) => {
   return (
     <Box>
-      <Link href="#" color="inherit">
+      <Link href={`/market/item/${id}`} color="inherit">
         <Wrap>
           <ImageWrap>
             <Image src={image[0]}></Image>
@@ -48,8 +51,8 @@ export const Product: React.FC<ProductProps> = ({
 const Box = styled.div`
   max-width: 284px;
   min-width: 242px;
-  padding-right:4px;
-  padding-left:4px;
+  padding-right: 4px;
+  padding-left: 4px;
 `;
 
 const Wrap = styled.div`
