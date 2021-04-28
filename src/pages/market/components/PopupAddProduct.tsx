@@ -12,7 +12,10 @@ import styled from "styled-components";
 import { TextFormField } from "../../../components/TextFormField";
 import { UserContext } from "../../../utils/useAuth";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
-import { ProductsDocument, useCreateProductMutation } from "../../../generated/graphql";
+import {
+  ProductsDocument,
+  useCreateProductMutation,
+} from "../../../generated/graphql";
 import { toErrorMap } from "../../../utils/toErrorMap";
 import { SelectFormField } from "../../../components/SelectFormField";
 
@@ -37,7 +40,7 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
   const addImage = (image: string) => {
     setArrImage([...arrImage, image]);
   };
-
+  const [errorImage, setErrorImage] = useState<any>({});
   const removeItem = (image: string) => {
     const filtered = arrImage.filter((x: any) => x !== image);
     setArrImage(filtered);
@@ -76,6 +79,11 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
               response.data?.createProduct.error
             ) {
               setErrors(toErrorMap(response.data?.createProduct.error));
+              setErrorImage(
+                response.data.createProduct.error.find(
+                  (e: any) => e.field === "image"
+                )
+              );
             } else {
               fc();
             }
@@ -155,6 +163,9 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
                             - Bạn có thể thêm tối đa 10 ảnh
                           </span>
                         </Note>
+                        {errorImage.field && !arrImage.length ? (
+                          <ErrorText>{errorImage.message}</ErrorText>
+                        ) : null}
                         {arrImage.length ? (
                           <ListImageSelected>
                             {arrImage.map((m: string, i: number) => (
@@ -170,29 +181,35 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
                               </ImageSelected>
                             ))}
 
-                            <ImageSelected style={{ width: "104px" }}>
-                              <Center>
-                                <Button
-                                  color="default"
-                                  aria-label="add product photo"
-                                  startIcon={<AddAPhotoIcon />}
-                                  onClick={() => inputImage.current.click()}
-                                >
-                                  Thêm ảnh
-                                </Button>
-                                <input
-                                  accept="image/jpeg,image/png,image/webp,image/gif"
-                                  multiple
-                                  type="file"
-                                  className="input-file"
-                                  ref={inputImage}
-                                  onChange={handleImageChange}
-                                />
-                              </Center>
-                            </ImageSelected>
+                            {arrImage.length < 10 && (
+                              <ImageSelected style={{ width: "104px" }}>
+                                <Center>
+                                  <Button
+                                    color="default"
+                                    aria-label="add product photo"
+                                    startIcon={<AddAPhotoIcon />}
+                                    onClick={() => inputImage.current.click()}
+                                  >
+                                    Thêm ảnh
+                                  </Button>
+                                  <input
+                                    accept="image/jpeg,image/png,image/webp,image/gif"
+                                    multiple
+                                    type="file"
+                                    className="input-file"
+                                    ref={inputImage}
+                                    onChange={handleImageChange}
+                                  />
+                                </Center>
+                              </ImageSelected>
+                            )}
                           </ListImageSelected>
                         ) : (
-                          <ProductImage>
+                          <ProductImage
+                            className={`${
+                              errorImage.field ? "errorImage" : ""
+                            } `}
+                          >
                             <Div>
                               <Button
                                 variant="contained"
@@ -206,6 +223,7 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
                               <input
                                 accept="image/jpeg,image/png,image/webp,image/gif"
                                 multiple
+                                name="image"
                                 type="file"
                                 className="input-file"
                                 ref={inputImage}
@@ -368,4 +386,17 @@ const Note = styled.span`
   word-break: break-word;
   font-size: 12px;
   margin-top: 12px;
+`;
+const ErrorText = styled.div`
+  color: #f44336;
+  margin-left: 14px;
+  margin-right: 14px;
+  margin-top: 3px;
+  font-size: 0.75rem;
+  margin-top: 3px;
+  text-align: left;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.66;
+  letter-spacing: 0.03333em;
 `;
