@@ -11,7 +11,11 @@ import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Loading } from "../../components/Loading";
-import { useProductQuery } from "../../generated/graphql";
+import {
+  useCreateRoomChatMutation,
+  useProductQuery,
+  useSendMessageMutation,
+} from "../../generated/graphql";
 interface DetailProps {}
 
 function currencyFormat(num: number) {
@@ -21,6 +25,8 @@ function currencyFormat(num: number) {
 }
 
 export const Detail: React.FC<DetailProps> = () => {
+  const [sendMessage] = useSendMessageMutation();
+  const [createRoomChat] = useCreateRoomChatMutation();
   const [crIndex, SetCrIndex] = useState<number>(0);
   const params: any = useParams();
   const router = useHistory();
@@ -161,7 +167,19 @@ export const Detail: React.FC<DetailProps> = () => {
           </Line>
           <Formik
             initialValues={{ content: "Mặt hàng này còn chứ?" }}
-            onSubmit={async (values) => {}}
+            onSubmit={async (values) => {
+              const roomChat : any = await createRoomChat({
+                variables: {
+                  userId: data?.getProduct.seller.id,
+                },
+              });
+              await sendMessage({
+                variables: {
+                  content: values.content,
+                  roomId: roomChat?.id,
+                },
+              });
+            }}
           >
             {({ handleChange, values }) => (
               <FormSubmit autoComplete="off">

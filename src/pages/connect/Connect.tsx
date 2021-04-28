@@ -40,7 +40,7 @@ export const Connect: React.FC<ConnectProps> = () => {
                 data?.getUsers
                   .filter((f: any) => f.username !== user.username)
                   .map((f: any) => (
-                    <div key={f.id} className="follow-modal-bottom-itemWrap">
+                    <div key={f.id} className="follow-modal-bottom-itemWrap" onClick={() => router.replace(`/users/${f.username}`)}>
                       <div className="follow-modal-bottom-item">
                         <div className="item">
                           <div className="item-left">

@@ -28,11 +28,7 @@ export const Profile: React.FC<ProfileProps> = () => {
       username: params.username,
     },
   });
-  const backUrl =
-    location.pathname.includes("/following") ||
-    location.pathname.includes("/follower")
-      ? `/users/${data?.getUser?.username}`
-      : `/home`;
+
 
   if (!loading && !data) {
     return (
@@ -55,7 +51,7 @@ export const Profile: React.FC<ProfileProps> = () => {
             <div className="feed__header">
               <ArrowBackIcon
                 className="feed__header--icon"
-                onClick={() => router.replace(backUrl)}
+                onClick={() => router.goBack()}
               />
               <h2>{data?.getUser?.displayname}</h2>
             </div>

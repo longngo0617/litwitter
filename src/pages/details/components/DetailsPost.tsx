@@ -26,7 +26,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
       <div className="feed__header">
         <ArrowBackIcon
           className="feed__header--icon"
-          onClick={() => router.replace("/home")}
+          onClick={() => router.goBack()}
         />
         <h2>Tweet</h2>
       </div>
@@ -70,7 +70,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
                 <div className="postSingle__text">
                   <span>{data?.getPost.body}</span>
                 </div>
-                {data?.getPost.image ? <Image image={data?.getPost.image} /> : null}
+                {data?.getPost.image?.length ? <Image image={data?.getPost.image} /> : null}
                 <div className="postSingle__date">
                   <span>{moment(data?.getPost?.createdAt).fromNow()}</span>
                   <span style={{ padding: "0 4px" }}>.</span>
