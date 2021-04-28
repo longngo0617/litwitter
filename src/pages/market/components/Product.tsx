@@ -9,6 +9,12 @@ interface ProductProps {
   image: string[];
 }
 
+function currencyFormat(num: number) {
+  return new Intl.NumberFormat("vn", { maximumSignificantDigits: 3 }).format(
+    num
+  );
+}
+
 export const Product: React.FC<ProductProps> = ({
   price,
   body,
@@ -24,13 +30,13 @@ export const Product: React.FC<ProductProps> = ({
           </ImageWrap>
           <InfoWrap>
             <MarginTop>
-              <Price>{price} đ</Price>
+              <Price>{currencyFormat(parseInt(price))} đ</Price>
             </MarginTop>
             <MarginTop>
               <NameProduct>{body}</NameProduct>
             </MarginTop>
             <MarginTop>
-              <Address>{address}</Address>
+              <Address>{address.location}</Address>
             </MarginTop>
           </InfoWrap>
         </Wrap>

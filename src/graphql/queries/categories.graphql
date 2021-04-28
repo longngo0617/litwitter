@@ -1,0 +1,12 @@
+query CategoriesAndLocations {
+  getCategories {
+    id
+    name
+    slug
+  }
+  getLocations {
+    id
+    location
+    zipcode
+  }
+}

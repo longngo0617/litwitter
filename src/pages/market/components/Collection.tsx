@@ -1,27 +1,17 @@
-import {
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-} from "@material-ui/core";
+import { FormControlLabel, Radio, RadioGroup } from "@material-ui/core";
 import React from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { useProductsQuery } from "../../../generated/graphql";
 import { Product } from "./Product";
 
-interface CollectionProps {}
+interface CollectionProps {
+  collection: any;
+  sortNumber:string;
+}
 
-export const Collection: React.FC<CollectionProps> = () => {
-  const { data, loading }: any = useProductsQuery();
-  const [value, setValue] = React.useState("");
+export const Collection: React.FC<CollectionProps> = ({collection,sortNumber}) => {
+  const router = useHistory();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
-  };
-  if (!data && loading) {
-    return null;
-  }
   return (
     <Container>
       <Main>
@@ -29,27 +19,34 @@ export const Collection: React.FC<CollectionProps> = () => {
           <Header>
             <Title>Lựa chọn hôm nay</Title>
             <BarFilter>
-              <Group
-                aria-label="price"
-                name="price1"
-                value={value}
-                onChange={handleChange}
-              >
+              <div>
                 <FormControlLabel
                   value="decrease"
                   control={<Radio />}
+                  checked={sortNumber === "-1"}
+                  onChange={() => {
+                    router.push({
+                      search: "?sort=-1",
+                    });
+                  }}
                   label="Giá từ cao xuống thấp"
                 />
                 <FormControlLabel
                   value="increase"
                   control={<Radio />}
+                  checked={sortNumber === "1"}
+                  onChange={() => {
+                    router.push({
+                      search: "?sort=1",
+                    });
+                  }}
                   label="Giá từ thấp đến cao"
                 />
-              </Group>
+              </div>
             </BarFilter>
           </Header>
           <ListProduct>
-            {data?.getProducts.map((product: any) => (
+            {collection?.getProducts.map((product: any) => (
               <Product key={product.id} {...product} />
             ))}
           </ListProduct>

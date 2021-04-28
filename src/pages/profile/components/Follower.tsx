@@ -49,7 +49,7 @@ export const Follower: React.FC<any> = (props) => {
         ) : (
           props?.props?.follower.map((f: Follow, index: number) => (
             <div key={index} className="follow-modal-bottom-itemWrap">
-              <div className="follow-modal-bottom-item">
+              <div className="follow-modal-bottom-item" onClick={() => router.replace(`/users/${f.username}`)}>
                 <div className="item">
                   <div className="item-left">
                     <div className="avatar">

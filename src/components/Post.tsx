@@ -14,7 +14,6 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
   const [likePost] = useLikeMutation();
   const { user, openMore } = useContext(UserContext);
 
-  console.log(props.image)
   return (
     <>
       <div

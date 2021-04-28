@@ -12,13 +12,21 @@ import styled from "styled-components";
 import { TextFormField } from "../../../components/TextFormField";
 import { UserContext } from "../../../utils/useAuth";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
+import { ProductsDocument, useCreateProductMutation } from "../../../generated/graphql";
+import { toErrorMap } from "../../../utils/toErrorMap";
+import { SelectFormField } from "../../../components/SelectFormField";
 
 interface PopupAddProductProps {
   fc: () => void;
+  data: any;
 }
 
-export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
-  const { user, addresses,categories } = useContext(UserContext);
+export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
+  fc,
+  data,
+}) => {
+  const [createProduct] = useCreateProductMutation();
+  const { user } = useContext(UserContext);
   const inputImage: any = useRef(null);
   const [arrImage, setArrImage] = useState<string[]>([]);
   const handleImageChange = (e: any) => {
@@ -27,13 +35,14 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
   };
 
   const addImage = (image: string) => {
-     setArrImage([...arrImage, image]);
+    setArrImage([...arrImage, image]);
   };
 
   const removeItem = (image: string) => {
     const filtered = arrImage.filter((x: any) => x !== image);
     setArrImage(filtered);
   };
+
   const previewFile = (file: any) => {
     if (!file) return;
     const reader = new FileReader();
@@ -43,22 +52,36 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
     };
   };
 
-
   return (
     <Container>
       <Overlay />
       <div className="follow-main">
         <Formik
           initialValues={{
-            title: "",
+            body: "",
             price: "",
-            mota: "",
-            hangmuc:"",
-            diachi:"",
+            describe: "",
+            category: "",
+            address: "",
+            image: [""],
           }}
-          onSubmit={async (values) => {}}
+          onSubmit={async (values, { setErrors }) => {
+            values.image = arrImage;
+            const response: any = await createProduct({
+              variables: values,
+              refetchQueries: [{ query: ProductsDocument }],
+            });
+            if (
+              response.data?.createProduct.error.length &&
+              response.data?.createProduct.error
+            ) {
+              setErrors(toErrorMap(response.data?.createProduct.error));
+            } else {
+              fc();
+            }
+          }}
         >
-          {({ handleChange, values }) => (
+          {() => (
             <Form autoComplete="off">
               <div className="follow-modal">
                 <Wrapper>
@@ -141,9 +164,7 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
                                     <ImageM src={m} />
                                   </ImageP>
                                   <ImageC>
-                                    <CloseIcon
-                                    onClick={() => removeItem(m)}
-                                    />
+                                    <CloseIcon onClick={() => removeItem(m)} />
                                   </ImageC>
                                 </Image>
                               </ImageSelected>
@@ -196,7 +217,7 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
 
                         <Field
                           label="Tiêu đề"
-                          name="title"
+                          name="body"
                           component={TextFormField}
                         />
                         <Field
@@ -204,42 +225,22 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({ fc }) => {
                           name="price"
                           component={TextFormField}
                         />
-                        <WrapText>
-                          <TextField
-                            style={{ width: "100%" }}
-                            select
-                            name="hangmuc"
-                            label="Hạng mục"
-                            onChange={handleChange}
-                            variant="outlined"
-                          >
-                            {categories.map((option) => (
-                            <MenuItem key={option} value={option}>
-                              {option}
-                            </MenuItem>
-                          ))}
-                          </TextField>
-                        </WrapText>
-                        <WrapText>
-                          <TextField
-                            style={{ width: "100%" }}
-                            select
-                            name="diachi"
-                            label="Địa chỉ"
-                            onChange={handleChange}
-                            variant="outlined"
-                          >
-                            {addresses.map((option, index) => (
-                              <MenuItem key={index} value={option}>
-                                {option}
-                              </MenuItem>
-                            ))}
-                          </TextField>
-                        </WrapText>
-
+                        <Field
+                          options={data.getCategories}
+                          categories
+                          name="category"
+                          label="Hạng mục"
+                          component={SelectFormField}
+                        />
+                        <Field
+                          options={data.getLocations}
+                          name="address"
+                          label="Địa điểm"
+                          component={SelectFormField}
+                        />
                         <Field
                           label="Mô tả"
-                          name="mota"
+                          name="describe"
                           multiline
                           rows={8}
                           component={TextFormField}

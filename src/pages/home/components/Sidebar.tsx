@@ -22,7 +22,7 @@ function Sidebar(props: any) {
       <TwitterIcon />
 
       <SidebarOption href="/home" Icon={HomeIcon} text="Home" />
-      <SidebarOption href="/market" Icon={StorefrontIcon} text="Marketplace" />
+      <SidebarOption href="/market/all" Icon={StorefrontIcon} text="Marketplace" />
       <SidebarOption href="/notifications" Icon={NotificationsNoneIcon} text="Notifications" />
       <SidebarOption href="/messages" Icon={MailOutlineIcon} text="Messages" />
       <SidebarOption href="/groups" Icon={GroupIcon} text="Groups" />

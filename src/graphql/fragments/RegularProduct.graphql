@@ -3,14 +3,12 @@ fragment RegularProduct on Product {
   price
   body
   address{
-    id
     location
     zipcode
   }
   createdAt
   image
   category{
-    id
     name
     slug
   }

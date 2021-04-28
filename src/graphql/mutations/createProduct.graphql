@@ -1,0 +1,24 @@
+mutation createProduct(
+  $image: [String]!
+  $price: String!
+  $address: String!
+  $body: String!
+  $category: String!
+  $describe: String
+) {
+  createProduct(
+    image: $image
+    category: $category
+    address: $address
+    price: $price
+    describe: $describe
+    body: $body
+  ) {
+    product {
+      ...RegularProduct
+    }
+    error {
+      ...RegularError
+    }
+  }
+}

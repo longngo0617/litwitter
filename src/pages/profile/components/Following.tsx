@@ -1,6 +1,6 @@
 import { Avatar, Button } from "@material-ui/core";
 import React, { useContext, useRef, useState } from "react";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import {
   Follow,
   PostsDocument,
@@ -12,7 +12,7 @@ export const Following: React.FC<any> = (props) => {
   const { user, addUser } = useContext(UserContext);
   const { url } = useRouteMatch();
   const [followUser] = useFollowUserMutation();
-
+  const router = useHistory();
   return (
     <div className="profile__wrapper">
       <nav className="profile__nav">
@@ -51,7 +51,7 @@ export const Following: React.FC<any> = (props) => {
         ) : (
           props?.props?.following.map((f: Follow, index: number) => (
             <div key={index} className="follow-modal-bottom-itemWrap">
-              <div className="follow-modal-bottom-item">
+              <div className="follow-modal-bottom-item" onClick={() => router.replace(`/users/${f.username}`)}>
                 <div className="item">
                   <div className="item-left">
                     <div className="avatar">

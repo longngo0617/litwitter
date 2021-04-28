@@ -12,13 +12,17 @@ import {
 import moment from "moment";
 import { Loading } from "../../../components/Loading";
 import { Post } from "../../../components/Post";
-export const MainPage: React.FC<UserQuery> = (props) => {
+interface MainPageProps {
+  dataUser?: UserQuery;
+  params: any;
+}
+export const MainPage: React.FC<MainPageProps> = ({dataUser,params}) => {
   const { openEdit, user, addUser } = useContext(UserContext);
   const { data, loading, fetchMore, variables } = useMyPostsQuery({
     variables: {
       limit: 10,
       cursor: "",
-      username: user.username,
+      username: params.username,
     },
     notifyOnNetworkStatusChange: true,
     pollInterval: 1000,
@@ -40,11 +44,11 @@ export const MainPage: React.FC<UserQuery> = (props) => {
                 <div
                   className="image--background"
                   style={{
-                    backgroundImage: `url(${props.getUser?.profile?.coverImage})`,
+                    backgroundImage: `url(${dataUser?.getUser?.profile?.coverImage})`,
                   }}
                 ></div>
                 <img
-                  src={`${props.getUser?.profile?.coverImage}`}
+                  src={`${dataUser?.getUser?.profile?.coverImage}`}
                   alt=""
                   className="image--hide"
                 />
@@ -67,14 +71,14 @@ export const MainPage: React.FC<UserQuery> = (props) => {
                       className="image--background"
                       style={{
                         backgroundImage: `url(${
-                          props.getUser?.profile?.avatar ||
+                          dataUser?.getUser?.profile?.avatar ||
                           "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
                         })`,
                       }}
                     ></div>
                     <img
                       src={`${
-                        props.getUser?.profile?.avatar ||
+                        dataUser?.getUser?.profile?.avatar ||
                         "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
                       }`}
                       alt=""
@@ -83,7 +87,7 @@ export const MainPage: React.FC<UserQuery> = (props) => {
                   </div>
                 </div>
               </div>
-              {user.username === props.getUser?.username ? (
+              {user.username === dataUser?.getUser?.username ? (
                 <div className="button">
                   <Button variant="outlined" color="primary" onClick={openEdit}>
                     Edit profile
@@ -92,7 +96,7 @@ export const MainPage: React.FC<UserQuery> = (props) => {
               ) : (
                 <div className="button">
                   {user.following.find(
-                    (ele: Follow) => ele.username === props.getUser?.username
+                    (ele: Follow) => ele.username === dataUser?.getUser?.username
                   ) ? (
                     <Button
                       variant="contained"
@@ -100,7 +104,7 @@ export const MainPage: React.FC<UserQuery> = (props) => {
                       onClick={async () => {
                         const data = await followUser({
                           variables: {
-                            username: props.getUser?.username,
+                            username: dataUser?.getUser?.username,
                           },
                         });
                         await addUser(data?.data?.following);
@@ -116,7 +120,7 @@ export const MainPage: React.FC<UserQuery> = (props) => {
                       onClick={async () => {
                         const data = await followUser({
                           variables: {
-                            username: props.getUser?.username,
+                            username: dataUser?.getUser?.username,
                           },
                         });
                         await addUser(data?.data?.following);
@@ -130,22 +134,22 @@ export const MainPage: React.FC<UserQuery> = (props) => {
             </div>
             <div className="bio__name">
               <div className="name">
-                <span>{props.getUser?.displayname}</span>
+                <span>{dataUser?.getUser?.displayname}</span>
               </div>
               <div className="username">
-                <span>@{props.getUser?.username}</span>
+                <span>@{dataUser?.getUser?.username}</span>
               </div>
             </div>
             <div className="bio__info">
               <div className="info">
-                <span> {props.getUser?.profile?.story}</span>
+                <span> {dataUser?.getUser?.profile?.story}</span>
               </div>
             </div>
             <div className="bio__join">
               <div className="date-join">
                 <span>
                   <DateRangeIcon />
-                  Tham gia {moment(props.getUser?.createdAt).format("LL")}
+                  Tham gia {moment(dataUser?.getUser?.createdAt).format("LL")}
                 </span>
               </div>
             </div>
@@ -153,7 +157,7 @@ export const MainPage: React.FC<UserQuery> = (props) => {
               <div className="bio__follow--item">
                 <Link to={`${url}/following`}>
                   <span className="number">
-                    {props.getUser?.following?.length}
+                    {dataUser?.getUser?.following?.length}
                   </span>
                   <span className="title">Following</span>
                 </Link>
@@ -161,7 +165,7 @@ export const MainPage: React.FC<UserQuery> = (props) => {
               <div className="bio__follow--item">
                 <Link to={`${url}/followers`}>
                   <span className="number">
-                    {props.getUser?.follower?.length}
+                    {dataUser?.getUser?.follower?.length}
                   </span>
                   <span className="title">Follower</span>
                 </Link>

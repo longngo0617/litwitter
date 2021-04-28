@@ -63,7 +63,7 @@ export const Profile: React.FC<ProfileProps> = () => {
               <Route
                 path={`${url}`}
                 exact
-                render={() => <MainPage {...data} />}
+                render={() => <MainPage dataUser={data} params={params} />}
               />
               <Route
                 path={`${url}/followers`}

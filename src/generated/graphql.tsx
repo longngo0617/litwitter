@@ -461,10 +461,10 @@ export type RegularProductFragment = (
   & Pick<Product, 'id' | 'price' | 'body' | 'createdAt' | 'image' | 'describe'>
   & { address?: Maybe<(
     { __typename?: 'Location' }
-    & Pick<Location, 'id' | 'location' | 'zipcode'>
+    & Pick<Location, 'location' | 'zipcode'>
   )>, category?: Maybe<(
     { __typename?: 'Category' }
-    & Pick<Category, 'id' | 'name' | 'slug'>
+    & Pick<Category, 'name' | 'slug'>
   )>, seller: (
     { __typename?: 'User' }
     & RegularUserFragment
@@ -538,6 +538,30 @@ export type CreatePostMutation = (
   & { createPost: (
     { __typename?: 'Post' }
     & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'image' | 'likeCount' | 'commentCount'>
+  ) }
+);
+
+export type CreateProductMutationVariables = Exact<{
+  image: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
+  price: Scalars['String'];
+  address: Scalars['String'];
+  body: Scalars['String'];
+  category: Scalars['String'];
+  describe?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreateProductMutation = (
+  { __typename?: 'Mutation' }
+  & { createProduct: (
+    { __typename?: 'ProductResponse' }
+    & { product?: Maybe<(
+      { __typename?: 'Product' }
+      & RegularProductFragment
+    )>, error?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & RegularErrorFragment
+    )>> }
   ) }
 );
 
@@ -680,6 +704,20 @@ export type SendMessageMutation = (
     { __typename?: 'RoomChat' }
     & RegularRoomChatFragment
   ) }
+);
+
+export type CategoriesAndLocationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CategoriesAndLocationsQuery = (
+  { __typename?: 'Query' }
+  & { getCategories?: Maybe<Array<Maybe<(
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name' | 'slug'>
+  )>>>, getLocations?: Maybe<Array<Maybe<(
+    { __typename?: 'Location' }
+    & Pick<Location, 'id' | 'location' | 'zipcode'>
+  )>>> }
 );
 
 export type ChatQueryVariables = Exact<{
@@ -874,14 +912,12 @@ export const RegularProductFragmentDoc = gql`
   price
   body
   address {
-    id
     location
     zipcode
   }
   createdAt
   image
   category {
-    id
     name
     slug
   }
@@ -1009,6 +1045,57 @@ export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const CreateProductDocument = gql`
+    mutation createProduct($image: [String]!, $price: String!, $address: String!, $body: String!, $category: String!, $describe: String) {
+  createProduct(
+    image: $image
+    category: $category
+    address: $address
+    price: $price
+    describe: $describe
+    body: $body
+  ) {
+    product {
+      ...RegularProduct
+    }
+    error {
+      ...RegularError
+    }
+  }
+}
+    ${RegularProductFragmentDoc}
+${RegularErrorFragmentDoc}`;
+export type CreateProductMutationFn = Apollo.MutationFunction<CreateProductMutation, CreateProductMutationVariables>;
+
+/**
+ * __useCreateProductMutation__
+ *
+ * To run a mutation, you first call `useCreateProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProductMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProductMutation, { data, loading, error }] = useCreateProductMutation({
+ *   variables: {
+ *      image: // value for 'image'
+ *      price: // value for 'price'
+ *      address: // value for 'address'
+ *      body: // value for 'body'
+ *      category: // value for 'category'
+ *      describe: // value for 'describe'
+ *   },
+ * });
+ */
+export function useCreateProductMutation(baseOptions?: Apollo.MutationHookOptions<CreateProductMutation, CreateProductMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProductMutation, CreateProductMutationVariables>(CreateProductDocument, options);
+      }
+export type CreateProductMutationHookResult = ReturnType<typeof useCreateProductMutation>;
+export type CreateProductMutationResult = Apollo.MutationResult<CreateProductMutation>;
+export type CreateProductMutationOptions = Apollo.BaseMutationOptions<CreateProductMutation, CreateProductMutationVariables>;
 export const CreateRoomChatDocument = gql`
     mutation createRoomChat($userId: String!) {
   createRoomChat(userId: $userId) {
@@ -1363,6 +1450,47 @@ export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
 export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
 export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
+export const CategoriesAndLocationsDocument = gql`
+    query CategoriesAndLocations {
+  getCategories {
+    id
+    name
+    slug
+  }
+  getLocations {
+    id
+    location
+    zipcode
+  }
+}
+    `;
+
+/**
+ * __useCategoriesAndLocationsQuery__
+ *
+ * To run a query within a React component, call `useCategoriesAndLocationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCategoriesAndLocationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCategoriesAndLocationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCategoriesAndLocationsQuery(baseOptions?: Apollo.QueryHookOptions<CategoriesAndLocationsQuery, CategoriesAndLocationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CategoriesAndLocationsQuery, CategoriesAndLocationsQueryVariables>(CategoriesAndLocationsDocument, options);
+      }
+export function useCategoriesAndLocationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CategoriesAndLocationsQuery, CategoriesAndLocationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CategoriesAndLocationsQuery, CategoriesAndLocationsQueryVariables>(CategoriesAndLocationsDocument, options);
+        }
+export type CategoriesAndLocationsQueryHookResult = ReturnType<typeof useCategoriesAndLocationsQuery>;
+export type CategoriesAndLocationsLazyQueryHookResult = ReturnType<typeof useCategoriesAndLocationsLazyQuery>;
+export type CategoriesAndLocationsQueryResult = Apollo.QueryResult<CategoriesAndLocationsQuery, CategoriesAndLocationsQueryVariables>;
 export const ChatDocument = gql`
     query Chat($roomId: ID) {
   getChat(roomId: $roomId) {

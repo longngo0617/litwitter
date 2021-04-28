@@ -13,6 +13,11 @@ import BuildIcon from "@material-ui/icons/Build";
 import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import DeckIcon from "@material-ui/icons/Deck";
+import TvIcon from '@material-ui/icons/Tv';
+import LocalAtmIcon from '@material-ui/icons/LocalAtm';
+import HouseIcon from '@material-ui/icons/House';
+import PetsIcon from '@material-ui/icons/Pets';
+import ToysIcon from '@material-ui/icons/Toys';
 interface BarProps {
   fc: () => void;
 }
@@ -42,7 +47,7 @@ export const Bar: React.FC<BarProps> = ({ fc }) => {
         <Category>
           <Wrap>
             <ItemOption
-              href="/market"
+              href="/market/all"
               text="Lướt xem tất cả"
               IconN={StorefrontIcon}
             />
@@ -59,44 +64,69 @@ export const Bar: React.FC<BarProps> = ({ fc }) => {
             </ButtonWrap>
             <Type>Hạng mục</Type>
             <ItemOption
-              href="/market/category/vehicles"
+              href="/market/category/xe-co"
               text="Xe cộ"
               IconN={DirectionsCarIcon}
             />
             <ItemOption
-              href="/market/category/home-improvements"
+              href="/market/category/dung-cu-sua-chua-nha-cua"
               text="Dụng cụ sửa chữa nhà cửa "
               IconN={BuildIcon}
             />
             <ItemOption
-              href="/market/category/family"
+              href="/market/category/gia-dinh"
               text="Gia Đình"
               IconN={FavoriteIcon}
             />
             <ItemOption
-              href="/market/category/entertainment"
+              href="/market/category/giai-tri"
               text="Giải trí"
               IconN={VideocamIcon}
             />
             <ItemOption
-              href="/market/category/garden"
+              href="/market/category/lam-vuon-va-hoat-dong-ngoai-troi"
               text="Làm vườn và hoạt động ngoài trời "
               IconN={DeckIcon}
             />
             <ItemOption
-              href="/market/category/instrument"
+              href="/market/category/nhac-cu"
               text="Nhạc cụ "
               IconN={AudiotrackIcon}
             />
             <ItemOption
-              href="/market/category/classifieds"
+              href="/market/category/rao-vat"
               text="Rao vặt "
               IconN={LocalOfferIcon}
             />
             <ItemOption
-              href="/market/category/fitness"
+              href="/market/category/san-pham-the-thao"
               text="Sản phẩm thể thao "
               IconN={DirectionsRunIcon}
+            />
+            <ItemOption
+              href="/market/category/tai-san-cho-thue"
+              text="Tài sản cho thuê"
+              IconN={LocalAtmIcon}
+            />
+            <ItemOption
+              href="/market/category/ban-nha"
+              text="Bán nhà"
+              IconN={HouseIcon}
+            />
+            <ItemOption
+              href="/market/category/do-dung-cho-thu-cung"
+              text="Đồ dùng cho thú cưng"
+              IconN={PetsIcon}
+            />
+            <ItemOption
+              href="/market/category/do-may-mac"
+              text="Đồ may mặc"
+              IconN={ToysIcon}
+            />
+            <ItemOption
+              href="/market/category/do-dien-tu"
+              text="Đồ điện tử"
+              IconN={TvIcon}
             />
           </Wrap>
         </Category>
