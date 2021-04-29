@@ -3,12 +3,14 @@ import React from "react";
 import styled from "styled-components";
 import CloseIcon from "@material-ui/icons/Close";
 import Chip from "@material-ui/core/Chip";
+import { currencyFormat } from "../../../utils/toErrorMap";
 
 interface PopUpDirectProps {
   fc: () => void;
+  data: any;
 }
 
-export const PopUpDirect: React.FC<PopUpDirectProps> = ({ fc }) => {
+export const PopUpDirect: React.FC<PopUpDirectProps> = ({ fc, data }) => {
   const contentSample: string[] = [
     "Tôi quan tâm đến mặt hàng này.",
     "Mặt hàng này vẫn còn chứ?",
@@ -66,17 +68,20 @@ export const PopUpDirect: React.FC<PopUpDirectProps> = ({ fc }) => {
                         <div className="item" style={{ alignItems: "center" }}>
                           <div className="item-left">
                             <div className="avatar">
-                              <ImageProduct variant="square" src="" />
+                              <ImageProduct
+                                variant="square"
+                                src={data.image[0]}
+                              />
                             </div>
                           </div>
                           <div className="item-right">
                             <div className="item-right-top">
                               <div className="item-right-top-text">
                                 <div className="name-wrap">
-                                  <div className="name">
-                                    NỆM CAO SU NON AMERICAN THANH LÝ GIÁ RẺ NÈ
+                                  <div className="name">{data.body}</div>
+                                  <div className="username">
+                                    {currencyFormat(data.price)} ₫
                                   </div>
-                                  <div className="username">550.000 ₫</div>
                                 </div>
                               </div>
                             </div>
@@ -95,19 +100,7 @@ export const PopUpDirect: React.FC<PopUpDirectProps> = ({ fc }) => {
                         />
                       ))}
                     </WrapChip>
-                    {/* <Note>
-                          Ảnh
-                          <span style={{ margin: "0px 4px" }}>
-                            <span>&nbsp;</span>
-                            <span>.</span>
-                          </span>
-                          {`${arrImage.length} / 10`}
-                          <span
-                            style={{ fontWeight: "normal", marginLeft: "4px" }}
-                          >
-                            - Bạn có thể thêm tối đa 10 ảnh
-                          </span>
-                        </Note> */}
+
                     <MarginTop>
                       <TextField
                         label="Vui lòng nhâp tin nhắn cho người bán"
@@ -118,9 +111,14 @@ export const PopUpDirect: React.FC<PopUpDirectProps> = ({ fc }) => {
                         fullWidth
                         value={value}
                         onChange={handleChange}
-                        // component={TextFormField}
                       />
                     </MarginTop>
+                    <Note>
+                      <span style={{ fontWeight: "normal", marginLeft: "4px" }}>
+                        Không chia sẻ email, số điện thoại hoặc thông tin tài
+                        chính của bạn.
+                      </span>
+                    </Note>
                   </div>
                 </div>
               </div>
@@ -157,7 +155,7 @@ const Wrapper = styled.div`
   z-index: 1;
 `;
 const MarginTop = styled.div`
-  margin-top: 10px;
+  margin-top: 50px;
 `;
 const Padding = styled.div`
   padding: 0 12px;
@@ -173,10 +171,18 @@ const WrapChip = styled.div`
   flex-wrap: wrap;
 `;
 const Chipp = styled(Chip)`
-  margin: 4px 6px 0px !important;
+  margin: 10px 6px 0px !important;
   height: 36px !important;
   padding: 0px 12px !important;
   .MuiChip-label {
     padding: 12px;
   }
+`;
+const Note = styled.span`
+  color: #65676b;
+  font-weight: 600;
+  line-height: 12px;
+  word-break: break-word;
+  font-size: 12px;
+  margin-top: 12px;
 `;

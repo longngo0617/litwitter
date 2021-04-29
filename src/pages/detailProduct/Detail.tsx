@@ -217,7 +217,7 @@ export const Detail: React.FC<DetailProps> = () => {
           </Formik>
         </RightBottom>
       </Right>
-      {display && <PopUpDirect fc={() => setDisplay(!display)} />}
+      {display && <PopUpDirect fc={() => setDisplay(!display)} data={data?.getProduct}/>}
     </Wrap>
   );
 };
