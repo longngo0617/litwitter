@@ -1,8 +1,7 @@
 import { Link } from "@material-ui/core";
-import React, { useContext } from "react";
-import { useRouteMatch } from "react-router";
+import React from "react";
 import styled from "styled-components";
-import { UserContext } from "../../../utils/useAuth";
+import { currencyFormat } from "../../../utils/toErrorMap";
 
 interface ProductProps {
   price: string;
@@ -10,12 +9,6 @@ interface ProductProps {
   address: any;
   id: string;
   image: string[];
-}
-
-function currencyFormat(num: number) {
-  return new Intl.NumberFormat("vn", { maximumSignificantDigits: 3 }).format(
-    num
-  );
 }
 
 export const Product: React.FC<ProductProps> = ({

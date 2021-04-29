@@ -1,5 +1,6 @@
 import { Avatar } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import { FormatListBulleted } from "@material-ui/icons";
 import CloseIcon from "@material-ui/icons/Close";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
@@ -16,6 +17,7 @@ import {
   useProductQuery,
   useSendMessageMutation,
 } from "../../generated/graphql";
+import { PopUpDirect } from "./component/PopUpDirect";
 interface DetailProps {}
 
 function currencyFormat(num: number) {
@@ -35,6 +37,7 @@ export const Detail: React.FC<DetailProps> = () => {
       id: params.id,
     },
   });
+  const [display, setDisplay] = useState(false);
   let imageLength = 0;
 
   if (data) {
@@ -53,9 +56,9 @@ export const Detail: React.FC<DetailProps> = () => {
     <Wrap>
       <Left>
         <Overlay
-          style={{
-            backgroundImage: `url(${data?.getProduct?.image[crIndex]})`,
-          }}
+        // style={{
+        //   backgroundImage: `url(${data?.getProduct?.image[crIndex]})`,
+        // }}
         />
         <Main>
           <CloseButton onClick={() => router.goBack()}>
@@ -113,7 +116,11 @@ export const Detail: React.FC<DetailProps> = () => {
             <HangMuc>{data?.getProduct.category.name}</HangMuc>
             <DiaDiem>{data?.getProduct.address.location}</DiaDiem>
             <WrapButton>
-              <SendButtonn variant="contained" startIcon={<SendIcon />}>
+              <SendButtonn
+                variant="contained"
+                startIcon={<SendIcon />}
+                onClick={() => setDisplay(!display)}
+              >
                 Nhắn tin
               </SendButtonn>
             </WrapButton>
@@ -168,7 +175,7 @@ export const Detail: React.FC<DetailProps> = () => {
           <Formik
             initialValues={{ content: "Mặt hàng này còn chứ?" }}
             onSubmit={async (values) => {
-              const roomChat : any = await createRoomChat({
+              const roomChat: any = await createRoomChat({
                 variables: {
                   userId: data?.getProduct.seller.id,
                 },
@@ -176,7 +183,7 @@ export const Detail: React.FC<DetailProps> = () => {
               await sendMessage({
                 variables: {
                   content: values.content,
-                  roomId: roomChat?.id,
+                  roomId: roomChat.data.createRoomChat.id,
                 },
               });
             }}
@@ -210,6 +217,7 @@ export const Detail: React.FC<DetailProps> = () => {
           </Formik>
         </RightBottom>
       </Right>
+      {display && <PopUpDirect fc={() => setDisplay(!display)} />}
     </Wrap>
   );
 };
@@ -386,12 +394,14 @@ const Line = styled.div`
   align-items: center;
 `;
 const Overlay = styled.div`
-  filter: blur(8px) drop-shadow(8px 8px 10px black);
-  -webkit-filter: blur(6px) drop-shadow(8px 8px 10px black);
+  // filter: blur(8px) drop-shadow(8px 8px 10px black);
+  // -webkit-filter: blur(6px) drop-shadow(8px 8px 10px black);
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  background-color: #000;
+  opacity: 0.9;
 `;
 const FormSubmit = styled(Form)`
   width: 100%;

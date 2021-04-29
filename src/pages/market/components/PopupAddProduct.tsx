@@ -1,23 +1,21 @@
 import {
   Avatar,
   Button,
-  IconButton,
-  MenuItem,
-  TextField,
+  IconButton
 } from "@material-ui/core";
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CloseIcon from "@material-ui/icons/Close";
 import { Field, Form, Formik } from "formik";
 import React, { useContext, useRef, useState } from "react";
 import styled from "styled-components";
+import { SelectFormField } from "../../../components/SelectFormField";
 import { TextFormField } from "../../../components/TextFormField";
-import { UserContext } from "../../../utils/useAuth";
-import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import {
   ProductsDocument,
-  useCreateProductMutation,
+  useCreateProductMutation
 } from "../../../generated/graphql";
 import { toErrorMap } from "../../../utils/toErrorMap";
-import { SelectFormField } from "../../../components/SelectFormField";
+import { UserContext } from "../../../utils/useAuth";
 
 interface PopupAddProductProps {
   fc: () => void;

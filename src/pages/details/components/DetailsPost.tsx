@@ -26,7 +26,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
       <div className="feed__header">
         <ArrowBackIcon
           className="feed__header--icon"
-          onClick={() => router.goBack()}
+          onClick={() => router.replace("/home")}
         />
         <h2>Tweet</h2>
       </div>

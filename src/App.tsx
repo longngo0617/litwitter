@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { CommentPost } from "./components/CommentPost";
 import { PopupMore } from "./components/PopupMore";
 import { Connect } from "./pages/connect/Connect";
-import { Detail } from "./pages/detail/Detail";
+import { Detail } from "./pages/detailProduct/Detail";
 import { Details } from "./pages/details/Details";
 import Home from "./pages/home/Home";
 import { Login } from "./pages/login/Login";
