@@ -11,7 +11,10 @@ interface UserAccountProps {}
 
 export const UserAccount: React.FC<UserAccountProps> = () => {
   const { data, loading }: any = useMeProductsQuery();
-
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  };
+  const [value, setValue] = React.useState("");
   if (!data && loading) {
     return (
       <WrapLoading>
@@ -19,6 +22,7 @@ export const UserAccount: React.FC<UserAccountProps> = () => {
       </WrapLoading>
     );
   }
+  console.log(value)
   return (
     <Page>
       <TopBar>
@@ -26,11 +30,11 @@ export const UserAccount: React.FC<UserAccountProps> = () => {
         <InputContainer>
           <InputIcon />
           <Input
+            autoComplete="off"
             name="displayname"
             placeholder="Tìm kiếm bài niêm yết"
-            // onChange={handleChange}
-            // value={values.displayname}
-            // onClick={() => setDisplay(!display)}
+            onChange={handleChange}
+            value={value}
           />
         </InputContainer>
       </TopBar>
@@ -48,54 +52,56 @@ export const UserAccount: React.FC<UserAccountProps> = () => {
         </div>
       </Empty> */}
       <ListProduct>
-        {data?.getMyProducts?.map((p: any) => (
-          <Product>
-            <ProductImage>
-              <img src={p?.image[0]} />
-            </ProductImage>
-            <ProductInfo>
-              <Wrap>
-                <TextW>
-                  <TextTop>
-                    <Line>
-                      <span>{p?.body}</span>
-                    </Line>
-                    <Line>
-                      <span style={{ fontWeight: "normal" }}>
-                        {currencyFormat(parseInt(p?.price))}đ
-                      </span>
-                    </Line>
-                  </TextTop>
-                  <TextBottom>
-                    <Line1>
-                      <span>
-                        Còn hàng
-                        <span style={{ margin: "0 5px" }}>.</span>
-                        Đăng lúc 30/4
-                      </span>
-                    </Line1>
-                    <Line1>
-                      <span>Đã niêm yết trên Marketplace</span>
-                    </Line1>
-                  </TextBottom>
-                </TextW>
-                <ButtonWrap>
-                  <Button>
-                    <IconCheck />
-                    <Text>Đánh dấu là hết hàng</Text>
-                  </Button>
-                  <ButtonEdit>
-                    <EditIcon />
-                    <Text style={{ color: "#050505" }}>Chỉnh sửa</Text>
-                  </ButtonEdit>
-                  <ButtonDelete>
-                    <DeleteIcon />
-                  </ButtonDelete>
-                </ButtonWrap>
-              </Wrap>
-            </ProductInfo>
-          </Product>
-        ))}
+        {data?.getMyProducts
+          ?.filter((p: any) => p.body.toLowerCase().includes(value.toLowerCase()))
+          .map((p: any) => (
+            <Product key={p.id}>
+              <ProductImage>
+                <img src={p?.image[0]} />
+              </ProductImage>
+              <ProductInfo>
+                <Wrap>
+                  <TextW>
+                    <TextTop>
+                      <Line>
+                        <span>{p?.body}</span>
+                      </Line>
+                      <Line>
+                        <span style={{ fontWeight: "normal" }}>
+                          {currencyFormat(parseInt(p?.price))} đ
+                        </span>
+                      </Line>
+                    </TextTop>
+                    <TextBottom>
+                      <Line1>
+                        <span>
+                          Còn hàng
+                          <span style={{ margin: "0 5px" }}>.</span>
+                          Đăng lúc 30/4
+                        </span>
+                      </Line1>
+                      <Line1>
+                        <span>Đã niêm yết trên Marketplace</span>
+                      </Line1>
+                    </TextBottom>
+                  </TextW>
+                  <ButtonWrap>
+                    <Button>
+                      <IconCheck />
+                      <Text>Đánh dấu là hết hàng</Text>
+                    </Button>
+                    <ButtonEdit>
+                      <EditIcon />
+                      <Text style={{ color: "#050505" }}>Chỉnh sửa</Text>
+                    </ButtonEdit>
+                    <ButtonDelete>
+                      <DeleteIcon />
+                    </ButtonDelete>
+                  </ButtonWrap>
+                </Wrap>
+              </ProductInfo>
+            </Product>
+          ))}
       </ListProduct>
     </Page>
   );
@@ -166,7 +172,7 @@ const Product = styled.div`
   align-items: center;
   background-color: #fff;
   justify-content: flex-start;
-  margin-bottom:12px;
+  margin-bottom: 12px;
 `;
 const ProductImage = styled.div`
   border-radius: 6px;
