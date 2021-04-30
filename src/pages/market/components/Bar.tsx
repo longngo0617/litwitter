@@ -13,21 +13,26 @@ import BuildIcon from "@material-ui/icons/Build";
 import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import DeckIcon from "@material-ui/icons/Deck";
-import TvIcon from '@material-ui/icons/Tv';
-import LocalAtmIcon from '@material-ui/icons/LocalAtm';
-import HouseIcon from '@material-ui/icons/House';
-import PetsIcon from '@material-ui/icons/Pets';
-import ToysIcon from '@material-ui/icons/Toys';
+import TvIcon from "@material-ui/icons/Tv";
+import LocalAtmIcon from "@material-ui/icons/LocalAtm";
+import HouseIcon from "@material-ui/icons/House";
+import PetsIcon from "@material-ui/icons/Pets";
+import ToysIcon from "@material-ui/icons/Toys";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { useHistory } from "react-router";
+
 interface BarProps {
   fc: () => void;
 }
 
 export const Bar: React.FC<BarProps> = ({ fc }) => {
   const [value, setValue] = useState("");
+  const router= useHistory();
   return (
     <FilterBarContainer>
       <FilterBar>
         <Header>
+          <ArrowBack onClick={() => router.replace("/")}/>
           <Head>Marketplace</Head>
         </Header>
         <Border>
@@ -156,6 +161,8 @@ const FilterBar = styled.div`
 const Header = styled.div`
   padding: 12px 16px;
   position: relative;
+  display: flex;
+  align-items: center;
 `;
 const Head = styled.h2`
   font-size: 28px;
@@ -165,6 +172,11 @@ const Head = styled.h2`
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
   overflow-wrap: break-word;
+`;
+const ArrowBack = styled(ArrowBackIcon)`
+  cursor:pointer;
+  color:#1877f2;
+  margin-right:15px;
 `;
 const InputContainer = styled.div`
   display: flex;

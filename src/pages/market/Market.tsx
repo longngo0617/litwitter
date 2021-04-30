@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { Route, Switch, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import {
   useCategoriesAndLocationsQuery,
@@ -8,6 +8,7 @@ import {
 import { Bar } from "./components/Bar";
 import { Collection } from "./components/Collection";
 import { PopupAddProduct } from "./components/PopupAddProduct";
+import { UserAccount } from "./components/UserAccount";
 interface MarketProps {}
 
 function useQuery() {
@@ -33,7 +34,18 @@ export const Market: React.FC<MarketProps> = () => {
   return (
     <Container>
       <Bar fc={() => setDisplay(!display)} />
-      <Collection collection={products?.data} sortNumber={sort} loading={products?.loading} />
+      <Switch>
+        <Route path="/market/you/selling">
+          <UserAccount />
+        </Route>
+        <Route path="/">
+          <Collection
+            collection={products?.data}
+            sortNumber={sort}
+            loading={products?.loading}
+          />
+        </Route>
+      </Switch>
       {display && (
         <PopupAddProduct fc={() => setDisplay(!display)} data={data} />
       )}
@@ -45,4 +57,6 @@ const Container = styled.div`
   display: flex;
   width: 100%;
   flex-grow: 1;
+  background-color: #f0f2f5;
+  height: auto;
 `;

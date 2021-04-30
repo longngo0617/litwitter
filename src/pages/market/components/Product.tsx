@@ -64,7 +64,7 @@ const ImageWrap = styled.div`
 `;
 const Image = styled.img`
   overflow: hidden;
-  height: auto;
+  height: 100%;
   width: 100%;
   object-fit: cover;
 `;

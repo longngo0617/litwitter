@@ -744,6 +744,17 @@ export type ChatsQuery = (
   )>>> }
 );
 
+export type MeProductsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeProductsQuery = (
+  { __typename?: 'Query' }
+  & { getMyProducts?: Maybe<Array<Maybe<(
+    { __typename?: 'Product' }
+    & RegularProductFragment
+  )>>> }
+);
+
 export type MyPostsQueryVariables = Exact<{
   username: Scalars['String'];
   cursor?: Maybe<Scalars['String']>;
@@ -1573,6 +1584,40 @@ export function useChatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Chat
 export type ChatsQueryHookResult = ReturnType<typeof useChatsQuery>;
 export type ChatsLazyQueryHookResult = ReturnType<typeof useChatsLazyQuery>;
 export type ChatsQueryResult = Apollo.QueryResult<ChatsQuery, ChatsQueryVariables>;
+export const MeProductsDocument = gql`
+    query MeProducts {
+  getMyProducts {
+    ...RegularProduct
+  }
+}
+    ${RegularProductFragmentDoc}`;
+
+/**
+ * __useMeProductsQuery__
+ *
+ * To run a query within a React component, call `useMeProductsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeProductsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeProductsQuery(baseOptions?: Apollo.QueryHookOptions<MeProductsQuery, MeProductsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MeProductsQuery, MeProductsQueryVariables>(MeProductsDocument, options);
+      }
+export function useMeProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeProductsQuery, MeProductsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MeProductsQuery, MeProductsQueryVariables>(MeProductsDocument, options);
+        }
+export type MeProductsQueryHookResult = ReturnType<typeof useMeProductsQuery>;
+export type MeProductsLazyQueryHookResult = ReturnType<typeof useMeProductsLazyQuery>;
+export type MeProductsQueryResult = Apollo.QueryResult<MeProductsQuery, MeProductsQueryVariables>;
 export const MyPostsDocument = gql`
     query myPosts($username: String!, $cursor: String, $limit: Int!) {
   getMyPosts(username: $username, cursor: $cursor, limit: $limit) {

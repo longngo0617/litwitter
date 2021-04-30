@@ -8,13 +8,13 @@ import { Product } from "./Product";
 interface CollectionProps {
   collection: any;
   sortNumber: string;
-  loading:boolean;
+  loading: boolean;
 }
 
 export const Collection: React.FC<CollectionProps> = ({
   collection,
   sortNumber,
-  loading
+  loading,
 }) => {
   const router = useHistory();
 
@@ -29,42 +29,57 @@ export const Collection: React.FC<CollectionProps> = ({
   return (
     <Container>
       <Main>
-        <Wrap>
-          <Header>
-            <Title>Lựa chọn hôm nay</Title>
-            <BarFilter>
-              <div>
-                <FormControlLabel
-                  value="decrease"
-                  control={<Radio />}
-                  checked={sortNumber === "-1"}
-                  onChange={() => {
-                    router.push({
-                      search: "?sort=-1",
-                    });
-                  }}
-                  label="Giá từ cao xuống thấp"
-                />
-                <FormControlLabel
-                  value="increase"
-                  control={<Radio />}
-                  checked={sortNumber === "1"}
-                  onChange={() => {
-                    router.push({
-                      search: "?sort=1",
-                    });
-                  }}
-                  label="Giá từ thấp đến cao"
-                />
+        {!collection?.getProducts.length ? (
+          <Empty>
+            <div className="empty">
+              <div className="empty--text">
+                <span className="title">Danh sách sản phẩm</span>
               </div>
-            </BarFilter>
-          </Header>
-          <ListProduct>
-            {collection?.getProducts.map((product: any) => (
-              <Product key={product.id} {...product} />
-            ))}
-          </ListProduct>
-        </Wrap>
+              <div className="empty--text empty--info">
+                <span className="info">
+                  Hiện không có những sản phẩm được niêm yết !
+                </span>
+              </div>
+            </div>
+          </Empty>
+        ) : (
+          <Wrap>
+            <Header>
+              <Title>Lựa chọn hôm nay</Title>
+              <BarFilter>
+                <div>
+                  <FormControlLabel
+                    value="decrease"
+                    control={<Radio />}
+                    checked={sortNumber === "-1"}
+                    onChange={() => {
+                      router.push({
+                        search: "?sort=-1",
+                      });
+                    }}
+                    label="Giá từ cao xuống thấp"
+                  />
+                  <FormControlLabel
+                    value="increase"
+                    control={<Radio />}
+                    checked={sortNumber === "1"}
+                    onChange={() => {
+                      router.push({
+                        search: "?sort=1",
+                      });
+                    }}
+                    label="Giá từ thấp đến cao"
+                  />
+                </div>
+              </BarFilter>
+            </Header>
+            <ListProduct>
+              {collection?.getProducts.map((product: any) => (
+                <Product key={product.id} {...product} />
+              ))}
+            </ListProduct>
+          </Wrap>
+        )}
       </Main>
     </Container>
   );
@@ -76,11 +91,9 @@ const Container = styled.div`
   max-width: 100%;
   flex-shrink: 1;
   flex-grow: 1;
-  background-color: #f0f2f5;
   box-sizing: border-box;
   height: 100%;
   flex-direction: column;
-  height:100vh;
 `;
 const Main = styled.div`
   padding-left: 26px;
@@ -123,5 +136,11 @@ const WrapLoading = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  width:100%;
+  width: 100%;
+`;
+const Empty = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 `;
