@@ -4,13 +4,19 @@ import SearchIcon from "@material-ui/icons/Search";
 import CheckIcon from "@material-ui/icons/Check";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { useMeProductsQuery } from "../../../generated/graphql";
+import {
+  MeProductsDocument,
+  useDeleteProductMutation,
+  useMeProductsQuery,
+} from "../../../generated/graphql";
 import { Loading } from "../../../components/Loading";
 import { currencyFormat } from "../../../utils/toErrorMap";
+import moment from "moment";
 interface UserAccountProps {}
 
 export const UserAccount: React.FC<UserAccountProps> = () => {
   const { data, loading }: any = useMeProductsQuery();
+  const [deleteProduct] = useDeleteProductMutation();
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
@@ -22,7 +28,7 @@ export const UserAccount: React.FC<UserAccountProps> = () => {
       </WrapLoading>
     );
   }
-  console.log(value)
+  console.log(value);
   return (
     <Page>
       <TopBar>
@@ -53,7 +59,9 @@ export const UserAccount: React.FC<UserAccountProps> = () => {
       </Empty> */}
       <ListProduct>
         {data?.getMyProducts
-          ?.filter((p: any) => p.body.toLowerCase().includes(value.toLowerCase()))
+          ?.filter((p: any) =>
+            p.body.toLowerCase().includes(value.toLowerCase())
+          )
           .map((p: any) => (
             <Product key={p.id}>
               <ProductImage>
@@ -77,7 +85,7 @@ export const UserAccount: React.FC<UserAccountProps> = () => {
                         <span>
                           Còn hàng
                           <span style={{ margin: "0 5px" }}>.</span>
-                          Đăng lúc 30/4
+                          Đăng lúc {moment(p.createdAt).format("l")}
                         </span>
                       </Line1>
                       <Line1>
@@ -94,7 +102,16 @@ export const UserAccount: React.FC<UserAccountProps> = () => {
                       <EditIcon />
                       <Text style={{ color: "#050505" }}>Chỉnh sửa</Text>
                     </ButtonEdit>
-                    <ButtonDelete>
+                    <ButtonDelete
+                      onClick={async () =>
+                        await deleteProduct({
+                          variables: {
+                            id: p.id,
+                          },
+                          refetchQueries: [{ query: MeProductsDocument }],
+                        })
+                      }
+                    >
                       <DeleteIcon />
                     </ButtonDelete>
                   </ButtonWrap>
@@ -275,4 +292,9 @@ const ButtonEdit = styled(Button)`
 const ButtonDelete = styled(Button)`
   background-color: #e4e6eb;
   flex: 0.1;
+  transition: 0.2s background-color, 0.2s color;
+  &:hover {
+    background-color: rgb(202, 32, 85);
+    color: #fff;
+  }
 `;

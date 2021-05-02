@@ -1,8 +1,4 @@
-import {
-  Avatar,
-  Button,
-  IconButton
-} from "@material-ui/core";
+import { Avatar, Button, IconButton } from "@material-ui/core";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CloseIcon from "@material-ui/icons/Close";
 import { Field, Form, Formik } from "formik";
@@ -11,8 +7,9 @@ import styled from "styled-components";
 import { SelectFormField } from "../../../components/SelectFormField";
 import { TextFormField } from "../../../components/TextFormField";
 import {
+  MeProductsDocument,
   ProductsDocument,
-  useCreateProductMutation
+  useCreateProductMutation,
 } from "../../../generated/graphql";
 import { toErrorMap } from "../../../utils/toErrorMap";
 import { UserContext } from "../../../utils/useAuth";
@@ -70,7 +67,10 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
             values.image = arrImage;
             const response: any = await createProduct({
               variables: values,
-              refetchQueries: [{ query: ProductsDocument }],
+              refetchQueries: [
+                { query: ProductsDocument },
+                { query: MeProductsDocument },
+              ],
             });
             if (
               response.data?.createProduct.error.length &&
