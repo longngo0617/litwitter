@@ -28,12 +28,11 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
   const inputImage: any = useRef(null);
   const [arrImage, setArrImage] = useState<string[]>([]);
   const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
-    previewFile(file);
-  };
-
-  const addImage = (image: string) => {
-    setArrImage([...arrImage, image]);
+    if(e.target.files) {
+      const fileArr = Array.from(e.target.files).map((file) => URL.createObjectURL(file))
+      setArrImage((prevImage) => prevImage.concat(fileArr))
+      Array.from(e.target.files).map((file : any) => URL.revokeObjectURL(file))
+    }
   };
   const [errorImage, setErrorImage] = useState<any>({});
   const removeItem = (image: string) => {
@@ -41,14 +40,6 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
     setArrImage(filtered);
   };
 
-  const previewFile = (file: any) => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      addImage(reader.result as string);
-    };
-  };
 
   return (
     <Container>
