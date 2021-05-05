@@ -1,5 +1,7 @@
 import React from "react";
 import CancelIcon from "@material-ui/icons/Cancel";
+
+
 interface ImageProps {
   image: any;
   close?: boolean;

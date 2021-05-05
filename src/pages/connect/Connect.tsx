@@ -4,7 +4,12 @@ import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Loading } from "../../components/Loading";
-import { Follow, PostsDocument, useUsersQuery } from "../../generated/graphql";
+import {
+  Follow,
+  PostsDocument,
+  useFollowUserMutation,
+  useUsersQuery,
+} from "../../generated/graphql";
 import { UserContext } from "../../utils/useAuth";
 import { WithSide } from "../../utils/withSide";
 
@@ -12,7 +17,9 @@ interface ConnectProps {}
 
 export const Connect: React.FC<ConnectProps> = () => {
   const { data, loading }: any = useUsersQuery();
-  const { user, followUser, addUser }: any = useContext(UserContext);
+  const { user, addUser }: any = useContext(UserContext);
+  const [followUser] = useFollowUserMutation();
+
   const router = useHistory();
 
   return (
@@ -40,7 +47,11 @@ export const Connect: React.FC<ConnectProps> = () => {
                 data?.getUsers
                   .filter((f: any) => f.username !== user.username)
                   .map((f: any) => (
-                    <div key={f.id} className="follow-modal-bottom-itemWrap" onClick={() => router.replace(`/users/${f.username}`)}>
+                    <div
+                      key={f.id}
+                      className="follow-modal-bottom-itemWrap"
+                      onClick={() => router.replace(`/users/${f.username}`)}
+                    >
                       <div className="follow-modal-bottom-item">
                         <div className="item">
                           <div className="item-left">
@@ -88,7 +99,13 @@ export const Connect: React.FC<ConnectProps> = () => {
                                             username: f.username,
                                           },
                                           refetchQueries: [
-                                            { query: PostsDocument },
+                                            {
+                                              query: PostsDocument,
+                                              variables: {
+                                                cursor: "",
+                                                limit:6,
+                                              },
+                                            },
                                           ],
                                         });
                                         await addUser(data?.data?.following);

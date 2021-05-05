@@ -70,7 +70,7 @@ export const DetailsPost: React.FC<DetailsPostProps> = () => {
                 <div className="postSingle__text">
                   <span>{data?.getPost.body}</span>
                 </div>
-                {data?.getPost.image?.length ? <Image image={data?.getPost.image} /> : null}
+                {data?.getPost.image?.length ? <Image image={data?.getPost.image[0]} /> : null}
                 <div className="postSingle__date">
                   <span>{moment(data?.getPost?.createdAt).fromNow()}</span>
                   <span style={{ padding: "0 4px" }}>.</span>
