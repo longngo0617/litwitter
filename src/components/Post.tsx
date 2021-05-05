@@ -67,7 +67,7 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
               <p>{props.body}</p>
             </div>
           </div>
-          {props?.image?.length ? <Image image={props.image[0]} /> : null}
+          {props?.image?.length ? <Image image={props.image} /> : null}
           <div className="post__footer">
             <InteractiveBar
               commentCount={props.commentCount}
