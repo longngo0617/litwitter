@@ -1,13 +1,14 @@
-import React from "react";
-import CancelIcon from "@material-ui/icons/Cancel";
+import React, { useContext } from "react";
+import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
+import { UserContext } from "../utils/useAuth";
 
 interface ImageProps {
   image: any;
   close?: boolean;
-  callback?: () => void;
 }
 
-export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
+export const Image: React.FC<ImageProps> = ({ image, close }) => {
+  const {removeImage} = useContext(UserContext);
   return (
     <div className="post__image--wrap">
       <div className="post__image--wrap">
@@ -42,9 +43,9 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                         {close ? (
                           <div className="post__image--close">
                             <div className="post__image--closeButton">
-                              <CancelIcon
+                              <CancelOutlinedIcon
                                 className="post__image--cancel"
-                                onClick={callback}
+                                onClick={() => removeImage(im)}
                               />
                             </div>
                           </div>
@@ -76,9 +77,9 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                         {close ? (
                           <div className="post__image--close">
                             <div className="post__image--closeButton">
-                              <CancelIcon
+                              <CancelOutlinedIcon
                                 className="post__image--cancel"
-                                onClick={callback}
+                                onClick={() => removeImage(image[0])}
                               />
                             </div>
                           </div>
@@ -99,7 +100,7 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                                 style={{ backgroundImage: `url(${image[1]})` }}
                               ></div>
                               <img
-                                src={image[0]}
+                                src={image[1]}
                                 alt=""
                                 className="post__image--hide"
                               />
@@ -108,9 +109,9 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                           {close ? (
                             <div className="post__image--close">
                               <div className="post__image--closeButton">
-                                <CancelIcon
+                                <CancelOutlinedIcon
                                   className="post__image--cancel"
-                                  onClick={callback}
+                                  onClick={() => removeImage(image[1])}
                                 />
                               </div>
                             </div>
@@ -127,7 +128,7 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                                 style={{ backgroundImage: `url(${image[2]})` }}
                               ></div>
                               <img
-                                src={image[0]}
+                                src={image[2]}
                                 alt=""
                                 className="post__image--hide"
                               />
@@ -136,9 +137,9 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                           {close ? (
                             <div className="post__image--close">
                               <div className="post__image--closeButton">
-                                <CancelIcon
+                                <CancelOutlinedIcon
                                   className="post__image--cancel"
-                                  onClick={callback}
+                                  onClick={() => removeImage(image[2])}
                                 />
                               </div>
                             </div>
@@ -176,9 +177,9 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                           {close ? (
                             <div className="post__image--close">
                               <div className="post__image--closeButton">
-                                <CancelIcon
+                                <CancelOutlinedIcon
                                   className="post__image--cancel"
-                                  onClick={callback}
+                                  onClick={() => removeImage(image[0])}
                                 />
                               </div>
                             </div>
@@ -192,10 +193,10 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                             >
                               <div
                                 className="post__image--background"
-                                style={{ backgroundImage: `url(${image[4]})` }}
+                                style={{ backgroundImage: `url(${image[3]})` }}
                               ></div>
                               <img
-                                src={image[0]}
+                                src={image[3]}
                                 alt=""
                                 className="post__image--hide"
                               />
@@ -204,9 +205,9 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                           {close ? (
                             <div className="post__image--close">
                               <div className="post__image--closeButton">
-                                <CancelIcon
+                                <CancelOutlinedIcon
                                   className="post__image--cancel"
-                                  onClick={callback}
+                                  onClick={() => removeImage(image[3])}
                                 />
                               </div>
                             </div>
@@ -228,7 +229,7 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                                 style={{ backgroundImage: `url(${image[1]})` }}
                               ></div>
                               <img
-                                src={image[0]}
+                                src={image[1]}
                                 alt=""
                                 className="post__image--hide"
                               />
@@ -237,9 +238,9 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                           {close ? (
                             <div className="post__image--close">
                               <div className="post__image--closeButton">
-                                <CancelIcon
+                                <CancelOutlinedIcon
                                   className="post__image--cancel"
-                                  onClick={callback}
+                                  onClick={() => removeImage(image[1])}
                                 />
                               </div>
                             </div>
@@ -256,7 +257,7 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                                 style={{ backgroundImage: `url(${image[2]})` }}
                               ></div>
                               <img
-                                src={image[0]}
+                                src={image[2]}
                                 alt=""
                                 className="post__image--hide"
                               />
@@ -265,9 +266,9 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                           {close ? (
                             <div className="post__image--close">
                               <div className="post__image--closeButton">
-                                <CancelIcon
+                                <CancelOutlinedIcon
                                   className="post__image--cancel"
-                                  onClick={callback}
+                                  onClick={() => removeImage(image[2])}
                                 />
                               </div>
                             </div>
@@ -279,9 +280,6 @@ export const Image: React.FC<ImageProps> = ({ image, close, callback }) => {
                 </div>
               </div>
             </div>
-            {/* <a href="#" className="post__image--wrap post__image--link">
-              
-            </a> */}
           </div>
         </div>
       </div>

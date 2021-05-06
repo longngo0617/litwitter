@@ -85,7 +85,8 @@ export type Chat = {
   username: Scalars['String'];
   displayname: Scalars['String'];
   createdAt: Scalars['String'];
-  content: Scalars['String'];
+  content?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
 };
 
 export type Member = {
@@ -285,6 +286,7 @@ export type Mutation = {
   deleteComment: Post;
   likePost: Post;
   createRoomChat: RoomChat;
+  createRoomChatUsername: RoomChat;
   deleteRoomChat?: Maybe<Scalars['String']>;
   createContentChat: RoomChat;
   createGroupChat: GroupChat;
@@ -352,6 +354,11 @@ export type MutationCreateRoomChatArgs = {
 };
 
 
+export type MutationCreateRoomChatUsernameArgs = {
+  username: Scalars['String'];
+};
+
+
 export type MutationDeleteRoomChatArgs = {
   roomId: Scalars['ID'];
 };
@@ -359,7 +366,8 @@ export type MutationDeleteRoomChatArgs = {
 
 export type MutationCreateContentChatArgs = {
   roomId: Scalars['String'];
-  content: Scalars['String'];
+  content?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
 };
 
 
@@ -421,7 +429,7 @@ export enum CacheControlScope {
 
 export type ChatSnippetFragment = (
   { __typename?: 'Chat' }
-  & Pick<Chat, 'id' | 'username' | 'displayname' | 'createdAt' | 'content'>
+  & Pick<Chat, 'id' | 'username' | 'displayname' | 'createdAt' | 'content' | 'image'>
 );
 
 export type CommentSnippetFragment = (
@@ -703,8 +711,9 @@ export type RegisterMutation = (
 );
 
 export type SendMessageMutationVariables = Exact<{
-  content: Scalars['String'];
+  content?: Maybe<Scalars['String']>;
   roomId: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -968,6 +977,7 @@ export const ChatSnippetFragmentDoc = gql`
   displayname
   createdAt
   content
+  image
 }
     `;
 export const RegularRoomChatFragmentDoc = gql`
@@ -1482,8 +1492,8 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const SendMessageDocument = gql`
-    mutation SendMessage($content: String!, $roomId: String!) {
-  createContentChat(content: $content, roomId: $roomId) {
+    mutation SendMessage($content: String, $roomId: String!, $image: String) {
+  createContentChat(content: $content, roomId: $roomId, image: $image) {
     ...RegularRoomChat
   }
 }
@@ -1505,6 +1515,7 @@ export type SendMessageMutationFn = Apollo.MutationFunction<SendMessageMutation,
  *   variables: {
  *      content: // value for 'content'
  *      roomId: // value for 'roomId'
+ *      image: // value for 'image'
  *   },
  * });
  */

@@ -18,7 +18,7 @@ interface MessagesProps {}
 export const Messages: React.FC<MessagesProps> = () => {
   const { user, openMessage } = useContext(UserContext);
   const { data, loading }: any = useChatsQuery({
-    pollInterval: 500,
+    pollInterval: 1000,
   });
   const params: any = useParams();
   const { url }: any = useRouteMatch();

@@ -1,5 +1,5 @@
-mutation SendMessage($content:String!,$roomId: String!) {
-  createContentChat(content:$content,roomId:$roomId){
+mutation SendMessage($content:String,$roomId: String!,$image:String) {
+  createContentChat(content:$content,roomId:$roomId,image:$image){
     ...RegularRoomChat
   }
 }

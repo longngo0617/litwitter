@@ -20,28 +20,23 @@ interface TweetBoxProps {
 export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
   const [createPost] = useCreatePostMutation();
   const [createComment] = useCommentMutation();
-  const { closeComment,user } = useContext(UserContext);
+  const { closeComment, user } = useContext(UserContext);
   const inputFile: any = useRef(null);
-  const [selectedFile, setSelectedFile] = useState("");
-  const [previewSource, setPreviewSource] = useState<any>("");
+  const { addImage, arrImage } = useContext(UserContext);
 
   const handleFileInputChange = (e: any) => {
-    const file = e.target.files[0];
-    previewFile(file);
-    setSelectedFile(e.target.value);
+    console.log(e.target.files)
+    if (e.target.files) {
+      Array.from(e.target.files).map((file) => readerImage(file));
+    }
   };
 
-  const previewFile = (file: any) => {
-    if (!file) return;
+  const readerImage = (file: any) => {
     const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setPreviewSource(reader.result);
+    reader.onload = (e) => {
+      addImage(e.target?.result as string)
     };
-  };
-  const cancelFile = () => {
-    setPreviewSource("");
-    setSelectedFile("");
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -51,9 +46,9 @@ export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
       </div>
       <div className="tweetBox__form">
         <Formik
-          initialValues={{ body: "", image: "" }}
+          initialValues={{ body: "", image: [""] }}
           onSubmit={async (values) => {
-            values.image = previewSource as string;
+            values.image = arrImage;
             (await !isComment)
               ? createPost({
                   variables: values,
@@ -67,8 +62,6 @@ export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
                     closeComment();
                   },
                 });
-            setPreviewSource("");
-            setSelectedFile("");
             values.body = "";
           }}
         >
@@ -77,9 +70,7 @@ export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
               <Field name="body" component={TextArea} />
               <div className="tweetBox__input">
                 <div className="tweetBox__imagePreview">
-                  {previewSource ? (
-                    <Image image={previewSource} close callback={cancelFile} />
-                  ) : null}
+                  {arrImage.length ? <Image image={arrImage} close /> : null}
                 </div>
               </div>
               <Box
@@ -104,7 +95,6 @@ export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
                         type="file"
                         className="input-file"
                         ref={inputFile}
-                        value={selectedFile}
                         onChange={handleFileInputChange}
                       />
                     </div>

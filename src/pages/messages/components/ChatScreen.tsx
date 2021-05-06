@@ -13,13 +13,30 @@ import { UserContext } from "../../../utils/useAuth";
 import { Formik, Form } from "formik";
 import SendIcon from "@material-ui/icons/Send";
 import { useHistory } from "react-router-dom";
-import moment from "moment";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import ImageIcon from "@material-ui/icons/Image";
+import CloseIcon from "@material-ui/icons/Close";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      "& > *": {
+        margin: theme.spacing(1),
+      },
+    },
+    input: {
+      display: "none",
+    },
+  })
+);
+
 interface ChatScreenProps {
   id: string;
   url: string;
 }
 
 export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
+  const classes = useStyles();
   const endOfMessageRef: any = useRef<any>(null);
   const { user } = useContext(UserContext);
   const [sendMessage] = useSendMessageMutation();
@@ -28,9 +45,23 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
   };
   const { data, loading }: any = useChatQuery({
     variables: { roomId: id },
-    pollInterval: 500,
+    pollInterval: 1000,
   });
   const router = useHistory();
+
+  const [imageSelected, setImageSelected] = React.useState<string>("");
+  const handleImageChange = (e: any) => {
+    if (e.target.files) {
+      readerImage(e.target.files[0]);
+    }
+  };
+  const readerImage = (file: any) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImageSelected(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const showMessages = () => {
     if (data) {
@@ -39,7 +70,12 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
           key={message.id}
           u={message.username}
           message={message.content}
-          time={message.username !== data.getChat?.content[index+1]?.username ? message.createdAt : ""}
+          image={message.image}
+          time={
+            message.username !== data.getChat?.content[index + 1]?.username
+              ? message.createdAt
+              : ""
+          }
         />
       ));
     }
@@ -97,12 +133,14 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
         </MessageContainer>
         <InputContainer>
           <Formik
-            initialValues={{ content: "" }}
+            initialValues={{ content: "", image: "" }}
             onSubmit={async (values) => {
+              values.image = imageSelected;
               sendMessage({
                 variables: {
                   content: values.content,
                   roomId: id,
+                  image: values.image,
                 },
               });
               values.content = "";
@@ -110,11 +148,45 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
           >
             {({ handleChange, values }) => (
               <FormSubmit autoComplete="off">
-                <Input
-                  onChange={handleChange}
-                  value={values.content}
-                  name="content"
-                />
+                {!imageSelected && <div className={classes.root}>
+                  <input
+                    accept="image/*"
+                    className={classes.input}
+                    id="icon-button-file"
+                    type="file"
+                    onChange={handleImageChange}
+                  />
+                  <label htmlFor="icon-button-file">
+                    <IconButton
+                      color="primary"
+                      aria-label="upload picture"
+                      component="span"
+                    >
+                      <ImageIcon style={{ color: "rgb(29, 161, 242)" }} />
+                    </IconButton>
+                  </label>
+                </div>}
+                <InputTextWrap>
+                  {imageSelected && <ImageWrap>
+                    <ImageSelected style={{ width: "150px" }}>
+                      <Image>
+                        <ImageP>
+                          <ImageM src={imageSelected} />
+                        </ImageP>
+                        <ImageC>
+                          <CloseIcon onClick={() => setImageSelected("")} />
+                        </ImageC>
+                      </Image>
+                    </ImageSelected>
+                  </ImageWrap>}
+                  <Input
+                    onChange={handleChange}
+                    value={values.content}
+                    placeholder="Gửi 1 tin nhắn mới"
+                    name="content"
+                  />
+                </InputTextWrap>
+
                 <IconButton type="submit" disabled={!values.content}>
                   {values.content ? <SendButton /> : <SendButtonDisable />}
                 </IconButton>
@@ -214,6 +286,8 @@ const FormSubmit = styled(Form)`
 `;
 const Input = styled.input`
   background-color: rgb(235, 238, 240);
+  padding-right: 12px;
+  padding-left: 12px;
   border-radius: 16px;
   flex: 1;
   outline: 0;
@@ -235,4 +309,55 @@ const WrapLoading = styled.div`
   align-items: center;
   justify-content: center;
   height: 80vh;
+`;
+
+const InputTextWrap = styled.div`
+  display: flex;
+  align-items: stretch;
+  -webkit-box-direction: normal;
+  -webkit-box-orient: vertical;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  justify-content: center;
+  border-radius: 16px;
+  background-color: rgb(235, 238, 240);
+  width: 100%;
+`;
+const ImageWrap = styled.div`
+  margin: 12px;
+`;
+const ImageSelected = styled.div`
+  position: relative;
+`;
+
+const Image = styled.div`
+  border-radius: 4px;
+  position: relative;
+`;
+const ImageM = styled.img`
+  position: absolute;
+  border-radius: 4px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const ImageP = styled.div`
+  padding-bottom: 100%;
+  width: 100%;
+  position: relative;
+`;
+
+const ImageC = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

@@ -6,15 +6,27 @@ interface MessageProps {
   u: string;
   message: string;
   time: string;
+  image: string;
 }
 
-export const Message: React.FC<MessageProps> = ({ u, message, time }) => {
+export const Message: React.FC<MessageProps> = ({
+  u,
+  message,
+  time,
+  image,
+}) => {
   const { user } = useContext(UserContext);
   const TypeOfMessage = user.username === u ? Sender : Reciever;
   const TypeOfTime = user.username === u ? TimeSender : TimeStamp;
+  const TypeOfImage = user.username === u ? ImageSender : ImageWrap;
   return (
     <Container>
-      <TypeOfMessage>{message}</TypeOfMessage>
+      {message !== "" && <TypeOfMessage>{message}</TypeOfMessage>}
+      {image !== null && (
+        <TypeOfImage>
+          <img src={image} alt="" />
+        </TypeOfImage>
+      )}
       <TypeOfTime>{!time ? null : moment(time).format("LT")}</TypeOfTime>
     </Container>
   );
@@ -65,4 +77,23 @@ const TimeStamp = styled.div`
 
 const TimeSender = styled(TimeStamp)`
   text-align: right;
+`;
+const ImageWrap = styled.div`
+  width: 400px;
+  height: 400px;
+  cursor: pointer;
+  user-select: text;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-top: 20px;
+  img {
+    inset: 0px;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+`;
+
+const ImageSender = styled(ImageWrap)`
+  margin-left: auto;
 `;

@@ -10,6 +10,7 @@ const initState = {
   editState: false,
   messState: false,
   urlState: "",
+  arrImage: [] as string[],
 };
 
 const UserContext = createContext({
@@ -26,6 +27,9 @@ const UserContext = createContext({
   },
   messState: false,
   listComment: [] as any[],
+  arrImage: [] as string[],
+  removeImage: (id: string) => {},
+  addImage: (fileArr: string) => {},
   openMore: (mousePos: any, item: any, isComment?: boolean) => {},
   closeMore: () => {},
   login: (userData: any) => {},
@@ -151,6 +155,18 @@ const userReducer = (state: any, action: any) => {
         ...state,
         urlState: "",
       };
+    case "ADD_IMAGE":
+      //(prevImage) => prevImage.concat(fileArr)
+      return {
+        ...state,
+        arrImage: state.arrImage.concat(action.payload),
+      };
+    case "REMOVE_IMAGE":
+      const filtered = state.arrImage.filter((x: any) => x !== action.payload);
+      return {
+        ...state,
+        arrImage: filtered,
+      };
     default:
       return state;
   }
@@ -221,6 +237,13 @@ const UserProvider = (props: any) => {
     dispatch({ type: "CLOSE_MESSAGE" });
   }
 
+  function addImage(fileArr: string) {
+    dispatch({ type: "ADD_IMAGE", payload: fileArr });
+  }
+  function removeImage(id: string) {
+    dispatch({ type: "REMOVE_IMAGE", payload: id });
+  }
+
   const values = {
     user: state.user,
     commentState: state.commentState,
@@ -229,6 +252,7 @@ const UserProvider = (props: any) => {
     listComment: state.listComment,
     editState: state.editState,
     messState: state.messState,
+    arrImage:state.arrImage,
     login,
     logout,
     openComment,
@@ -243,6 +267,8 @@ const UserProvider = (props: any) => {
     cacheProfile,
     openMessage,
     closeMessage,
+    addImage,
+    removeImage,
   };
   return <UserContext.Provider value={values} {...props} />;
 };

@@ -28,7 +28,6 @@ export const UserAccount: React.FC<UserAccountProps> = () => {
       </WrapLoading>
     );
   }
-  console.log(value);
   return (
     <Page>
       <TopBar>
@@ -248,15 +247,15 @@ const TextBottom = styled.div`
   margin-top: 5px;
 `;
 const Line1 = styled(Line)`
-    margin:top:0;
-    margin-bottom:4px;
-    span {
-        display:flex;
-        align-items:center;
-        font-weight:normal;
-        font-size: .8125rem;
-        color:#65676b;
-    }
+  margin-top: 0;
+  margin-bottom: 4px;
+  span {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+    font-size: 0.8125rem;
+    color: #65676b;
+  }
 `;
 
 const ButtonWrap = styled.div`
