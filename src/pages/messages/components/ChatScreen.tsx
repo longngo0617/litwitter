@@ -197,8 +197,12 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
                   />
                 </InputTextWrap>
 
-                <IconButton type="submit" disabled={!values.content}>
-                  {values.content ? <SendButton /> : <SendButtonDisable />}
+                <IconButton type="submit" disabled={!values.content && !imageSelected }>
+                  {values.content || imageSelected ? (
+                    <SendButton />
+                  ) : (
+                    <SendButtonDisable />
+                  )}
                 </IconButton>
               </FormSubmit>
             )}
@@ -302,7 +306,7 @@ const Input = styled.input`
   flex: 1;
   outline: 0;
   border: 0;
-  height: 32px;
+  min-height: 32px;
 `;
 const SendButton = styled(SendIcon)`
   color: rgb(29, 161, 242);
