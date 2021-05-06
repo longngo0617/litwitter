@@ -16,6 +16,7 @@ import { useHistory } from "react-router-dom";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import ImageIcon from "@material-ui/icons/Image";
 import CloseIcon from "@material-ui/icons/Close";
+import { useOutside } from "@pacote/react-use-outside";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,7 +63,10 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
     };
     reader.readAsDataURL(file);
   };
-
+  const [openInput, setOpenInput] = React.useState<boolean>(false);
+  const ref = useOutside("click", () => {
+    setOpenInput(!openInput);
+  });
   const showMessages = () => {
     if (data) {
       return data.getChat?.content.map((message: any, index: number) => (
@@ -148,42 +152,48 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
           >
             {({ handleChange, values }) => (
               <FormSubmit autoComplete="off">
-                {!imageSelected && <div className={classes.root}>
-                  <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="icon-button-file"
-                    type="file"
-                    onChange={handleImageChange}
-                  />
-                  <label htmlFor="icon-button-file">
-                    <IconButton
-                      color="primary"
-                      aria-label="upload picture"
-                      component="span"
-                    >
-                      <ImageIcon style={{ color: "rgb(29, 161, 242)" }} />
-                    </IconButton>
-                  </label>
-                </div>}
-                <InputTextWrap>
-                  {imageSelected && <ImageWrap>
-                    <ImageSelected style={{ width: "150px" }}>
-                      <Image>
-                        <ImageP>
-                          <ImageM src={imageSelected} />
-                        </ImageP>
-                        <ImageC>
-                          <CloseIcon onClick={() => setImageSelected("")} />
-                        </ImageC>
-                      </Image>
-                    </ImageSelected>
-                  </ImageWrap>}
+                {!imageSelected && (
+                  <div className={classes.root}>
+                    <input
+                      accept="image/*"
+                      className={classes.input}
+                      id="icon-button-file"
+                      type="file"
+                      onChange={handleImageChange}
+                    />
+                    <label htmlFor="icon-button-file">
+                      <IconButton
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <ImageIcon style={{ color: "rgb(29, 161, 242)" }} />
+                      </IconButton>
+                    </label>
+                  </div>
+                )}
+                <InputTextWrap open={openInput}>
+                  {imageSelected && (
+                    <ImageWrap>
+                      <ImageSelected style={{ width: "150px" }}>
+                        <Image>
+                          <ImageP>
+                            <ImageM src={imageSelected} />
+                          </ImageP>
+                          <ImageC>
+                            <CloseIcon onClick={() => setImageSelected("")} />
+                          </ImageC>
+                        </Image>
+                      </ImageSelected>
+                    </ImageWrap>
+                  )}
                   <Input
                     onChange={handleChange}
+                    ref={ref as React.RefObject<HTMLInputElement>}
                     value={values.content}
                     placeholder="Gửi 1 tin nhắn mới"
                     name="content"
+                    onFocus={() => setOpenInput(!openInput)}
                   />
                 </InputTextWrap>
 
@@ -285,18 +295,14 @@ const FormSubmit = styled(Form)`
   padding: 4px 8px;
 `;
 const Input = styled.input`
-  background-color: rgb(235, 238, 240);
+  background-color: inherit;
   padding-right: 12px;
   padding-left: 12px;
   border-radius: 16px;
   flex: 1;
   outline: 0;
   border: 0;
-  height: 24px;
-  &:focus {
-    border: 1px solid rgb(29, 161, 242);
-    background-color: rgb(255, 255, 255);
-  }
+  height: 32px;
 `;
 const SendButton = styled(SendIcon)`
   color: rgb(29, 161, 242);
@@ -311,7 +317,7 @@ const WrapLoading = styled.div`
   height: 80vh;
 `;
 
-const InputTextWrap = styled.div`
+const InputTextWrap = styled.div<{ open: boolean }>`
   display: flex;
   align-items: stretch;
   -webkit-box-direction: normal;
@@ -320,8 +326,11 @@ const InputTextWrap = styled.div`
   -webkit-box-pack: center;
   justify-content: center;
   border-radius: 16px;
-  background-color: rgb(235, 238, 240);
+  background-color: ${(props: any) =>
+    props.open ? "rgb(255,255,255)" : "rgb(235, 238, 240)"};
+  border: ${(props: any) => props.open && "1px solid rgb(29, 161, 242)"};
   width: 100%;
+  min-height: 32px;
 `;
 const ImageWrap = styled.div`
   margin: 12px;
