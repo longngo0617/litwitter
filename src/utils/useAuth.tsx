@@ -11,6 +11,7 @@ const initState = {
   messState: false,
   urlState: "",
   arrImage: [] as string[],
+  errorFile: false,
 };
 
 const UserContext = createContext({
@@ -28,6 +29,7 @@ const UserContext = createContext({
   messState: false,
   listComment: [] as any[],
   arrImage: [] as string[],
+  errorFile: false,
   removeImage: (id: string) => {},
   addImage: (fileArr: string) => {},
   openMore: (mousePos: any, item: any, isComment?: boolean) => {},
@@ -44,6 +46,8 @@ const UserContext = createContext({
   openMessage: () => {},
   closeMessage: () => {},
   cacheProfile: (data: any) => {},
+  openErrorFile: ()=>{},
+  closeErrorFile: ()=> {},
 });
 
 function returnState(state: any) {
@@ -167,6 +171,16 @@ const userReducer = (state: any, action: any) => {
         ...state,
         arrImage: filtered,
       };
+    case "OPEN_ERROR_FILE":
+      return {
+        ...state,
+        errorFile:true,
+      }
+    case "CLOSE_ERROR_FILE":
+      return {
+        ...state,
+        errorFile:false,
+      }
     default:
       return state;
   }
@@ -244,6 +258,14 @@ const UserProvider = (props: any) => {
     dispatch({ type: "REMOVE_IMAGE", payload: id });
   }
 
+  function openErrorFile() {
+    dispatch({type:"OPEN_ERROR_FILE"})
+  }  
+
+  function closeErrorFile() {
+    dispatch({type:"CLOSE_ERROR_FILE"})
+  }  
+
   const values = {
     user: state.user,
     commentState: state.commentState,
@@ -253,6 +275,7 @@ const UserProvider = (props: any) => {
     editState: state.editState,
     messState: state.messState,
     arrImage:state.arrImage,
+    errorFile:state.errorFile,
     login,
     logout,
     openComment,
@@ -269,6 +292,8 @@ const UserProvider = (props: any) => {
     closeMessage,
     addImage,
     removeImage,
+    openErrorFile,
+    closeErrorFile,
   };
   return <UserContext.Provider value={values} {...props} />;
 };

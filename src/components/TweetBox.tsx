@@ -22,11 +22,20 @@ export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
   const [createComment] = useCommentMutation();
   const { closeComment, user } = useContext(UserContext);
   const inputFile: any = useRef(null);
-  const { addImage, arrImage } = useContext(UserContext);
+  const { addImage, arrImage, openErrorFile,closeErrorFile } = useContext(UserContext);
 
   const handleFileInputChange = (e: any) => {
-    console.log(e.target.files)
-    if (e.target.files) {
+    if (e.target.files.length > 4) {
+      openErrorFile();
+      const timeId = setTimeout(() => {
+        closeErrorFile();
+      }, 3000);
+  
+      return () => {
+        clearTimeout(timeId);
+      };
+      return;
+    } else {
       Array.from(e.target.files).map((file) => readerImage(file));
     }
   };
@@ -34,7 +43,7 @@ export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
   const readerImage = (file: any) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      addImage(e.target?.result as string)
+      addImage(e.target?.result as string);
     };
     reader.readAsDataURL(file);
   };
