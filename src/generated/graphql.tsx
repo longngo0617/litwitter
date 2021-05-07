@@ -447,6 +447,11 @@ export type LikeSnippetFragment = (
   & Pick<Like, 'id' | 'avatar' | 'username' | 'displayname' | 'createdAt'>
 );
 
+export type NotificationSnippetFragment = (
+  { __typename?: 'Notification' }
+  & Pick<Notification, 'id' | 'displayname' | 'avatar' | 'username' | 'title' | 'createdAt' | 'watched' | 'whose' | 'type'>
+);
+
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
   & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'displayname' | 'verified' | 'image' | 'avatar' | 'likeCount' | 'commentCount'>
@@ -793,6 +798,21 @@ export type MyPostsQuery = (
   ) }
 );
 
+export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NotificationsQuery = (
+  { __typename?: 'Query' }
+  & { getNotification?: Maybe<(
+    { __typename?: 'Notifications' }
+    & Pick<Notifications, 'count'>
+    & { notifications?: Maybe<Array<Maybe<(
+      { __typename?: 'Notification' }
+      & NotificationSnippetFragment
+    )>>> }
+  )> }
+);
+
 export type PostQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -876,6 +896,20 @@ export type UsersQuery = (
   )>>> }
 );
 
+export const NotificationSnippetFragmentDoc = gql`
+    fragment NotificationSnippet on Notification {
+  id
+  displayname
+  avatar
+  username
+  title
+  createdAt
+  watched
+  whose
+  type
+  title
+}
+    `;
 export const LikeSnippetFragmentDoc = gql`
     fragment LikeSnippet on Like {
   id
@@ -1710,6 +1744,43 @@ export function useMyPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<My
 export type MyPostsQueryHookResult = ReturnType<typeof useMyPostsQuery>;
 export type MyPostsLazyQueryHookResult = ReturnType<typeof useMyPostsLazyQuery>;
 export type MyPostsQueryResult = Apollo.QueryResult<MyPostsQuery, MyPostsQueryVariables>;
+export const NotificationsDocument = gql`
+    query notifications {
+  getNotification {
+    count
+    notifications {
+      ...NotificationSnippet
+    }
+  }
+}
+    ${NotificationSnippetFragmentDoc}`;
+
+/**
+ * __useNotificationsQuery__
+ *
+ * To run a query within a React component, call `useNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotificationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNotificationsQuery(baseOptions?: Apollo.QueryHookOptions<NotificationsQuery, NotificationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NotificationsQuery, NotificationsQueryVariables>(NotificationsDocument, options);
+      }
+export function useNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationsQuery, NotificationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NotificationsQuery, NotificationsQueryVariables>(NotificationsDocument, options);
+        }
+export type NotificationsQueryHookResult = ReturnType<typeof useNotificationsQuery>;
+export type NotificationsLazyQueryHookResult = ReturnType<typeof useNotificationsLazyQuery>;
+export type NotificationsQueryResult = Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>;
 export const PostDocument = gql`
     query Post($id: ID!) {
   getPost(postId: $id) {

@@ -1,0 +1,8 @@
+query notifications {
+  getNotification {
+    count
+    notifications {
+      ...NotificationSnippet
+    }
+  }
+}

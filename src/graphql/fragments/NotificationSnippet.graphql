@@ -1,0 +1,12 @@
+fragment NotificationSnippet on Notification {
+  id
+  displayname
+  avatar
+  username
+  title
+  createdAt
+  watched
+  whose
+  type
+  title
+}

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { CommentPost } from "./components/CommentPost";
 import { PopupMore } from "./components/PopupMore";
@@ -10,11 +10,12 @@ import { Login } from "./pages/login/Login";
 import { Market } from "./pages/market/Market";
 import { PopupMess } from "./pages/messages/components/PopupMess";
 import { Messages } from "./pages/messages/Messages";
+import { Notifications } from "./pages/notifications/Notifications";
 import { PopupEdit } from "./pages/profile/components/PopupEdit";
 import { Profile } from "./pages/profile/Profile";
 import { Register } from "./pages/register/Register";
 import "./styles/App.scss";
-import { UserContext, UserProvider } from "./utils/useAuth";
+import { UserProvider } from "./utils/useAuth";
 
 const App = () => {
   const routes = [
@@ -25,6 +26,7 @@ const App = () => {
     { path: "/logout", name: "Logout", Component: Login },
     { path: "/home", name: "Home", Component: Home },
     { path: "/connect", name: "Connect Users", Component: Connect },
+    { path: "/notifications", name: "Notifications", Component: Notifications },
     { path: "/market/category/:slug?", name: "Marketplace", Component: Market },
     { path: "/market/locations/:location?", name: "Marketplace", Component: Market },
     { path: "/market/item/:id", name: "Marketplace", Component: Detail },
