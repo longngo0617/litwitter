@@ -12,6 +12,7 @@ const initState = {
   urlState: "",
   arrImage: [] as string[],
   errorFile: false,
+  notiState: true,
 };
 
 const UserContext = createContext({
@@ -30,6 +31,7 @@ const UserContext = createContext({
   listComment: [] as any[],
   arrImage: [] as string[],
   errorFile: false,
+  notiState: true,
   removeImage: (id: string) => {},
   addImage: (fileArr: string) => {},
   openMore: (mousePos: any, item: any, isComment?: boolean) => {},
@@ -46,8 +48,10 @@ const UserContext = createContext({
   openMessage: () => {},
   closeMessage: () => {},
   cacheProfile: (data: any) => {},
-  openErrorFile: ()=>{},
-  closeErrorFile: ()=> {},
+  openErrorFile: () => {},
+  closeErrorFile: () => {},
+  setNotiTrue: () => {},
+  setNotiFalse: () => {},
 });
 
 function returnState(state: any) {
@@ -174,13 +178,23 @@ const userReducer = (state: any, action: any) => {
     case "OPEN_ERROR_FILE":
       return {
         ...state,
-        errorFile:true,
-      }
+        errorFile: true,
+      };
     case "CLOSE_ERROR_FILE":
       return {
         ...state,
-        errorFile:false,
-      }
+        errorFile: false,
+      };
+    case "SET_NOTI_TRUE":
+      return {
+        ...state,
+        notiState: true,
+      };
+    case "SET_NOTI_FALSE":
+      return {
+        ...state,
+        notiState: false,
+      };
     default:
       return state;
   }
@@ -259,12 +273,20 @@ const UserProvider = (props: any) => {
   }
 
   function openErrorFile() {
-    dispatch({type:"OPEN_ERROR_FILE"})
-  }  
+    dispatch({ type: "OPEN_ERROR_FILE" });
+  }
 
   function closeErrorFile() {
-    dispatch({type:"CLOSE_ERROR_FILE"})
-  }  
+    dispatch({ type: "CLOSE_ERROR_FILE" });
+  }
+
+  function setNotiTrue() {
+    dispatch({ type: "SET_NOTI_TRUE" });
+  }
+
+  function setNotiFalse() {
+    dispatch({ type: "SET_NOTI_FALSE" });
+  }
 
   const values = {
     user: state.user,
@@ -274,8 +296,9 @@ const UserProvider = (props: any) => {
     listComment: state.listComment,
     editState: state.editState,
     messState: state.messState,
-    arrImage:state.arrImage,
-    errorFile:state.errorFile,
+    arrImage: state.arrImage,
+    errorFile: state.errorFile,
+    notiState: state.notiState,
     login,
     logout,
     openComment,
@@ -294,6 +317,8 @@ const UserProvider = (props: any) => {
     removeImage,
     openErrorFile,
     closeErrorFile,
+    setNotiTrue,
+    setNotiFalse,
   };
   return <UserContext.Provider value={values} {...props} />;
 };

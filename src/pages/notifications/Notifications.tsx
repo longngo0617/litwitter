@@ -7,19 +7,31 @@ import PersonIcon from "@material-ui/icons/Person";
 import { Avatar, Link } from "@material-ui/core";
 import { useNotificationsQuery, Notification } from "../../generated/graphql";
 import { UserContext } from "../../utils/useAuth";
+import { useHistory } from "react-router-dom";
 
 interface NotificationsProps {}
 
 export const Notifications: React.FC<NotificationsProps> = () => {
   const { data, loading }: any = useNotificationsQuery();
-  const { user } = useContext(UserContext);
+  const { user, setNotiFalse } = useContext(UserContext);
+  const router = useHistory();
+
+  if (data) {
+    const watched = Array.from(data.getNotification.notifications).filter(
+      (t: any) => t.watched === false
+    ).length;
+    if (watched > 0) {
+      setNotiFalse();
+    }
+  }
+
   return (
     <WithSide>
       <div className="feed">
         <div className="feed__header">
           <ArrowBackIcon
             className="feed__header--icon"
-            // onClick={() => router.replace("/home")}
+            onClick={() => router.goBack()}
           />
           <h2>Notifications</h2>
         </div>
@@ -28,7 +40,7 @@ export const Notifications: React.FC<NotificationsProps> = () => {
           : data?.getNotification.notifications
               .filter((t: Notification) => t.username !== user.username)
               .map((noti: Notification) => (
-                <Page>
+                <Page key={noti.id}>
                   <NotificationsItem>
                     <NotiLeft>
                       {noti.type === "Following" ? (
