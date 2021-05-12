@@ -1,0 +1,340 @@
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { AvatarGroup } from "@material-ui/lab";
+import { Avatar, Button } from "@material-ui/core";
+import React from "react";
+import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+import { UserContext } from "../../utils/useAuth";
+import Sidebar from "../home/components/Sidebar";
+
+interface GroupsProps {}
+
+export const Groups: React.FC<GroupsProps> = (props) => {
+  const { user } = React.useContext(UserContext);
+  const router = useHistory();
+  return (
+    <div className="wrapper">
+      <Sidebar {...user} />
+      <Main>
+        <div className="feed" style={{ flex: 0.8}}>
+          <div className="feed__header">
+            <ArrowBackIcon
+              className="feed__header--icon"
+              onClick={() => router.goBack()}
+            />
+            <h2>Groups</h2>
+          </div>
+          <Page>
+            <GroupItem>
+              <GroupContainer>
+                <Item>
+                  <div>
+                    <Link>
+                      <div
+                        style={{
+                          paddingBottom: "56.25%",
+                          position: "relative",
+                          width: "100%",
+                        }}
+                      >
+                        <Image>
+                          <img src="/cat.jpeg" alt="" />
+                        </Image>
+                      </div>
+                    </Link>
+                    <div style={{ padding: "12px 16px 0" }}>
+                      <div style={{ paddingBottom: "4px" }}>
+                        <TextWrap>
+                          <Line>
+                            <span>Đảo Mèo</span>
+                          </Line>
+                          <Line1>
+                            <span>
+                              34K thành viên
+                              <span style={{ margin: "0 5px" }}>•</span>
+                              10 bài viết / ngày
+                            </span>
+                          </Line1>
+                        </TextWrap>
+                      </div>
+                    </div>
+                  </div>
+                  <Content>
+                    <div style={{ marginTop: "-15px" }}>
+                      <div style={{ padding: "12px 16px 0" }}>
+                        <MemberWrap>
+                          <div style={{ minWidth: "64px" }}>
+                            <AvatarGroup max={3}>
+                              <UserAvatar alt="Remy Sharp" src="/per1.jpeg" />
+                              <UserAvatar
+                                alt="Travis Howard"
+                                src="/per2.jpeg"
+                              />
+                              <UserAvatar alt="Cindy Baker" src="/per3.jpeg" />
+                            </AvatarGroup>
+                          </div>
+                          <TextWrap>
+                            <Line1>
+                              <span>
+                                Khoa và 230 nguời bạn khác là thành viên
+                              </span>
+                            </Line1>
+                          </TextWrap>
+                        </MemberWrap>
+                      </div>
+                    </div>
+                  </Content>
+                  <div style={{ padding: "16px" }}>
+                    <ButtonJoin variant="contained">Tham gia nhóm</ButtonJoin>
+                  </div>
+                </Item>
+              </GroupContainer>
+            </GroupItem>
+            <GroupItem>
+              <GroupContainer>
+                <Item>
+                  <div>
+                    <Link>
+                      <div
+                        style={{
+                          paddingBottom: "56.25%",
+                          position: "relative",
+                          width: "100%",
+                        }}
+                      >
+                        <Image>
+                          <img src="/cat.jpeg" alt="" />
+                        </Image>
+                      </div>
+                    </Link>
+                    <div style={{ padding: "12px 16px 0" }}>
+                      <div style={{ paddingBottom: "4px" }}>
+                        <TextWrap>
+                          <Line>
+                            <span>Đảo Mèo</span>
+                          </Line>
+                          <Line1>
+                            <span>
+                              34K thành viên
+                              <span style={{ margin: "0 5px" }}>•</span>
+                              10 bài viết / ngày
+                            </span>
+                          </Line1>
+                        </TextWrap>
+                      </div>
+                    </div>
+                  </div>
+                  <Content>
+                    <div style={{ marginTop: "-15px" }}>
+                      <div style={{ padding: "12px 16px 0" }}>
+                        <MemberWrap>
+                          <div style={{ minWidth: "64px" }}>
+                            <AvatarGroup max={3}>
+                              <UserAvatar alt="Remy Sharp" src="/per1.jpeg" />
+                              <UserAvatar
+                                alt="Travis Howard"
+                                src="/per2.jpeg"
+                              />
+                              <UserAvatar alt="Cindy Baker" src="/per3.jpeg" />
+                            </AvatarGroup>
+                          </div>
+                          <TextWrap>
+                            <Line1>
+                              <span>
+                                Khoa và 230 nguời bạn khác là thành viên
+                              </span>
+                            </Line1>
+                          </TextWrap>
+                        </MemberWrap>
+                      </div>
+                    </div>
+                  </Content>
+                  <div style={{ padding: "16px" }}>
+                    <ButtonJoin variant="contained">Tham gia nhóm</ButtonJoin>
+                  </div>
+                </Item>
+              </GroupContainer>
+            </GroupItem>
+            <GroupItem>
+              <GroupContainer>
+                <Item>
+                  <div>
+                    <Link>
+                      <div
+                        style={{
+                          paddingBottom: "56.25%",
+                          position: "relative",
+                          width: "100%",
+                        }}
+                      >
+                        <Image>
+                          <img src="/cat.jpeg" alt="" />
+                        </Image>
+                      </div>
+                    </Link>
+                    <div style={{ padding: "12px 16px 0" }}>
+                      <div style={{ paddingBottom: "4px" }}>
+                        <TextWrap>
+                          <Line>
+                            <span>Đảo Mèo</span>
+                          </Line>
+                          <Line1>
+                            <span>
+                              34K thành viên
+                              <span style={{ margin: "0 5px" }}>•</span>
+                              10 bài viết / ngày
+                            </span>
+                          </Line1>
+                        </TextWrap>
+                      </div>
+                    </div>
+                  </div>
+                  <Content>
+                    <div style={{ marginTop: "-15px" }}>
+                      <div style={{ padding: "12px 16px 0" }}>
+                        <MemberWrap>
+                          <div style={{ minWidth: "64px" }}>
+                            <AvatarGroup max={3}>
+                              <UserAvatar alt="Remy Sharp" src="/per1.jpeg" />
+                              <UserAvatar
+                                alt="Travis Howard"
+                                src="/per2.jpeg"
+                              />
+                              <UserAvatar alt="Cindy Baker" src="/per3.jpeg" />
+                            </AvatarGroup>
+                          </div>
+                          <TextWrap>
+                            <Line1>
+                              <span>
+                                Khoa và 230 nguời bạn khác là thành viên
+                              </span>
+                            </Line1>
+                          </TextWrap>
+                        </MemberWrap>
+                      </div>
+                    </div>
+                  </Content>
+                  <div style={{ padding: "16px" }}>
+                    <ButtonJoin variant="contained">Tham gia nhóm</ButtonJoin>
+                  </div>
+                </Item>
+              </GroupContainer>
+            </GroupItem>
+          </Page>
+        </div>
+      </Main>
+    </div>
+  );
+};
+const Main = styled.div`
+  flex-shrink: 1;
+  flex: 1;
+  user-select: text;
+  display: flex;
+`;
+const Page = styled.div`
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+
+const GroupItem = styled.div`
+  box-sizing: border-box;
+  min-width: 308px;
+  padding: 4px;
+  overflow: hidden;
+`;
+const GroupContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-grow: 1;
+`;
+const Item = styled.div`
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+`;
+const Link = styled.a`
+  text-decoration: none;
+  display: inline;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: inherit;
+  width: 100%;
+`;
+const Image = styled.div`
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  img {
+    border: 0;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+const Content = styled.div`
+  padding-top: 8px;
+`;
+
+const TextWrap = styled.div``;
+const Line = styled.div`
+  margin-top: 3px;
+  margin-bottom: 3px;
+  span {
+    color: #050505;
+    word-break: break-word;
+    font-weight: 600;
+    -webkit-font-smoothing: antialiased;
+    text-align: left;
+    max-width: 100%;
+    word-wrap: break-word;
+    display: block;
+    font-size: 1.0625rem;
+    line-height: 1.1765;
+  }
+`;
+const Line1 = styled(Line)`
+  margin-top: 0;
+  margin-bottom: 4px;
+  span {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+    font-size: 13px;
+    color: #65676b;
+  }
+`;
+const MemberWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+`;
+const UserAvatar = styled(Avatar)`
+  width: 24px;
+  height: 24px;
+`;
+const ButtonJoin = styled(Button)`
+  width: 100%;
+  box-shadow: none;
+`;

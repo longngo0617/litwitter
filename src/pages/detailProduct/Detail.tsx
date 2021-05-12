@@ -175,7 +175,7 @@ export const Detail: React.FC<DetailProps> = () => {
           <Formik
             initialValues={{ content: "Mặt hàng này còn chứ?" }}
             onSubmit={async (values) => {
-              const roomChat: any = await createRoomChat({
+              const roomChat : any = await createRoomChat({
                 variables: {
                   userId: data?.getProduct.seller.id,
                 },
@@ -183,7 +183,8 @@ export const Detail: React.FC<DetailProps> = () => {
               await sendMessage({
                 variables: {
                   content: values.content,
-                  roomId: roomChat.data.createRoomChat.id,
+                  roomId: roomChat.data?.createRoomChat,
+                  image: data.image[0],
                 },
               });
             }}
@@ -217,7 +218,9 @@ export const Detail: React.FC<DetailProps> = () => {
           </Formik>
         </RightBottom>
       </Right>
-      {display && <PopUpDirect fc={() => setDisplay(!display)} data={data?.getProduct}/>}
+      {display && (
+        <PopUpDirect fc={() => setDisplay(!display)} data={data?.getProduct} />
+      )}
     </Wrap>
   );
 };

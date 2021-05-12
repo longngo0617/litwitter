@@ -5,6 +5,7 @@ import { PopupMore } from "./components/PopupMore";
 import { Connect } from "./pages/connect/Connect";
 import { Detail } from "./pages/detailProduct/Detail";
 import { Details } from "./pages/details/Details";
+import { Groups } from "./pages/groups/Groups";
 import Home from "./pages/home/Home";
 import { Login } from "./pages/login/Login";
 import { Market } from "./pages/market/Market";
@@ -27,6 +28,7 @@ const App = () => {
     { path: "/home", name: "Home", Component: Home },
     { path: "/connect", name: "Connect Users", Component: Connect },
     { path: "/notifications", name: "Notifications", Component: Notifications },
+    { path: "/groups", name: "Groups", Component: Groups },
     { path: "/market/category/:slug?", name: "Marketplace", Component: Market },
     { path: "/market/locations/:location?", name: "Marketplace", Component: Market },
     { path: "/market/item/:id", name: "Marketplace", Component: Detail },
