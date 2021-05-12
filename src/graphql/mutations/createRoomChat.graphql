@@ -1,5 +1,3 @@
 mutation createRoomChat($userId: String!) {
-  createRoomChat(userId: $userId) {
-    ...RegularRoomChat
-  }
+  createRoomChat(userId: $userId)
 }

@@ -140,7 +140,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
             initialValues={{ content: "", image: "" }}
             onSubmit={async (values) => {
               values.image = imageSelected;
-              sendMessage({
+             await sendMessage({
                 variables: {
                   content: values.content,
                   roomId: id,

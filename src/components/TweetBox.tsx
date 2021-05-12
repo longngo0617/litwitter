@@ -34,7 +34,6 @@ export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
       return () => {
         clearTimeout(timeId);
       };
-      return;
     } else {
       Array.from(e.target.files).map((file) => readerImage(file));
     }

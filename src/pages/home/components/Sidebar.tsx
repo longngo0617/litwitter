@@ -12,7 +12,6 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../../utils/useAuth";
 import { Popover } from "./Popover";
 import SidebarOption from "./SidebarOption";
-import { useOutside } from "@pacote/react-use-outside";
 
 function Sidebar(props: any) {
   const [popState, setPopState] = useState(false);

@@ -12,19 +12,18 @@ import { useHistory } from "react-router-dom";
 interface NotificationsProps {}
 
 export const Notifications: React.FC<NotificationsProps> = () => {
-  const { data, loading }: any = useNotificationsQuery();
-  const { user, setNotiFalse } = useContext(UserContext);
+  const [oldData, setOldData] = React.useState([]);
+  const { data, loading } : any  = useNotificationsQuery({
+    pollInterval: 1000,
+  });
+  const { user } = useContext(UserContext);
   const router = useHistory();
 
-  if (data) {
-    const watched = Array.from(data.getNotification.notifications).filter(
-      (t: any) => t.watched === false
-    ).length;
-    if (watched > 0) {
-      setNotiFalse();
+  React.useEffect(() => {
+    if (data) {
+      setOldData(data.getNotification?.notifications);
     }
-  }
-
+  }, []);
   return (
     <WithSide>
       <div className="feed">

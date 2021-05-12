@@ -192,6 +192,26 @@ export type Notifications = {
   notifications?: Maybe<Array<Maybe<Notification>>>;
 };
 
+export type TypeGroup = {
+  __typename?: 'TypeGroup';
+  name: Scalars['String'];
+  slug: Scalars['String'];
+};
+
+export type Group = {
+  __typename?: 'Group';
+  leader: User;
+  admins?: Maybe<Array<Maybe<User>>>;
+  members: Array<Maybe<User>>;
+  typeGroup: TypeGroup;
+  name: Scalars['String'];
+  imageCover: Scalars['String'];
+  countMembers: Scalars['String'];
+  public: Scalars['Boolean'];
+  describe: Scalars['String'];
+  posts?: Maybe<Array<Maybe<Post>>>;
+};
+
 export type RegisterInput = {
   username: Scalars['String'];
   password: Scalars['String'];
@@ -213,7 +233,7 @@ export type Query = {
   getMyUser?: Maybe<User>;
   getUserFollowing?: Maybe<Array<Maybe<User>>>;
   getRoomChat?: Maybe<Array<Maybe<RoomChat>>>;
-  getGroups?: Maybe<Array<Maybe<GroupChat>>>;
+  findUsers?: Maybe<Array<Maybe<User>>>;
   getGroup?: Maybe<GroupChat>;
   getGroupChat?: Maybe<Array<Maybe<GroupChat>>>;
   getNotification?: Maybe<Notifications>;
@@ -222,6 +242,8 @@ export type Query = {
   getProducts?: Maybe<Array<Maybe<Product>>>;
   getCategories?: Maybe<Array<Maybe<Category>>>;
   getLocations?: Maybe<Array<Maybe<Location>>>;
+  getTypeGroup: Array<Maybe<TypeGroup>>;
+  getGroups: Array<Maybe<Group>>;
 };
 
 
@@ -258,6 +280,11 @@ export type QueryGetUserArgs = {
 };
 
 
+export type QueryFindUsersArgs = {
+  displayname: Scalars['String'];
+};
+
+
 export type QueryGetGroupArgs = {
   groupId: Scalars['ID'];
 };
@@ -285,7 +312,7 @@ export type Mutation = {
   createComment: Post;
   deleteComment: Post;
   likePost: Post;
-  createRoomChat: RoomChat;
+  createRoomChat: Scalars['String'];
   createRoomChatUsername: RoomChat;
   deleteRoomChat?: Maybe<Scalars['String']>;
   createContentChat: RoomChat;
@@ -585,10 +612,7 @@ export type CreateRoomChatMutationVariables = Exact<{
 
 export type CreateRoomChatMutation = (
   { __typename?: 'Mutation' }
-  & { createRoomChat: (
-    { __typename?: 'RoomChat' }
-    & RegularRoomChatFragment
-  ) }
+  & Pick<Mutation, 'createRoomChat'>
 );
 
 export type DeleteCommentMutationVariables = Exact<{
@@ -1176,11 +1200,9 @@ export type CreateProductMutationResult = Apollo.MutationResult<CreateProductMut
 export type CreateProductMutationOptions = Apollo.BaseMutationOptions<CreateProductMutation, CreateProductMutationVariables>;
 export const CreateRoomChatDocument = gql`
     mutation createRoomChat($userId: String!) {
-  createRoomChat(userId: $userId) {
-    ...RegularRoomChat
-  }
+  createRoomChat(userId: $userId)
 }
-    ${RegularRoomChatFragmentDoc}`;
+    `;
 export type CreateRoomChatMutationFn = Apollo.MutationFunction<CreateRoomChatMutation, CreateRoomChatMutationVariables>;
 
 /**

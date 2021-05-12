@@ -5,6 +5,7 @@ import { UserContext } from "../../../utils/useAuth";
 
 function SidebarOption({ href, text, Icon }: any) {
   const { notiState,setNotiTrue } = useContext(UserContext);
+  
   return (
     <NavLink to={href} className="link" activeClassName="sidebarOption--active">
       <div className={`sidebarOption `} onClick={setNotiTrue}>

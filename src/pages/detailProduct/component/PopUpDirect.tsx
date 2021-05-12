@@ -4,6 +4,10 @@ import styled from "styled-components";
 import CloseIcon from "@material-ui/icons/Close";
 import Chip from "@material-ui/core/Chip";
 import { currencyFormat } from "../../../utils/toErrorMap";
+import {
+  useCreateRoomChatMutation,
+  useSendMessageMutation,
+} from "../../../generated/graphql";
 
 interface PopUpDirectProps {
   fc: () => void;
@@ -11,6 +15,9 @@ interface PopUpDirectProps {
 }
 
 export const PopUpDirect: React.FC<PopUpDirectProps> = ({ fc, data }) => {
+  const [sendMessage] = useSendMessageMutation();
+  const [createRoomChat] = useCreateRoomChatMutation();
+
   const contentSample: string[] = [
     "Tôi quan tâm đến mặt hàng này.",
     "Mặt hàng này vẫn còn chứ?",
@@ -24,11 +31,28 @@ export const PopUpDirect: React.FC<PopUpDirectProps> = ({ fc, data }) => {
   const handleClick = (text: string) => {
     setValue(text);
   };
+
+  const handleSend = async (e: any, value: string) => {
+    e.preventDefault();
+    const roomId  = await createRoomChat({
+      variables: { userId: data.seller.id },
+    });
+
+    await sendMessage({
+      variables: {
+        content: value,
+        roomId: roomId.data?.createRoomChat as string,
+        image: data.image[0],
+      },
+    });
+    await fc();
+  };
+
   return (
     <Container>
       <Overlay />
       <div className="follow-main">
-        <form autoComplete="off">
+        <form autoComplete="off" onSubmit={(e) => handleSend(e,value)}>
           <div className="follow-modal">
             <Wrapper>
               <div className="follow-modal-top" style={{ borderBottom: "0px" }}>
