@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { UserContext } from "../../utils/useAuth";
 import Sidebar from "../home/components/Sidebar";
+import { Widgets } from "./component/Widgets";
 
 interface GroupsProps {}
 
@@ -15,8 +16,8 @@ export const Groups: React.FC<GroupsProps> = (props) => {
   return (
     <div className="wrapper">
       <Sidebar {...user} />
-      <Main>
-        <div className="feed" style={{ flex: 0.8}}>
+      <Main style={{ flex: 0.6 }}>
+        <div className="feed" style={{ flex: 1 }}>
           <div className="feed__header">
             <ArrowBackIcon
               className="feed__header--icon"
@@ -128,72 +129,7 @@ export const Groups: React.FC<GroupsProps> = (props) => {
                     <div style={{ marginTop: "-15px" }}>
                       <div style={{ padding: "12px 16px 0" }}>
                         <MemberWrap>
-                          <div style={{ minWidth: "64px" }}>
-                            <AvatarGroup max={3}>
-                              <UserAvatar alt="Remy Sharp" src="/per1.jpeg" />
-                              <UserAvatar
-                                alt="Travis Howard"
-                                src="/per2.jpeg"
-                              />
-                              <UserAvatar alt="Cindy Baker" src="/per3.jpeg" />
-                            </AvatarGroup>
-                          </div>
-                          <TextWrap>
-                            <Line1>
-                              <span>
-                                Khoa và 230 nguời bạn khác là thành viên
-                              </span>
-                            </Line1>
-                          </TextWrap>
-                        </MemberWrap>
-                      </div>
-                    </div>
-                  </Content>
-                  <div style={{ padding: "16px" }}>
-                    <ButtonJoin variant="contained">Tham gia nhóm</ButtonJoin>
-                  </div>
-                </Item>
-              </GroupContainer>
-            </GroupItem>
-            <GroupItem>
-              <GroupContainer>
-                <Item>
-                  <div>
-                    <Link>
-                      <div
-                        style={{
-                          paddingBottom: "56.25%",
-                          position: "relative",
-                          width: "100%",
-                        }}
-                      >
-                        <Image>
-                          <img src="/cat.jpeg" alt="" />
-                        </Image>
-                      </div>
-                    </Link>
-                    <div style={{ padding: "12px 16px 0" }}>
-                      <div style={{ paddingBottom: "4px" }}>
-                        <TextWrap>
-                          <Line>
-                            <span>Đảo Mèo</span>
-                          </Line>
-                          <Line1>
-                            <span>
-                              34K thành viên
-                              <span style={{ margin: "0 5px" }}>•</span>
-                              10 bài viết / ngày
-                            </span>
-                          </Line1>
-                        </TextWrap>
-                      </div>
-                    </div>
-                  </div>
-                  <Content>
-                    <div style={{ marginTop: "-15px" }}>
-                      <div style={{ padding: "12px 16px 0" }}>
-                        <MemberWrap>
-                          <div style={{ minWidth: "64px" }}>
+                          <div style={{ minWidth: "64px", marginRight: "6px" }}>
                             <AvatarGroup max={3}>
                               <UserAvatar alt="Remy Sharp" src="/per1.jpeg" />
                               <UserAvatar
@@ -223,6 +159,7 @@ export const Groups: React.FC<GroupsProps> = (props) => {
           </Page>
         </div>
       </Main>
+      <Widgets data={{ a: "", b: "" }} loading={false} />
     </div>
   );
 };
@@ -244,6 +181,8 @@ const GroupItem = styled.div`
   min-width: 308px;
   padding: 4px;
   overflow: hidden;
+  flex: 1;
+  cursor: pointer;
 `;
 const GroupContainer = styled.div`
   position: relative;

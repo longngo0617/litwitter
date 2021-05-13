@@ -1,0 +1,24 @@
+fragment RegularGroup on Group {
+  id
+  name
+  imageCover
+  public
+  describe
+  createdAt
+  leader {
+    ...RegularUser
+  }
+  admins {
+    ...RegularUser
+  }
+  members {
+    ...RegularUser
+  }
+  typeGroup {
+    name
+    slug
+  }
+  posts {
+    ...PostSnippet
+  }
+}
