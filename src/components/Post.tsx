@@ -6,51 +6,68 @@ import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { PostSnippetFragment, useLikeMutation } from "../generated/graphql";
 import { UserContext } from "../utils/useAuth";
-import { DisplaynamePost } from "./DisplaynamePost";
+import styled from "styled-components";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import { Image } from "./Image";
 import { InteractiveBar } from "./InteractiveBar";
+interface PostProps {
+  groupName?: string;
+  groupId?: string;
+  post: PostSnippetFragment;
+}
 
-export const Post: React.FC<PostSnippetFragment> = (props) => {
+export const Post: React.FC<PostProps> = (props) => {
   const router = useHistory();
   const [likePost] = useLikeMutation();
   const { openMore } = useContext(UserContext);
-
+  const { groupName, groupId } = props;
   return (
     <>
       <div
         className="post"
-        onClick={() => router.replace(`/posts/${props.id}`)}
+        onClick={() => router.replace(`/posts/${props.post.id}`)}
       >
         <Link
-          to={`/users/${props.username}`}
+          to={`/users/${props.post.username}`}
           className="post__avatar"
           onClick={(e) => e.stopPropagation()}
         >
-          <Avatar src={props.avatar || ""} />
+          <Avatar src={props.post.avatar || ""} />
         </Link>
         <div className="post__body">
           <div className="post__header">
             <div className="post__headerText">
               <h3>
                 <Link
-                  to={`/users/${props.username}`}
+                  to={`/users/${props.post.username}`}
                   className="link link--none"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {props.displayname.includes(",") ? (
-                    <DisplaynamePost name={props.displayname} />
+                  {props.groupName ? (
+                    <Name>
+                      {props.post.displayname}
+                      <span
+                        style={{
+                          display: "inline-block",
+                          verticalAlign: "-0.25em",
+                        }}
+                      >
+                        <Icon />
+                      </span>
+                      {props.groupName}
+                    </Name>
                   ) : (
-                    props.displayname
+                    props.post.displayname
                   )}
                   <span className="post__headerSpecial">
-                    {props.verified && (
+                    {props.post.verified && (
                       <VerifiedUserIcon className="post__badge" />
                     )}
-                    @{props.username}
+                    @{props.post.username}
                   </span>
                 </Link>
                 <time className="post__time">
-                  {moment(props.createdAt).format("l")}
+                  {moment(props.post.createdAt).format("l")}
                 </time>
               </h3>
 
@@ -71,19 +88,21 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
               </IconButton>
             </div>
             <div className="post__headerDescription">
-              <p>{props.body}</p>
+              <p>{props.post.body}</p>
             </div>
           </div>
-          {props?.image?.length ? <Image image={props.image} /> : null}
+          {props?.post.image?.length ? (
+            <Image image={props.post.image} />
+          ) : null}
           <div className="post__footer">
             <InteractiveBar
-              commentCount={props.commentCount}
-              likeCount={props.likeCount}
-              likeList={props.likes}
+              commentCount={props.post.commentCount}
+              likeCount={props.post.likeCount}
+              likeList={props.post.likes}
               item={props}
               likePost={async () =>
                 await likePost({
-                  variables: { id: props.id },
+                  variables: { id: props.post.id },
                 })
               }
             />
@@ -93,3 +112,13 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
     </>
   );
 };
+
+const Name = styled.span`
+  display: block;
+`;
+
+const Icon = styled(PlayArrowIcon)`
+  width: 16px;
+  height: 16px;
+  color: #606770;
+`;

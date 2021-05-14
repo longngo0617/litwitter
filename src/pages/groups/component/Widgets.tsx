@@ -6,14 +6,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Loading } from "../../../components/Loading";
+import { useMyGroupsQuery } from "../../../generated/graphql";
 
 interface WidgetsProps {
-  data: any;
-  loading: boolean;
   onOpen: () => void;
 }
 
-export const Widgets: React.FC<WidgetsProps> = ({ data, loading, onOpen }) => {
+export const Widgets: React.FC<WidgetsProps> = ({ onOpen }) => {
+  const { data, loading } = useMyGroupsQuery();
 
   return (
     <div className="widgets" style={{ flex: 0.2, padding: "0 20px" }}>
@@ -31,7 +31,7 @@ export const Widgets: React.FC<WidgetsProps> = ({ data, loading, onOpen }) => {
               <Autocomplete
                 id="free-solo-demo"
                 freeSolo
-                options={data?.getUsers}
+                options={data?.getMyGroups as any}
                 renderInput={(params) => (
                   <TextField {...params} margin="normal" variant="outlined" />
                 )}
@@ -39,7 +39,7 @@ export const Widgets: React.FC<WidgetsProps> = ({ data, loading, onOpen }) => {
                 renderOption={(option) => (
                   <div className="follow-modal-bottom-itemWrap full-width">
                     <Link
-                      to={`/users/${option.username}`}
+                      to={`/groups/${option?.id}`}
                       className="link link--none"
                     >
                       <div className="follow-modal-bottom-item">
@@ -56,7 +56,7 @@ export const Widgets: React.FC<WidgetsProps> = ({ data, loading, onOpen }) => {
                               <div className="item-right-top-text">
                                 <div className="name-wrap">
                                   <div className="name">
-                                    <span>{option.name}</span>
+                                    <span>{option?.name}</span>
                                   </div>
                                 </div>
                               </div>
@@ -81,43 +81,50 @@ export const Widgets: React.FC<WidgetsProps> = ({ data, loading, onOpen }) => {
               <Head>Nhóm bạn đã tham gia</Head>
             </Header>
             <Main>
-              {/* {data?.getUsers
-                .filter((f: any, index: number) => index < 3)
-                .map((f: any) => (
-                  
-                ))} */}
-              <div className="follow-modal-bottom-itemWrap">
-                <div className="follow-modal-bottom-item">
-                  <div className="item">
-                    <div className="item-left">
-                      <div className="avatar">
-                        <GroupAvatar variant="square" src={""} />
-                      </div>
-                    </div>
-                    <div className="item-right">
-                      <div className="item-right-top">
-                        <div className="item-right-top-text">
-                          <Link to={`/groups/`}>
-                            <div className="name-wrap">
-                              <div className="name">
-                                <span>Dao meo</span>
-                              </div>
-                            </div>
-                          </Link>
+              {data?.getMyGroups.map((group) => (
+                <div className="follow-modal-bottom-itemWrap" key={group?.id}>
+                  <div className="follow-modal-bottom-item">
+                    <div className="item">
+                      <div className="item-left">
+                        <div className="avatar">
+                          <GroupAvatar
+                            variant="square"
+                            src={group?.imageCover || ""}
+                          />
                         </div>
                       </div>
-                      <div
-                        className="item-right-bottom"
-                        style={{ paddingTop: 0 }}
-                      >
-                        <span className="body" style={{ fontSize: "12px" }}>
-                          Meo meo meo
-                        </span>
+                      <div className="item-right">
+                        <div className="item-right-top">
+                          <div className="item-right-top-text">
+                            <Link to={`/groups/`}>
+                              <div className="name-wrap">
+                                <div
+                                  className="name"
+                                  style={{
+                                    whiteSpace: "pre-wrap",
+                                    wordBreak: "break-word",
+                                    wordWrap: "break-word",
+                                  }}
+                                >
+                                  <span>{group?.name}</span>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        </div>
+                        <div
+                          className="item-right-bottom"
+                          style={{ paddingTop: 0 }}
+                        >
+                          <span className="body" style={{ fontSize: "12px" }}>
+                            Meo meo meo
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </Main>
             <Footer to="/connect">
               <TextLink>Show more</TextLink>

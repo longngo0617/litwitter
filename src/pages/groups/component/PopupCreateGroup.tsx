@@ -7,6 +7,8 @@ import { TextFormField } from "../../../components/TextFormField";
 import CloseIcon from "@material-ui/icons/Close";
 import { UserContext } from "../../../utils/useAuth";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
+import { GroupsDocument, MyGroupsDocument, useCreateGroupMutation } from "../../../generated/graphql";
+import { toErrorMap } from "../../../utils/toErrorMap";
 
 interface PopupCreateGroupProps {
   onClose: () => void;
@@ -17,11 +19,12 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
   onClose,
   typeGroups,
 }) => {
+  const [createGroup] = useCreateGroupMutation();
   const { user } = React.useContext(UserContext);
   const inputImage: any = React.useRef(null);
   const [previewImage, setPreviewImage] = React.useState<any>("");
   const publicArr = [
-    { name: "Công khai",publicc: true },
+    { name: "Công khai", publicc: true },
     { name: "Riêng tư", publicc: false },
   ];
   const handleImageChange = (e: any) => {
@@ -39,6 +42,7 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
     };
     reader.readAsDataURL(file);
   };
+  const [errorImage, setErrorImage] = React.useState<any>({});
 
   return (
     <Container>
@@ -49,11 +53,31 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
             name: "",
             typeGroup: "",
             describe: "",
-            public: "",
+            public: true,
             imageCover: "",
           }}
           onSubmit={async (values, { setErrors }) => {
-            console.log(values)
+            values.imageCover = previewImage;
+            const response : any = await createGroup({
+              variables: values,
+              refetchQueries: [
+                { query: GroupsDocument },
+                { query: MyGroupsDocument },
+              ],
+            });
+            if (
+              response.data?.createGroup.error.length &&
+              response.data?.createGroup.error
+            ) {
+              setErrors(toErrorMap(response.data?.createGroup.error));
+              setErrorImage(
+                response.data.createGroup.error.find(
+                  (e: any) => e.field === "imageCover"
+                )
+              );
+            } else {
+              onClose();
+            }
           }}
         >
           {() => (
@@ -172,7 +196,9 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
                             </div>
                           </div>
                         </div>
-
+                        {errorImage.field && !previewImage ? (
+                          <ErrorText>{errorImage.message}</ErrorText>
+                        ) : null}
                         <Field
                           label="Tên nhóm"
                           name="name"
@@ -244,4 +270,17 @@ const Wrapper = styled.div`
 `;
 const Padding = styled.div`
   padding: 0 12px;
+`;
+const ErrorText = styled.div`
+  color: #f44336;
+  margin-left: 14px;
+  margin-right: 14px;
+  margin-top: 3px;
+  font-size: 0.75rem;
+  margin-top: 3px;
+  text-align: left;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.66;
+  letter-spacing: 0.03333em;
 `;

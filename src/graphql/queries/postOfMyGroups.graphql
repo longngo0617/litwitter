@@ -1,5 +1,9 @@
 query postOfMyGroup {
   getPostInMyGroup {
-    ...PostSnippet
+    groupId
+    groupName
+    post {
+      ...PostSnippet
+    }
   }
 }

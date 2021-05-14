@@ -61,7 +61,7 @@ const Feed = () => {
         </Empty>
       ) : (
         data!.getPosts?.posts.map((p, index) =>
-          !p ? null : <Post key={index} {...p} />
+          !p ? null : <Post key={index} post={p} />
         )
       )}
 

@@ -214,6 +214,13 @@ export type Group = {
   createdAt: Scalars['String'];
 };
 
+export type PostInGroup = {
+  __typename?: 'PostInGroup';
+  groupId: Scalars['String'];
+  groupName: Scalars['String'];
+  post: Post;
+};
+
 export type GroupResponse = {
   __typename?: 'GroupResponse';
   error?: Maybe<Array<FieldError>>;
@@ -242,8 +249,6 @@ export type Query = {
   getUserFollowing?: Maybe<Array<Maybe<User>>>;
   getRoomChat?: Maybe<Array<Maybe<RoomChat>>>;
   findUsers?: Maybe<Array<Maybe<User>>>;
-  getGroup?: Maybe<GroupChat>;
-  getGroupChat?: Maybe<Array<Maybe<GroupChat>>>;
   getNotification?: Maybe<Notifications>;
   getProduct?: Maybe<Product>;
   getMyProducts?: Maybe<Array<Maybe<Product>>>;
@@ -253,7 +258,8 @@ export type Query = {
   getTypeGroup: Array<Maybe<TypeGroup>>;
   getGroups: Array<Maybe<Group>>;
   getMyGroups: Array<Maybe<Group>>;
-  getPostInMyGroup: Array<Maybe<Post>>;
+  getPostInMyGroup: Array<Maybe<PostInGroup>>;
+  getGroup: Group;
 };
 
 
@@ -295,11 +301,6 @@ export type QueryFindUsersArgs = {
 };
 
 
-export type QueryGetGroupArgs = {
-  groupId: Scalars['ID'];
-};
-
-
 export type QueryGetProductArgs = {
   productId: Scalars['ID'];
 };
@@ -309,6 +310,11 @@ export type QueryGetProductsArgs = {
   category?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   sort?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryGetGroupArgs = {
+  groupId: Scalars['String'];
 };
 
 export type Mutation = {
@@ -506,7 +512,7 @@ export type RegularErrorFragment = (
 
 export type RegularGroupFragment = (
   { __typename?: 'Group' }
-  & Pick<Group, 'id' | 'name' | 'imageCover' | 'public' | 'describe' | 'createdAt'>
+  & Pick<Group, 'id' | 'name' | 'imageCover' | 'public' | 'describe' | 'createdAt' | 'countMembers'>
   & { leader: (
     { __typename?: 'User' }
     & RegularUserFragment
@@ -930,8 +936,12 @@ export type PostOfMyGroupQueryVariables = Exact<{ [key: string]: never; }>;
 export type PostOfMyGroupQuery = (
   { __typename?: 'Query' }
   & { getPostInMyGroup: Array<Maybe<(
-    { __typename?: 'Post' }
-    & PostSnippetFragment
+    { __typename?: 'PostInGroup' }
+    & Pick<PostInGroup, 'groupId' | 'groupName'>
+    & { post: (
+      { __typename?: 'Post' }
+      & PostSnippetFragment
+    ) }
   )>> }
 );
 
@@ -1111,6 +1121,7 @@ export const RegularGroupFragmentDoc = gql`
   public
   describe
   createdAt
+  countMembers
   leader {
     ...RegularUser
   }
@@ -2081,7 +2092,11 @@ export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
 export const PostOfMyGroupDocument = gql`
     query postOfMyGroup {
   getPostInMyGroup {
-    ...PostSnippet
+    groupId
+    groupName
+    post {
+      ...PostSnippet
+    }
   }
 }
     ${PostSnippetFragmentDoc}`;

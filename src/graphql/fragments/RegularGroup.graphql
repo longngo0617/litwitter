@@ -5,6 +5,7 @@ fragment RegularGroup on Group {
   public
   describe
   createdAt
+  countMembers
   leader {
     ...RegularUser
   }

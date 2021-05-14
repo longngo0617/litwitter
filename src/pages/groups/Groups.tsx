@@ -27,6 +27,7 @@ export const Groups: React.FC<GroupsProps> = (props) => {
   React.useEffect(() => {
     router.push(`${url}/feed`);
   }, []);
+
   return (
     <div className="wrapper">
       <Sidebar {...user} />
@@ -72,8 +73,6 @@ export const Groups: React.FC<GroupsProps> = (props) => {
         </div>
       </Main>
       <Widgets
-        data={{ a: "", b: "" }}
-        loading={false}
         onOpen={() => setOpen(true)}
       />
       {open && (

@@ -30,12 +30,12 @@ export const FeedGroup: React.FC<FeedGroupProps> = ({}) => {
             </div>
             <ButtonLink>
               <Button
-                href="/connect"
+                href="/groups/discover"
                 color="primary"
                 variant="contained"
                 className="empty--link"
               >
-                Đi đến theo dõi
+                Khám phá
               </Button>
             </ButtonLink>
           </div>
