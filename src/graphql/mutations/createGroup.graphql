@@ -1,0 +1,22 @@
+mutation createGroup(
+  $imageCover: String!
+  $name: String!
+  $typeGroup: String!
+  $public: Boolean!
+  $describe: String!
+) {
+  createGroup(
+    imageCover: $imageCover
+    name: $name
+    typeGroup: $typeGroup
+    public: $public
+    describe: $describe
+  ) {
+    error {
+      ...RegularError
+    }
+    group {
+      ...RegularGroup
+    }
+  }
+}

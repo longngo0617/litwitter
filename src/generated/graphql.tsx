@@ -200,6 +200,7 @@ export type TypeGroup = {
 
 export type Group = {
   __typename?: 'Group';
+  id: Scalars['ID'];
   leader: User;
   admins?: Maybe<Array<Maybe<User>>>;
   members: Array<Maybe<User>>;
@@ -210,6 +211,13 @@ export type Group = {
   public: Scalars['Boolean'];
   describe: Scalars['String'];
   posts?: Maybe<Array<Maybe<Post>>>;
+  createdAt: Scalars['String'];
+};
+
+export type GroupResponse = {
+  __typename?: 'GroupResponse';
+  error?: Maybe<Array<FieldError>>;
+  group?: Maybe<Group>;
 };
 
 export type RegisterInput = {
@@ -244,6 +252,8 @@ export type Query = {
   getLocations?: Maybe<Array<Maybe<Location>>>;
   getTypeGroup: Array<Maybe<TypeGroup>>;
   getGroups: Array<Maybe<Group>>;
+  getMyGroups: Array<Maybe<Group>>;
+  getPostInMyGroup: Array<Maybe<Post>>;
 };
 
 
@@ -316,14 +326,13 @@ export type Mutation = {
   createRoomChatUsername: RoomChat;
   deleteRoomChat?: Maybe<Scalars['String']>;
   createContentChat: RoomChat;
-  createGroupChat: GroupChat;
-  createContentGroupChat: GroupChat;
-  createMember: GroupChat;
   following: User;
   editProfile: User;
   createProduct: ProductResponse;
   setWatchedTrue?: Maybe<Array<Maybe<Notification>>>;
   deleteProduct: Scalars['String'];
+  createGroup: GroupResponse;
+  createPostInGroup: Scalars['Boolean'];
 };
 
 
@@ -398,23 +407,6 @@ export type MutationCreateContentChatArgs = {
 };
 
 
-export type MutationCreateGroupChatArgs = {
-  body: Scalars['String'];
-};
-
-
-export type MutationCreateContentGroupChatArgs = {
-  groupId: Scalars['String'];
-  content: Scalars['String'];
-};
-
-
-export type MutationCreateMemberArgs = {
-  groupId: Scalars['String'];
-  username: Scalars['String'];
-};
-
-
 export type MutationFollowingArgs = {
   username?: Maybe<Scalars['String']>;
 };
@@ -441,6 +433,22 @@ export type MutationCreateProductArgs = {
 
 export type MutationDeleteProductArgs = {
   productId: Scalars['ID'];
+};
+
+
+export type MutationCreateGroupArgs = {
+  name: Scalars['String'];
+  describe: Scalars['String'];
+  imageCover: Scalars['String'];
+  typeGroup: Scalars['String'];
+  public: Scalars['Boolean'];
+};
+
+
+export type MutationCreatePostInGroupArgs = {
+  groupId: Scalars['String'];
+  body?: Maybe<Scalars['String']>;
+  image?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type Subscription = {
@@ -494,6 +502,27 @@ export type PostSnippetFragment = (
 export type RegularErrorFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
+);
+
+export type RegularGroupFragment = (
+  { __typename?: 'Group' }
+  & Pick<Group, 'id' | 'name' | 'imageCover' | 'public' | 'describe' | 'createdAt'>
+  & { leader: (
+    { __typename?: 'User' }
+    & RegularUserFragment
+  ), admins?: Maybe<Array<Maybe<(
+    { __typename?: 'User' }
+    & RegularUserFragment
+  )>>>, members: Array<Maybe<(
+    { __typename?: 'User' }
+    & RegularUserFragment
+  )>>, typeGroup: (
+    { __typename?: 'TypeGroup' }
+    & Pick<TypeGroup, 'name' | 'slug'>
+  ), posts?: Maybe<Array<Maybe<(
+    { __typename?: 'Post' }
+    & PostSnippetFragment
+  )>>> }
 );
 
 export type RegularProductFragment = (
@@ -564,6 +593,29 @@ export type CommentMutation = (
       { __typename?: 'Comment' }
       & Pick<Comment, 'body' | 'createdAt' | 'username'>
     )>> }
+  ) }
+);
+
+export type CreateGroupMutationVariables = Exact<{
+  imageCover: Scalars['String'];
+  name: Scalars['String'];
+  typeGroup: Scalars['String'];
+  public: Scalars['Boolean'];
+  describe: Scalars['String'];
+}>;
+
+
+export type CreateGroupMutation = (
+  { __typename?: 'Mutation' }
+  & { createGroup: (
+    { __typename?: 'GroupResponse' }
+    & { error?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & RegularErrorFragment
+    )>>, group?: Maybe<(
+      { __typename?: 'Group' }
+      & RegularGroupFragment
+    )> }
   ) }
 );
 
@@ -792,6 +844,17 @@ export type ChatsQuery = (
   )>>> }
 );
 
+export type GroupsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GroupsQuery = (
+  { __typename?: 'Query' }
+  & { getGroups: Array<Maybe<(
+    { __typename?: 'Group' }
+    & RegularGroupFragment
+  )>> }
+);
+
 export type MeProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -801,6 +864,17 @@ export type MeProductsQuery = (
     { __typename?: 'Product' }
     & RegularProductFragment
   )>>> }
+);
+
+export type MyGroupsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyGroupsQuery = (
+  { __typename?: 'Query' }
+  & { getMyGroups: Array<Maybe<(
+    { __typename?: 'Group' }
+    & RegularGroupFragment
+  )>> }
 );
 
 export type MyPostsQueryVariables = Exact<{
@@ -850,6 +924,17 @@ export type PostQuery = (
   ) }
 );
 
+export type PostOfMyGroupQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PostOfMyGroupQuery = (
+  { __typename?: 'Query' }
+  & { getPostInMyGroup: Array<Maybe<(
+    { __typename?: 'Post' }
+    & PostSnippetFragment
+  )>> }
+);
+
 export type PostsQueryVariables = Exact<{
   cursor: Scalars['String'];
   limit: Scalars['Int'];
@@ -896,6 +981,17 @@ export type ProductsQuery = (
   )>>> }
 );
 
+export type TypeGroupQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TypeGroupQuery = (
+  { __typename?: 'Query' }
+  & { getTypeGroup: Array<Maybe<(
+    { __typename?: 'TypeGroup' }
+    & Pick<TypeGroup, 'name' | 'slug'>
+  )>> }
+);
+
 export type UserQueryVariables = Exact<{
   username: Scalars['String'];
 }>;
@@ -934,6 +1030,39 @@ export const NotificationSnippetFragmentDoc = gql`
   title
 }
     `;
+export const RegularFollowFragmentDoc = gql`
+    fragment RegularFollow on Follow {
+  id
+  username
+  createdAt
+  displayname
+  avatar
+  story
+}
+    `;
+export const RegularUserFragmentDoc = gql`
+    fragment RegularUser on User {
+  id
+  username
+  email
+  createdAt
+  profile {
+    avatar
+    dateOfBirth
+    fullName
+    story
+    coverImage
+  }
+  token
+  displayname
+  following {
+    ...RegularFollow
+  }
+  follower {
+    ...RegularFollow
+  }
+}
+    ${RegularFollowFragmentDoc}`;
 export const LikeSnippetFragmentDoc = gql`
     fragment LikeSnippet on Like {
   id
@@ -974,39 +1103,33 @@ export const PostSnippetFragmentDoc = gql`
 }
     ${LikeSnippetFragmentDoc}
 ${CommentSnippetFragmentDoc}`;
-export const RegularFollowFragmentDoc = gql`
-    fragment RegularFollow on Follow {
+export const RegularGroupFragmentDoc = gql`
+    fragment RegularGroup on Group {
   id
-  username
+  name
+  imageCover
+  public
+  describe
   createdAt
-  displayname
-  avatar
-  story
-}
-    `;
-export const RegularUserFragmentDoc = gql`
-    fragment RegularUser on User {
-  id
-  username
-  email
-  createdAt
-  profile {
-    avatar
-    dateOfBirth
-    fullName
-    story
-    coverImage
+  leader {
+    ...RegularUser
   }
-  token
-  displayname
-  following {
-    ...RegularFollow
+  admins {
+    ...RegularUser
   }
-  follower {
-    ...RegularFollow
+  members {
+    ...RegularUser
+  }
+  typeGroup {
+    name
+    slug
+  }
+  posts {
+    ...PostSnippet
   }
 }
-    ${RegularFollowFragmentDoc}`;
+    ${RegularUserFragmentDoc}
+${PostSnippetFragmentDoc}`;
 export const RegularProductFragmentDoc = gql`
     fragment RegularProduct on Product {
   id
@@ -1107,6 +1230,55 @@ export function useCommentMutation(baseOptions?: Apollo.MutationHookOptions<Comm
 export type CommentMutationHookResult = ReturnType<typeof useCommentMutation>;
 export type CommentMutationResult = Apollo.MutationResult<CommentMutation>;
 export type CommentMutationOptions = Apollo.BaseMutationOptions<CommentMutation, CommentMutationVariables>;
+export const CreateGroupDocument = gql`
+    mutation createGroup($imageCover: String!, $name: String!, $typeGroup: String!, $public: Boolean!, $describe: String!) {
+  createGroup(
+    imageCover: $imageCover
+    name: $name
+    typeGroup: $typeGroup
+    public: $public
+    describe: $describe
+  ) {
+    error {
+      ...RegularError
+    }
+    group {
+      ...RegularGroup
+    }
+  }
+}
+    ${RegularErrorFragmentDoc}
+${RegularGroupFragmentDoc}`;
+export type CreateGroupMutationFn = Apollo.MutationFunction<CreateGroupMutation, CreateGroupMutationVariables>;
+
+/**
+ * __useCreateGroupMutation__
+ *
+ * To run a mutation, you first call `useCreateGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createGroupMutation, { data, loading, error }] = useCreateGroupMutation({
+ *   variables: {
+ *      imageCover: // value for 'imageCover'
+ *      name: // value for 'name'
+ *      typeGroup: // value for 'typeGroup'
+ *      public: // value for 'public'
+ *      describe: // value for 'describe'
+ *   },
+ * });
+ */
+export function useCreateGroupMutation(baseOptions?: Apollo.MutationHookOptions<CreateGroupMutation, CreateGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateGroupMutation, CreateGroupMutationVariables>(CreateGroupDocument, options);
+      }
+export type CreateGroupMutationHookResult = ReturnType<typeof useCreateGroupMutation>;
+export type CreateGroupMutationResult = Apollo.MutationResult<CreateGroupMutation>;
+export type CreateGroupMutationOptions = Apollo.BaseMutationOptions<CreateGroupMutation, CreateGroupMutationVariables>;
 export const CreatePostDocument = gql`
     mutation createPost($body: String!, $image: [String]) {
   createPost(body: $body, image: $image) {
@@ -1692,6 +1864,40 @@ export function useChatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Chat
 export type ChatsQueryHookResult = ReturnType<typeof useChatsQuery>;
 export type ChatsLazyQueryHookResult = ReturnType<typeof useChatsLazyQuery>;
 export type ChatsQueryResult = Apollo.QueryResult<ChatsQuery, ChatsQueryVariables>;
+export const GroupsDocument = gql`
+    query Groups {
+  getGroups {
+    ...RegularGroup
+  }
+}
+    ${RegularGroupFragmentDoc}`;
+
+/**
+ * __useGroupsQuery__
+ *
+ * To run a query within a React component, call `useGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGroupsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGroupsQuery(baseOptions?: Apollo.QueryHookOptions<GroupsQuery, GroupsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GroupsQuery, GroupsQueryVariables>(GroupsDocument, options);
+      }
+export function useGroupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GroupsQuery, GroupsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GroupsQuery, GroupsQueryVariables>(GroupsDocument, options);
+        }
+export type GroupsQueryHookResult = ReturnType<typeof useGroupsQuery>;
+export type GroupsLazyQueryHookResult = ReturnType<typeof useGroupsLazyQuery>;
+export type GroupsQueryResult = Apollo.QueryResult<GroupsQuery, GroupsQueryVariables>;
 export const MeProductsDocument = gql`
     query MeProducts {
   getMyProducts {
@@ -1726,6 +1932,40 @@ export function useMeProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type MeProductsQueryHookResult = ReturnType<typeof useMeProductsQuery>;
 export type MeProductsLazyQueryHookResult = ReturnType<typeof useMeProductsLazyQuery>;
 export type MeProductsQueryResult = Apollo.QueryResult<MeProductsQuery, MeProductsQueryVariables>;
+export const MyGroupsDocument = gql`
+    query myGroups {
+  getMyGroups {
+    ...RegularGroup
+  }
+}
+    ${RegularGroupFragmentDoc}`;
+
+/**
+ * __useMyGroupsQuery__
+ *
+ * To run a query within a React component, call `useMyGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyGroupsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyGroupsQuery(baseOptions?: Apollo.QueryHookOptions<MyGroupsQuery, MyGroupsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyGroupsQuery, MyGroupsQueryVariables>(MyGroupsDocument, options);
+      }
+export function useMyGroupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyGroupsQuery, MyGroupsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyGroupsQuery, MyGroupsQueryVariables>(MyGroupsDocument, options);
+        }
+export type MyGroupsQueryHookResult = ReturnType<typeof useMyGroupsQuery>;
+export type MyGroupsLazyQueryHookResult = ReturnType<typeof useMyGroupsLazyQuery>;
+export type MyGroupsQueryResult = Apollo.QueryResult<MyGroupsQuery, MyGroupsQueryVariables>;
 export const MyPostsDocument = gql`
     query myPosts($username: String!, $cursor: String, $limit: Int!) {
   getMyPosts(username: $username, cursor: $cursor, limit: $limit) {
@@ -1838,6 +2078,40 @@ export function usePostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostQ
 export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
 export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
 export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
+export const PostOfMyGroupDocument = gql`
+    query postOfMyGroup {
+  getPostInMyGroup {
+    ...PostSnippet
+  }
+}
+    ${PostSnippetFragmentDoc}`;
+
+/**
+ * __usePostOfMyGroupQuery__
+ *
+ * To run a query within a React component, call `usePostOfMyGroupQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostOfMyGroupQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostOfMyGroupQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePostOfMyGroupQuery(baseOptions?: Apollo.QueryHookOptions<PostOfMyGroupQuery, PostOfMyGroupQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PostOfMyGroupQuery, PostOfMyGroupQueryVariables>(PostOfMyGroupDocument, options);
+      }
+export function usePostOfMyGroupLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostOfMyGroupQuery, PostOfMyGroupQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PostOfMyGroupQuery, PostOfMyGroupQueryVariables>(PostOfMyGroupDocument, options);
+        }
+export type PostOfMyGroupQueryHookResult = ReturnType<typeof usePostOfMyGroupQuery>;
+export type PostOfMyGroupLazyQueryHookResult = ReturnType<typeof usePostOfMyGroupLazyQuery>;
+export type PostOfMyGroupQueryResult = Apollo.QueryResult<PostOfMyGroupQuery, PostOfMyGroupQueryVariables>;
 export const PostsDocument = gql`
     query Posts($cursor: String!, $limit: Int!) {
   getPosts(cursor: $cursor, limit: $limit) {
@@ -1949,6 +2223,41 @@ export function useProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<P
 export type ProductsQueryHookResult = ReturnType<typeof useProductsQuery>;
 export type ProductsLazyQueryHookResult = ReturnType<typeof useProductsLazyQuery>;
 export type ProductsQueryResult = Apollo.QueryResult<ProductsQuery, ProductsQueryVariables>;
+export const TypeGroupDocument = gql`
+    query typeGroup {
+  getTypeGroup {
+    name
+    slug
+  }
+}
+    `;
+
+/**
+ * __useTypeGroupQuery__
+ *
+ * To run a query within a React component, call `useTypeGroupQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTypeGroupQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTypeGroupQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTypeGroupQuery(baseOptions?: Apollo.QueryHookOptions<TypeGroupQuery, TypeGroupQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TypeGroupQuery, TypeGroupQueryVariables>(TypeGroupDocument, options);
+      }
+export function useTypeGroupLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TypeGroupQuery, TypeGroupQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TypeGroupQuery, TypeGroupQueryVariables>(TypeGroupDocument, options);
+        }
+export type TypeGroupQueryHookResult = ReturnType<typeof useTypeGroupQuery>;
+export type TypeGroupLazyQueryHookResult = ReturnType<typeof useTypeGroupLazyQuery>;
+export type TypeGroupQueryResult = Apollo.QueryResult<TypeGroupQuery, TypeGroupQueryVariables>;
 export const UserDocument = gql`
     query User($username: String!) {
   getUser(username: $username) {

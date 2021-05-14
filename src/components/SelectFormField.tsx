@@ -13,8 +13,9 @@ export const SelectFormField: React.FC<
     label?: string;
     options: Array<any>;
     categories?: boolean;
+    typePublic?: boolean;
   }
-> = ({ field, form, label, options, categories, ...props }) => {
+> = ({ field, form, label, options, categories, typePublic, ...props }) => {
   const errorText =
     getIn(form.touched, field.name) && getIn(form.errors, field.name);
   if (categories) {
@@ -23,7 +24,7 @@ export const SelectFormField: React.FC<
         {label && <InputLabel>{label}</InputLabel>}
         <Select fullWidth {...field} {...props}>
           {options.map((op) => (
-            <MenuItem key={op.name} value={op.name}>
+            <MenuItem key={op.name} value={typePublic ? op.publicc : op.name}>
               {op.name}
             </MenuItem>
           ))}

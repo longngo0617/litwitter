@@ -6,13 +6,14 @@ import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { PostSnippetFragment, useLikeMutation } from "../generated/graphql";
 import { UserContext } from "../utils/useAuth";
+import { DisplaynamePost } from "./DisplaynamePost";
 import { Image } from "./Image";
 import { InteractiveBar } from "./InteractiveBar";
 
 export const Post: React.FC<PostSnippetFragment> = (props) => {
   const router = useHistory();
   const [likePost] = useLikeMutation();
-  const { user, openMore } = useContext(UserContext);
+  const { openMore } = useContext(UserContext);
 
   return (
     <>
@@ -36,7 +37,11 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
                   className="link link--none"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {props.displayname}
+                  {props.displayname.includes(",") ? (
+                    <DisplaynamePost name={props.displayname} />
+                  ) : (
+                    props.displayname
+                  )}
                   <span className="post__headerSpecial">
                     {props.verified && (
                       <VerifiedUserIcon className="post__badge" />
@@ -44,7 +49,9 @@ export const Post: React.FC<PostSnippetFragment> = (props) => {
                     @{props.username}
                   </span>
                 </Link>
-                <time className="post__time">{moment(props.createdAt).format('l')}</time>
+                <time className="post__time">
+                  {moment(props.createdAt).format("l")}
+                </time>
               </h3>
 
               <IconButton

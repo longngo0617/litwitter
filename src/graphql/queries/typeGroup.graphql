@@ -1,0 +1,6 @@
+query typeGroup {
+  getTypeGroup {
+    name
+    slug
+  }
+}

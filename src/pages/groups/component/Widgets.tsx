@@ -1,18 +1,20 @@
-import React from "react";
-import { Loading } from "../../../components/Loading";
-import SearchIcon from "@material-ui/icons/Search";
-import styled from "styled-components";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import { TextField, Avatar } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Avatar, TextField } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import SearchIcon from "@material-ui/icons/Search";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { Loading } from "../../../components/Loading";
 
 interface WidgetsProps {
   data: any;
   loading: boolean;
+  onOpen: () => void;
 }
 
-export const Widgets: React.FC<WidgetsProps> = ({ data, loading }) => {
+export const Widgets: React.FC<WidgetsProps> = ({ data, loading, onOpen }) => {
+
   return (
     <div className="widgets" style={{ flex: 0.2, padding: "0 20px" }}>
       {!data && loading ? (
@@ -69,7 +71,7 @@ export const Widgets: React.FC<WidgetsProps> = ({ data, loading }) => {
             </div>
           </div>
           <ButtonWrap>
-            <Button>
+            <Button onClick={onOpen}>
               <IconAdd />
               <Text>Tạo nhóm mới</Text>
             </Button>
@@ -200,7 +202,7 @@ const Text = styled.div`
   font-family: inherit;
   font-size: 15px;
   color: #fff;
-  font-weight:600;
+  font-weight: 600;
 `;
 
 const IconAdd = styled(AddIcon)`
