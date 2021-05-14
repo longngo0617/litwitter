@@ -7,7 +7,11 @@ import { TextFormField } from "../../../components/TextFormField";
 import CloseIcon from "@material-ui/icons/Close";
 import { UserContext } from "../../../utils/useAuth";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
-import { GroupsDocument, MyGroupsDocument, useCreateGroupMutation } from "../../../generated/graphql";
+import {
+  GroupsDocument,
+  MyGroupsDocument,
+  useCreateGroupMutation,
+} from "../../../generated/graphql";
 import { toErrorMap } from "../../../utils/toErrorMap";
 
 interface PopupCreateGroupProps {
@@ -43,7 +47,6 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
     reader.readAsDataURL(file);
   };
   const [errorImage, setErrorImage] = React.useState<any>({});
-
   return (
     <Container>
       <Overlay />
@@ -58,7 +61,8 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
           }}
           onSubmit={async (values, { setErrors }) => {
             values.imageCover = previewImage;
-            const response : any = await createGroup({
+            console.log(previewImage)
+            const response: any = await createGroup({
               variables: values,
               refetchQueries: [
                 { query: GroupsDocument },

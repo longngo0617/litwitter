@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useHistory,
+} from "react-router-dom";
 import { CommentPost } from "./components/CommentPost";
 import { PopupMore } from "./components/PopupMore";
 import { Connect } from "./pages/connect/Connect";
@@ -30,22 +35,25 @@ const App = () => {
     { path: "/notifications", name: "Notifications", Component: Notifications },
     { path: "/groups", name: "Groups", Component: Groups },
     { path: "/market/category/:slug?", name: "Marketplace", Component: Market },
-    { path: "/market/locations/:location?", name: "Marketplace", Component: Market },
+    {
+      path: "/market/locations/:location?",
+      name: "Marketplace",
+      Component: Market,
+    },
     { path: "/market/item/:id", name: "Marketplace", Component: Detail },
     { path: "/market", name: "Marketplace", Component: Market },
     { path: "/messages/:id", name: "Messages", Component: Messages },
     { path: "/messages", name: "Messages", Component: Messages },
     { path: "/", name: "Home", Component: Home },
   ];
-
   return (
     <>
       <UserProvider>
         <Router>
           <PopupMore />
           <CommentPost />
-          <PopupEdit/>
-          <PopupMess/>
+          <PopupEdit />
+          <PopupMess />
           <Switch>
             {routes.map((e: any) => (
               <Route key={e.path} path={e.path}>
