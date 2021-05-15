@@ -26,7 +26,7 @@ export const CommentPost: React.FC<CommentPostProps> = () => {
             <div className="box__comment--body">
               <div className="box__comment--content">
                 <div className="avartar">
-                  <Avatar src={commentItem?.post?.avatar} style={{ marginBottom: "10px" }} />
+                  <Avatar src={commentItem?.avatar} style={{ marginBottom: "10px" }} />
                   <div className="bar">
                     <p></p>
                   </div>
@@ -34,14 +34,14 @@ export const CommentPost: React.FC<CommentPostProps> = () => {
                 <div className="info">
                   <div className="info__top">
                     <span className="info__top--name">
-                      {commentItem?.post?.displayname}
+                      {commentItem?.displayname}
                     </span>
                     <span className="info__top--username">
-                      @{commentItem?.post?.username}
+                      @{commentItem?.username}
                     </span>
                   </div>
                   <div className="info__bot">
-                    <span className="content">{commentItem?.post?.body}</span>
+                    <span className="content">{commentItem?.body}</span>
                   </div>
                 </div>
               </div>
@@ -51,10 +51,10 @@ export const CommentPost: React.FC<CommentPostProps> = () => {
                 </div>
                 <div className="reply">
                   Trả lời
-                  <span>@{commentItem?.post?.username}</span>
+                  <span>@{commentItem?.username}</span>
                 </div>
               </div>
-              <TweetBox isComment postId={commentItem?.post?.id} />
+              <TweetBox isComment postId={commentItem?.id} />
             </div>
           </div>
         </div>

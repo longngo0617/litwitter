@@ -82,8 +82,7 @@ export const TweetBox: React.FC<TweetBoxProps> = ({
                 //   cache.evict({fieldName:""})
                 // }
               });
-            }
-            if (isCommentInGroup && groupId) {
+            } else if (isCommentInGroup && groupId) {
               await createCommentInGroup({
                 variables: {
                   groupId: groupId as string,
@@ -94,20 +93,21 @@ export const TweetBox: React.FC<TweetBoxProps> = ({
                   closeComment();
                 },
               });
+            } else if (isComment) {
+              await createComment({
+                variables: { id: postId as string, body: values.body },
+                update: () => {
+                  closeComment();
+                },
+              });
+            } else {
+              await createPost({
+                variables: values,
+                update: (cache) => {
+                  cache.evict({ fieldName: "getPosts:{}" });
+                },
+              });
             }
-            (await !isComment)
-              ? createPost({
-                  variables: values,
-                  update: (cache) => {
-                    cache.evict({ fieldName: "getPosts:{}" });
-                  },
-                })
-              : createComment({
-                  variables: { id: postId as string, body: values.body },
-                  update: () => {
-                    closeComment();
-                  },
-                });
             values.body = "";
           }}
         >
