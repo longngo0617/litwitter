@@ -4,7 +4,11 @@ import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import moment from "moment";
 import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { PostSnippetFragment, useLikeMutation } from "../generated/graphql";
+import {
+  PostSnippetFragment,
+  useLikeMutation,
+  useLikePostInGroupMutation,
+} from "../generated/graphql";
 import { UserContext } from "../utils/useAuth";
 import styled from "styled-components";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
@@ -19,8 +23,10 @@ interface PostProps {
 export const PostItem: React.FC<PostProps> = (props) => {
   const router = useHistory();
   const [likePost] = useLikeMutation();
+  const [likePostInGroup] = useLikePostInGroupMutation();
   const { openMore } = useContext(UserContext);
   const { groupName, groupId } = props;
+
   return (
     <>
       <div
@@ -102,9 +108,16 @@ export const PostItem: React.FC<PostProps> = (props) => {
               likeList={props.post.likes}
               item={props}
               likePost={async () =>
-                await likePost({
-                  variables: { id: props.post.id },
-                })
+                !groupId
+                  ? await likePost({
+                      variables: { id: props.post.id },
+                    })
+                  : await likePostInGroup({
+                      variables: {
+                        postId: props.post.id,
+                        groupId: groupId,
+                      },
+                    })
               }
             />
           </div>

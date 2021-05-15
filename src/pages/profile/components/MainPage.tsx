@@ -210,7 +210,7 @@ export const MainPage: React.FC<MainPageProps> = ({dataUser,params}) => {
             </Box>
           ) : (
             data!.getMyPosts?.posts.map((p: any, index: number) =>
-              !p ? null : <PostItem key={index} {...p} />
+              !p ? null : <PostItem key={index} post={p} />
             )
           )}
 
