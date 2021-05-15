@@ -260,6 +260,8 @@ export type Query = {
   getMyGroups: Array<Maybe<Group>>;
   getPostInMyGroup: Array<Maybe<PostInGroup>>;
   getGroup: Group;
+  getCommentInGroup: Array<Maybe<Comment>>;
+  getPostInGroup: Post;
 };
 
 
@@ -317,6 +319,18 @@ export type QueryGetGroupArgs = {
   groupId: Scalars['String'];
 };
 
+
+export type QueryGetCommentInGroupArgs = {
+  groupId: Scalars['String'];
+  postId: Scalars['String'];
+};
+
+
+export type QueryGetPostInGroupArgs = {
+  groupId: Scalars['String'];
+  postId: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   register: UserResponse;
@@ -339,6 +353,8 @@ export type Mutation = {
   deleteProduct: Scalars['String'];
   createGroup: GroupResponse;
   createPostInGroup: Scalars['Boolean'];
+  likePostInGroup: Scalars['String'];
+  CommentPostInGroup: Scalars['Boolean'];
 };
 
 
@@ -455,6 +471,19 @@ export type MutationCreatePostInGroupArgs = {
   groupId: Scalars['String'];
   body?: Maybe<Scalars['String']>;
   image?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+
+export type MutationLikePostInGroupArgs = {
+  groupId: Scalars['String'];
+  postId: Scalars['String'];
+};
+
+
+export type MutationCommentPostInGroupArgs = {
+  groupId: Scalars['String'];
+  postId: Scalars['String'];
+  body: Scalars['String'];
 };
 
 export type Subscription = {
@@ -848,6 +877,19 @@ export type ChatsQuery = (
     { __typename?: 'RoomChat' }
     & RegularRoomChatFragment
   )>>> }
+);
+
+export type GroupQueryVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type GroupQuery = (
+  { __typename?: 'Query' }
+  & { getGroup: (
+    { __typename?: 'Group' }
+    & RegularGroupFragment
+  ) }
 );
 
 export type GroupsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1875,6 +1917,41 @@ export function useChatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Chat
 export type ChatsQueryHookResult = ReturnType<typeof useChatsQuery>;
 export type ChatsLazyQueryHookResult = ReturnType<typeof useChatsLazyQuery>;
 export type ChatsQueryResult = Apollo.QueryResult<ChatsQuery, ChatsQueryVariables>;
+export const GroupDocument = gql`
+    query Group($groupId: String!) {
+  getGroup(groupId: $groupId) {
+    ...RegularGroup
+  }
+}
+    ${RegularGroupFragmentDoc}`;
+
+/**
+ * __useGroupQuery__
+ *
+ * To run a query within a React component, call `useGroupQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGroupQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useGroupQuery(baseOptions: Apollo.QueryHookOptions<GroupQuery, GroupQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GroupQuery, GroupQueryVariables>(GroupDocument, options);
+      }
+export function useGroupLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GroupQuery, GroupQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GroupQuery, GroupQueryVariables>(GroupDocument, options);
+        }
+export type GroupQueryHookResult = ReturnType<typeof useGroupQuery>;
+export type GroupLazyQueryHookResult = ReturnType<typeof useGroupLazyQuery>;
+export type GroupQueryResult = Apollo.QueryResult<GroupQuery, GroupQueryVariables>;
 export const GroupsDocument = gql`
     query Groups {
   getGroups {

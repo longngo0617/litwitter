@@ -3,7 +3,7 @@ import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Loading } from "../../../components/Loading";
 import { useMyGroupsQuery } from "../../../generated/graphql";
@@ -14,7 +14,10 @@ interface WidgetsProps {
 
 export const Widgets: React.FC<WidgetsProps> = ({ onOpen }) => {
   const { data, loading } = useMyGroupsQuery();
-
+  const router = useHistory();
+  const handleClickGroup = (router: any, url: string) => {
+    return router.replace(`/groups/group/${url}`);
+  };
   return (
     <div className="widgets" style={{ flex: 0.2, padding: "0 20px" }}>
       {!data && loading ? (
@@ -82,7 +85,11 @@ export const Widgets: React.FC<WidgetsProps> = ({ onOpen }) => {
             </Header>
             <Main>
               {data?.getMyGroups.map((group) => (
-                <div className="follow-modal-bottom-itemWrap" key={group?.id}>
+                <div
+                  className="follow-modal-bottom-itemWrap"
+                  key={group?.id}
+                  onClick={() => handleClickGroup(router,group?.id as string)}
+                >
                   <div className="follow-modal-bottom-item">
                     <div className="item">
                       <div className="item-left">

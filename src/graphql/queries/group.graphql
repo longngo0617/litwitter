@@ -1,0 +1,5 @@
+query Group($groupId: String!) {
+  getGroup(groupId: $groupId) {
+    ...RegularGroup
+  }
+}
