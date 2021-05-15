@@ -1,6 +1,6 @@
 import { TweetBox } from "../../../components/TweetBox";
 import { usePostsQuery } from "../../../generated/graphql";
-import { Post } from "../../../components/Post";
+import { PostItem } from "../../../components/PostItem";
 import Box from "@material-ui/core/Box";
 import { Button } from "@material-ui/core";
 import { Loading } from "../../../components/Loading";
@@ -61,7 +61,7 @@ const Feed = () => {
         </Empty>
       ) : (
         data!.getPosts?.posts.map((p, index) =>
-          !p ? null : <Post key={index} post={p} />
+          !p ? null : <PostItem key={index} post={p} />
         )
       )}
 

@@ -11,7 +11,7 @@ import {
 } from "../../../generated/graphql";
 import moment from "moment";
 import { Loading } from "../../../components/Loading";
-import { Post } from "../../../components/Post";
+import { PostItem } from "../../../components/PostItem";
 interface MainPageProps {
   dataUser?: UserQuery;
   params: any;
@@ -210,7 +210,7 @@ export const MainPage: React.FC<MainPageProps> = ({dataUser,params}) => {
             </Box>
           ) : (
             data!.getMyPosts?.posts.map((p: any, index: number) =>
-              !p ? null : <Post key={index} {...p} />
+              !p ? null : <PostItem key={index} {...p} />
             )
           )}
 

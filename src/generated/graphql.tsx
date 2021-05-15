@@ -227,6 +227,25 @@ export type GroupResponse = {
   group?: Maybe<Group>;
 };
 
+export type Invite = {
+  __typename?: 'Invite';
+  id: Scalars['ID'];
+  groupId: Scalars['String'];
+  name: Scalars['String'];
+  imageCover: Scalars['String'];
+  to: User;
+  from: User;
+};
+
+export type Join = {
+  __typename?: 'Join';
+  id: Scalars['ID'];
+  groupId: Scalars['String'];
+  name: Scalars['String'];
+  imageCover: Scalars['String'];
+  to: User;
+};
+
 export type RegisterInput = {
   username: Scalars['String'];
   password: Scalars['String'];
@@ -262,6 +281,7 @@ export type Query = {
   getGroup: Group;
   getCommentInGroup: Array<Maybe<Comment>>;
   getPostInGroup: Post;
+  getMyInvites: Array<Maybe<Invite>>;
 };
 
 
@@ -355,6 +375,8 @@ export type Mutation = {
   createPostInGroup: Scalars['Boolean'];
   likePostInGroup: Scalars['String'];
   CommentPostInGroup: Scalars['Boolean'];
+  createInvite: Scalars['Boolean'];
+  acceptInvite: Scalars['Boolean'];
 };
 
 
@@ -484,6 +506,19 @@ export type MutationCommentPostInGroupArgs = {
   groupId: Scalars['String'];
   postId: Scalars['String'];
   body: Scalars['String'];
+};
+
+
+export type MutationCreateInviteArgs = {
+  groupId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+
+export type MutationAcceptInviteArgs = {
+  groupId: Scalars['String'];
+  userId: Scalars['String'];
+  inviteId: Scalars['String'];
 };
 
 export type Subscription = {
@@ -631,6 +666,18 @@ export type CommentMutation = (
   ) }
 );
 
+export type CreateCommentInGroupMutationVariables = Exact<{
+  groupId: Scalars['String'];
+  postId: Scalars['String'];
+  body: Scalars['String'];
+}>;
+
+
+export type CreateCommentInGroupMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'CommentPostInGroup'>
+);
+
 export type CreateGroupMutationVariables = Exact<{
   imageCover: Scalars['String'];
   name: Scalars['String'];
@@ -666,6 +713,18 @@ export type CreatePostMutation = (
     { __typename?: 'Post' }
     & Pick<Post, 'id' | 'body' | 'createdAt' | 'username' | 'image' | 'likeCount' | 'commentCount'>
   ) }
+);
+
+export type CreatePostInGroupMutationVariables = Exact<{
+  groupId: Scalars['String'];
+  body: Scalars['String'];
+  image?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
+}>;
+
+
+export type CreatePostInGroupMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'createPostInGroup'>
 );
 
 export type CreateProductMutationVariables = Exact<{
@@ -797,6 +856,17 @@ export type LikeMutation = (
     { __typename?: 'Post' }
     & PostSnippetFragment
   ) }
+);
+
+export type LikePostInGroupMutationVariables = Exact<{
+  groupId: Scalars['String'];
+  postId: Scalars['String'];
+}>;
+
+
+export type LikePostInGroupMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'likePostInGroup'>
 );
 
 export type LoginMutationVariables = Exact<{
@@ -1283,6 +1353,39 @@ export function useCommentMutation(baseOptions?: Apollo.MutationHookOptions<Comm
 export type CommentMutationHookResult = ReturnType<typeof useCommentMutation>;
 export type CommentMutationResult = Apollo.MutationResult<CommentMutation>;
 export type CommentMutationOptions = Apollo.BaseMutationOptions<CommentMutation, CommentMutationVariables>;
+export const CreateCommentInGroupDocument = gql`
+    mutation createCommentInGroup($groupId: String!, $postId: String!, $body: String!) {
+  CommentPostInGroup(groupId: $groupId, postId: $postId, body: $body)
+}
+    `;
+export type CreateCommentInGroupMutationFn = Apollo.MutationFunction<CreateCommentInGroupMutation, CreateCommentInGroupMutationVariables>;
+
+/**
+ * __useCreateCommentInGroupMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentInGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentInGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentInGroupMutation, { data, loading, error }] = useCreateCommentInGroupMutation({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      postId: // value for 'postId'
+ *      body: // value for 'body'
+ *   },
+ * });
+ */
+export function useCreateCommentInGroupMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommentInGroupMutation, CreateCommentInGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCommentInGroupMutation, CreateCommentInGroupMutationVariables>(CreateCommentInGroupDocument, options);
+      }
+export type CreateCommentInGroupMutationHookResult = ReturnType<typeof useCreateCommentInGroupMutation>;
+export type CreateCommentInGroupMutationResult = Apollo.MutationResult<CreateCommentInGroupMutation>;
+export type CreateCommentInGroupMutationOptions = Apollo.BaseMutationOptions<CreateCommentInGroupMutation, CreateCommentInGroupMutationVariables>;
 export const CreateGroupDocument = gql`
     mutation createGroup($imageCover: String!, $name: String!, $typeGroup: String!, $public: Boolean!, $describe: String!) {
   createGroup(
@@ -1372,6 +1475,39 @@ export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const CreatePostInGroupDocument = gql`
+    mutation createPostInGroup($groupId: String!, $body: String!, $image: [String]) {
+  createPostInGroup(groupId: $groupId, body: $body, image: $image)
+}
+    `;
+export type CreatePostInGroupMutationFn = Apollo.MutationFunction<CreatePostInGroupMutation, CreatePostInGroupMutationVariables>;
+
+/**
+ * __useCreatePostInGroupMutation__
+ *
+ * To run a mutation, you first call `useCreatePostInGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostInGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostInGroupMutation, { data, loading, error }] = useCreatePostInGroupMutation({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      body: // value for 'body'
+ *      image: // value for 'image'
+ *   },
+ * });
+ */
+export function useCreatePostInGroupMutation(baseOptions?: Apollo.MutationHookOptions<CreatePostInGroupMutation, CreatePostInGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePostInGroupMutation, CreatePostInGroupMutationVariables>(CreatePostInGroupDocument, options);
+      }
+export type CreatePostInGroupMutationHookResult = ReturnType<typeof useCreatePostInGroupMutation>;
+export type CreatePostInGroupMutationResult = Apollo.MutationResult<CreatePostInGroupMutation>;
+export type CreatePostInGroupMutationOptions = Apollo.BaseMutationOptions<CreatePostInGroupMutation, CreatePostInGroupMutationVariables>;
 export const CreateProductDocument = gql`
     mutation createProduct($image: [String]!, $price: String!, $address: String!, $body: String!, $category: String!, $describe: String) {
   createProduct(
@@ -1705,6 +1841,38 @@ export function useLikeMutation(baseOptions?: Apollo.MutationHookOptions<LikeMut
 export type LikeMutationHookResult = ReturnType<typeof useLikeMutation>;
 export type LikeMutationResult = Apollo.MutationResult<LikeMutation>;
 export type LikeMutationOptions = Apollo.BaseMutationOptions<LikeMutation, LikeMutationVariables>;
+export const LikePostInGroupDocument = gql`
+    mutation likePostInGroup($groupId: String!, $postId: String!) {
+  likePostInGroup(groupId: $groupId, postId: $postId)
+}
+    `;
+export type LikePostInGroupMutationFn = Apollo.MutationFunction<LikePostInGroupMutation, LikePostInGroupMutationVariables>;
+
+/**
+ * __useLikePostInGroupMutation__
+ *
+ * To run a mutation, you first call `useLikePostInGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLikePostInGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [likePostInGroupMutation, { data, loading, error }] = useLikePostInGroupMutation({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useLikePostInGroupMutation(baseOptions?: Apollo.MutationHookOptions<LikePostInGroupMutation, LikePostInGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LikePostInGroupMutation, LikePostInGroupMutationVariables>(LikePostInGroupDocument, options);
+      }
+export type LikePostInGroupMutationHookResult = ReturnType<typeof useLikePostInGroupMutation>;
+export type LikePostInGroupMutationResult = Apollo.MutationResult<LikePostInGroupMutation>;
+export type LikePostInGroupMutationOptions = Apollo.BaseMutationOptions<LikePostInGroupMutation, LikePostInGroupMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {

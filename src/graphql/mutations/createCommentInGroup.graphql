@@ -1,0 +1,7 @@
+mutation createCommentInGroup(
+  $groupId: String!
+  $postId: String!
+  $body: String!
+) {
+  CommentPostInGroup(groupId: $groupId, postId: $postId, body: $body)
+}

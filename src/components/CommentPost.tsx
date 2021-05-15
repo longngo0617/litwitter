@@ -12,6 +12,7 @@ export const CommentPost: React.FC<CommentPostProps> = () => {
   if (!commentState) {
     return null;
   }
+
   return ReactDOM.createPortal(
       <div className="box">
         <div className="overlay"></div>
@@ -25,7 +26,7 @@ export const CommentPost: React.FC<CommentPostProps> = () => {
             <div className="box__comment--body">
               <div className="box__comment--content">
                 <div className="avartar">
-                  <Avatar src={commentItem?.avatar} style={{ marginBottom: "10px" }} />
+                  <Avatar src={commentItem?.post?.avatar} style={{ marginBottom: "10px" }} />
                   <div className="bar">
                     <p></p>
                   </div>
@@ -33,14 +34,14 @@ export const CommentPost: React.FC<CommentPostProps> = () => {
                 <div className="info">
                   <div className="info__top">
                     <span className="info__top--name">
-                      {commentItem?.displayname}
+                      {commentItem?.post?.displayname}
                     </span>
                     <span className="info__top--username">
-                      @{commentItem?.username}
+                      @{commentItem?.post?.username}
                     </span>
                   </div>
                   <div className="info__bot">
-                    <span className="content">{commentItem?.body}</span>
+                    <span className="content">{commentItem?.post?.body}</span>
                   </div>
                 </div>
               </div>
@@ -50,10 +51,10 @@ export const CommentPost: React.FC<CommentPostProps> = () => {
                 </div>
                 <div className="reply">
                   Trả lời
-                  <span>@{commentItem?.username}</span>
+                  <span>@{commentItem?.post?.username}</span>
                 </div>
               </div>
-              <TweetBox isComment postId={commentItem?.id} />
+              <TweetBox isComment postId={commentItem?.post?.id} />
             </div>
           </div>
         </div>

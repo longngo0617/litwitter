@@ -16,7 +16,7 @@ interface PostProps {
   post: PostSnippetFragment;
 }
 
-export const Post: React.FC<PostProps> = (props) => {
+export const PostItem: React.FC<PostProps> = (props) => {
   const router = useHistory();
   const [likePost] = useLikeMutation();
   const { openMore } = useContext(UserContext);
@@ -43,7 +43,7 @@ export const Post: React.FC<PostProps> = (props) => {
                   className="link link--none"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {props.groupName ? (
+                  {groupName ? (
                     <Name>
                       {props.post.displayname}
                       <span
@@ -54,7 +54,7 @@ export const Post: React.FC<PostProps> = (props) => {
                       >
                         <Icon />
                       </span>
-                      {props.groupName}
+                      {groupName}
                     </Name>
                   ) : (
                     props.post.displayname
@@ -96,6 +96,7 @@ export const Post: React.FC<PostProps> = (props) => {
           ) : null}
           <div className="post__footer">
             <InteractiveBar
+              groupId={groupId}
               commentCount={props.post.commentCount}
               likeCount={props.post.likeCount}
               likeList={props.post.likes}

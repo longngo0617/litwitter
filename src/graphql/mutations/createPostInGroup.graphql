@@ -1,0 +1,7 @@
+mutation createPostInGroup(
+  $groupId: String!
+  $body: String!
+  $image: [String]
+) {
+  createPostInGroup(groupId: $groupId, body: $body, image: $image)
+}

@@ -1,0 +1,3 @@
+mutation likePostInGroup($groupId: String!,$postId: String!) {
+    likePostInGroup(groupId:$groupId,postId:$postId)
+}

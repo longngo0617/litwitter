@@ -12,6 +12,7 @@ interface InteractiveBarProps {
   likePost?: () => void;
   likeList?: any;
   item?: any,
+  groupId?:string;
 }
 
 export const InteractiveBar: React.FC<InteractiveBarProps> = ({
@@ -20,6 +21,7 @@ export const InteractiveBar: React.FC<InteractiveBarProps> = ({
   likePost,
   likeList,
   item,
+  groupId
 }) => {
   const [backGround, setBackGround] = useState<
     "reply" | "retweet" | "like" | "share" | ""
@@ -36,6 +38,7 @@ export const InteractiveBar: React.FC<InteractiveBarProps> = ({
       />
     );
   };
+  
   return (
     <>
       <IconOption
@@ -45,7 +48,7 @@ export const InteractiveBar: React.FC<InteractiveBarProps> = ({
         object={commentCount}
         mouseEnter={() => setBackGround("reply")}
         mouseLeave={() => setBackGround("")}
-        mouseClick={() => {openComment(item)}}
+        mouseClick={() => {openComment({...item,groupId})}}
       />
       <IconOption
         background={backGround}

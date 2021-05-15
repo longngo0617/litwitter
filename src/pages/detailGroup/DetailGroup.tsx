@@ -4,7 +4,7 @@ import Sidebar from "../home/components/Sidebar";
 import styled from "styled-components";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useHistory, useParams, useRouteMatch } from "react-router";
-import { Group, useGroupQuery } from "../../generated/graphql";
+import { Group, Post, useGroupQuery } from "../../generated/graphql";
 import PublicIcon from "@material-ui/icons/Public";
 import LockIcon from "@material-ui/icons/Lock";
 import { AvatarGroup } from "@material-ui/lab";
@@ -14,6 +14,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { NavLink, Route, Switch } from "react-router-dom";
 import { About } from "./component/About";
 import { Loading } from "../../components/Loading";
+import { Discuss } from "./component/Discuss";
 interface DetailGroupProps {}
 interface ParamsProps {
   id: string;
@@ -161,26 +162,14 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                       <InfoRight>
                         <ItemRight>
                           <MemberWrap>
-                            <AvatarGroup max={13} style={{zIndex:0}}>
-                              {/* {data?.getGroup.members.map((member) => (
-                              <UserAvatar
-                                alt="Remy Sharp"
-                                src={member?.profile?.avatar || ""}
-                                key={member?.id}
-                              />
-                            ))} */}
-                              <UserAvatar alt="Remy Sharp" src="/per1.jpeg" />
-                              <UserAvatar alt="Remy Sharp" src="/per2.jpeg" />
-                              <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
-                              <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
-                              <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
-                              <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
-                              <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
-                              <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
-                              <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
-                              <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
-                              <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
-                              <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
+                            <AvatarGroup max={13} style={{ zIndex: 0 }}>
+                              {data?.getGroup.members.map((member) => (
+                                <UserAvatar
+                                  alt="Remy Sharp"
+                                  src={member?.profile?.avatar || ""}
+                                  key={member?.id}
+                                />
+                              ))}
                             </AvatarGroup>
                           </MemberWrap>
                         </ItemRight>
@@ -231,10 +220,16 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
             </div>
             <Switch>
               <Route path={`${url}/about`}>
-                <About about={data?.getGroup as Group} url={`${url}/members`}/>
+                <About about={data?.getGroup as Group} url={`${url}/members`} />
               </Route>
               <Route path={`${url}/members`}></Route>
-              <Route exact path={url}></Route>
+              <Route exact path={url}>
+                <Discuss
+                  posts={data?.getGroup.posts as [Post]}
+                  see={data?.getGroup.public as boolean}
+                  groupId={data?.getGroup.id as string}
+                />
+              </Route>
             </Switch>
           </div>
         </Main>
@@ -429,5 +424,5 @@ const WrapLoading = styled.div`
   align-items: center;
   justify-content: center;
   height: 80vh;
-  width:100%;
+  width: 100%;
 `;

@@ -6,6 +6,8 @@ import React, { useContext, useRef, useState } from "react";
 import {
   useCreatePostMutation,
   useCommentMutation,
+  useCreatePostInGroupMutation,
+  useCreateCommentInGroupMutation,
 } from "../generated/graphql";
 import { UserContext } from "../utils/useAuth";
 import { Image } from "./Image";
@@ -14,15 +16,28 @@ import { TextArea } from "./TextFormField";
 
 interface TweetBoxProps {
   isComment?: boolean;
+  isGroup?: boolean;
   postId?: string;
+  groupId?: string;
+  isCommentInGroup?: boolean;
 }
 
-export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
+export const TweetBox: React.FC<TweetBoxProps> = ({
+  isComment,
+  postId,
+  isGroup,
+  groupId,
+  isCommentInGroup,
+}) => {
   const [createPost] = useCreatePostMutation();
   const [createComment] = useCommentMutation();
+  const [createPostInGroup] = useCreatePostInGroupMutation();
+  const [createCommentInGroup] = useCreateCommentInGroupMutation();
   const { closeComment, user } = useContext(UserContext);
   const inputFile: any = useRef(null);
-  const { addImage, arrImage, openErrorFile,closeErrorFile } = useContext(UserContext);
+  const { addImage, arrImage, openErrorFile, closeErrorFile } = useContext(
+    UserContext
+  );
 
   const handleFileInputChange = (e: any) => {
     if (e.target.files.length > 4) {
@@ -30,7 +45,7 @@ export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
       const timeId = setTimeout(() => {
         closeErrorFile();
       }, 3000);
-  
+
       return () => {
         clearTimeout(timeId);
       };
@@ -57,6 +72,29 @@ export const TweetBox: React.FC<TweetBoxProps> = ({ isComment, postId }) => {
           initialValues={{ body: "", image: [""] }}
           onSubmit={async (values) => {
             values.image = arrImage;
+            if (isGroup) {
+              await createPostInGroup({
+                variables: {
+                  ...values,
+                  groupId: groupId as string,
+                },
+                // update:(cache) => {
+                //   cache.evict({fieldName:""})
+                // }
+              });
+            }
+            if (isCommentInGroup && groupId) {
+              await createCommentInGroup({
+                variables: {
+                  groupId: groupId as string,
+                  postId: postId as string,
+                  body: values.body,
+                },
+                update: () => {
+                  closeComment();
+                },
+              });
+            }
             (await !isComment)
               ? createPost({
                   variables: values,

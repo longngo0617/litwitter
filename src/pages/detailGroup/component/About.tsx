@@ -189,7 +189,6 @@ export const About: React.FC<AboutProps> = ({ about,url }) => {
                       key={member?.id}
                     />
                   ))}
-                  <UserAvatar alt="Remy Sharp" src="/per1.jpeg" />
                 </AvatarGroup>
                 <div>
                   <Content>

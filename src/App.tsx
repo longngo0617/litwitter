@@ -5,6 +5,7 @@ import {
   Switch,
 } from "react-router-dom";
 import { CommentPost } from "./components/CommentPost";
+import { CommentPostGroup } from "./components/CommentPostGroup";
 import { PopupMore } from "./components/PopupMore";
 import { Connect } from "./pages/connect/Connect";
 import { DetailGroup } from "./pages/detailGroup/DetailGroup";
@@ -53,6 +54,7 @@ const App = () => {
         <Router>
           <PopupMore />
           <CommentPost />
+          <CommentPostGroup/>
           <PopupEdit />
           <PopupMess />
           <Switch>

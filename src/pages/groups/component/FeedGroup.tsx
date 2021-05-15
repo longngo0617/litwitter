@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Box } from "@material-ui/core";
 import { Loading } from "../../../components/Loading";
 import { Button } from "@material-ui/core";
-import { Post } from "../../../components/Post";
+import { PostItem } from "../../../components/PostItem";
 
 interface FeedGroupProps {}
 
@@ -42,7 +42,7 @@ export const FeedGroup: React.FC<FeedGroupProps> = ({}) => {
         </Empty>
       ) : (
         data!.getPostInMyGroup?.map((p, index) =>
-          !p ? null : <Post key={index} {...p} />
+          !p ? null : <PostItem key={index} {...p} />
         )
       )}
     </Container>

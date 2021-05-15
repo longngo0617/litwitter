@@ -29,7 +29,7 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
   if (!moreState.showMenu) {
     return null;
   }
-
+  console.log(moreState)
   return ReactDOM.createPortal(
     <div className="menu--wrap">
       <div className="menu--fixed"></div>
@@ -41,21 +41,21 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
       >
         <div className="menu--more__wrap">
           <div className="menu--more__wrap">
-            {user.username === moreState.item.username ? (
+            {user.username === moreState.item.post.username ? (
               <div
                 className="menu--item"
                 onClick={async () => {
                   (await !moreState.isComment)
                     ? deletePost({
-                        variables: { id: moreState.item.id },
+                        variables: { id: moreState.item.post.id },
                         update: (cache) => {
-                          cache.evict({ id: "Post:" + moreState.item.id });
+                          cache.evict({ id: "Post:" + moreState.item.post.id });
                         },
                       })
                     : deleteComment({
                         variables: {
-                          id: moreState.item.postId,
-                          commentId: moreState.item.id,
+                          id: moreState.item.post.postId,
+                          commentId: moreState.item.post.id,
                         },
                       });
                   closeMore();
@@ -74,25 +74,25 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
                 </div>
               </div>
             ) : null}
-            {user.username === moreState.item.username ? null : (
+            {user.username === moreState.item.post.username ? null : (
               <>
                 <div
                   className="menu--item"
                   onClick={async () => {
                     closeMore();
                     const data = await followUser({ variables: {
-                      username: moreState.item.username
+                      username: moreState.item.post.username
                     } });
                     await addUser(data?.data?.following);
                   }}
                 >
                   <div className="menu--item__icon">
-                    {!user.following.find((e:Follow) => e.username === moreState.item.username) ? <PersonAddIcon /> : <PersonAddDisabledIcon/>}
+                    {!user.following.find((e:Follow) => e.username === moreState.item.post.username) ? <PersonAddIcon /> : <PersonAddDisabledIcon/>}
                   </div>
                   <div className="menu--item__text">
                     <div className="menu--item__css">
                       <span className="text">
-                        {!user.following.find((e:Follow) => e.username === moreState.item.username) ? "Follow" : "Unfollow" } {moreState?.item?.displayname}
+                        {!user.following.find((e:Follow) => e.username === moreState.item.post.username) ? "Follow" : "Unfollow" } {moreState?.item?.displayname}
                       </span>
                     </div>
                   </div>
@@ -114,7 +114,7 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
                   <div className="menu--item__text">
                     <div className="menu--item__css">
                       <span className="text">
-                        Block @{moreState?.item?.username}
+                        Block @{moreState?.item?.post.username}
                       </span>
                     </div>
                   </div>
