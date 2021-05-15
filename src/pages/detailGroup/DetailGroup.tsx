@@ -3,18 +3,36 @@ import { UserContext } from "../../utils/useAuth";
 import Sidebar from "../home/components/Sidebar";
 import styled from "styled-components";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { useHistory, useParams } from "react-router";
+import { useHistory, useParams, useRouteMatch } from "react-router";
 import { useGroupQuery } from "../../generated/graphql";
-import PublicIcon from '@material-ui/icons/Public';
-import LockIcon from '@material-ui/icons/Lock';
+import PublicIcon from "@material-ui/icons/Public";
+import LockIcon from "@material-ui/icons/Lock";
+import { AvatarGroup } from "@material-ui/lab";
+import { Avatar, Button } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { NavLink, Route, Switch } from "react-router-dom";
 interface DetailGroupProps {}
 interface ParamsProps {
   id: string;
 }
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    button: {
+      margin: theme.spacing(1),
+      backgroundColor: "rgb(29, 161, 242)",
+      fontWeight: 700,
+    },
+  })
+);
+
 export const DetailGroup: React.FC<DetailGroupProps> = () => {
   const { user } = React.useContext(UserContext);
+  const classes = useStyles();
   const router = useHistory();
   const params: ParamsProps = useParams();
+  const { url } = useRouteMatch();
   const { data, loading } = useGroupQuery({
     variables: {
       groupId: params.id,
@@ -101,18 +119,24 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                 <Info>
                   <InfoEach>
                     <InfoLeft>
-                      <div style={{margin:"8px 0"}}>
+                      <div style={{ margin: "8px 0" }}>
                         <GroupName>{data?.getGroup.name}</GroupName>
                       </div>
                       <div>
                         <Line1>
                           <span>
                             {data?.getGroup.public ? (
-                                <span> <PublicIcon/> 
-                                Nhóm công khai</span>
-                            ): (
-                                <span> <LockIcon/> 
-                                Nhóm riêng tư</span>
+                              <span>
+                                {" "}
+                                <PublicIcon />
+                                Nhóm công khai
+                              </span>
+                            ) : (
+                              <span>
+                                {" "}
+                                <LockIcon />
+                                Nhóm riêng tư
+                              </span>
                             )}
                             <span style={{ margin: "0 5px" }}>•</span>
                             {data?.getGroup.countMembers} thành viên
@@ -121,11 +145,89 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                       </div>
                     </InfoLeft>
                   </InfoEach>
-                  <InfoEach></InfoEach>
+                  <InfoEach style={{ justifyContent: "flex-end" }}>
+                    <InfoRight>
+                      <ItemRight>
+                        <MemberWrap>
+                          <AvatarGroup max={13}>
+                            {/* {data?.getGroup.members.map((member) => (
+                              <UserAvatar
+                                alt="Remy Sharp"
+                                src={member?.profile?.avatar || ""}
+                                key={member?.id}
+                              />
+                            ))} */}
+                            <UserAvatar alt="Remy Sharp" src="/per1.jpeg" />
+                            <UserAvatar alt="Remy Sharp" src="/per2.jpeg" />
+                            <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
+                            <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
+                            <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
+                            <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
+                            <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
+                            <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
+                            <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
+                            <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
+                            <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
+                            <UserAvatar alt="Remy Sharp" src="/per3.jpeg" />
+                          </AvatarGroup>
+                        </MemberWrap>
+                      </ItemRight>
+                      <ItemRight>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<AddIcon />}
+                        >
+                          Mời
+                        </Button>
+                      </ItemRight>
+                    </InfoRight>
+                  </InfoEach>
                 </Info>
               </div>
             </InfoGroup>
           </Page>
+          <div className="profile__wrapper">
+            <nav className="profile__nav">
+              <div className="profile__nav--item">
+                <NavLink
+                  to={`${url}/about`}
+                  className="link"
+                  activeClassName="active"
+                >
+                  <div className="link--title">
+                    <span>Giới thiệu</span>
+                  </div>
+                </NavLink>
+              </div>
+              <div className="profile__nav--item">
+                <NavLink exact to={`${url}`} className="link">
+                  <div className="link--title">
+                    <span>Thảo luận</span>
+                  </div>
+                </NavLink>
+              </div>
+              <div className="profile__nav--item">
+                <NavLink exact to={`${url}/members`} className="link">
+                  <div className="link--title">
+                    <span>Thành viên</span>
+                  </div>
+                </NavLink>
+              </div>
+            </nav>
+          </div>
+          <Switch>
+            <Route path={`${url}/about`}>
+
+            </Route>
+            <Route path={`${url}/members`}>
+
+            </Route>
+            <Route exact path={url}>
+
+            </Route>
+          </Switch>
         </div>
       </Main>
     </div>
@@ -224,7 +326,7 @@ const Line = styled.div`
 `;
 const Line1 = styled(Line)`
   margin-top: 0;
-  padding:0;
+  padding: 0;
   span {
     display: flex;
     align-items: center;
@@ -273,7 +375,18 @@ const InfoLeft = styled.div`
   flex-direction: column;
   margin: -8px 0;
 `;
-const InfoRight = styled.div``;
+const InfoRight = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  position: relative;
+  margin-top: -6px;
+  margin-right: -6px;
+  margin-bottom: -6px;
+  margin-left: -6px;
+  box-sizing: border-box;
+  flex-wrap: nowrap;
+`;
 const GroupName = styled.h2`
   color: #050505;
   word-break: break-word;
@@ -285,4 +398,20 @@ const GroupName = styled.h2`
   display: block;
   font-size: 1.75rem;
   line-height: 1.1429;
+`;
+const ItemRight = styled.div`
+  padding: 6px;
+  display: flex;
+  max-width: 100%;
+  flex-direction: column;
+`;
+const MemberWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+`;
+const UserAvatar = styled(Avatar)`
+  width: 36px;
+  height: 36px;
 `;

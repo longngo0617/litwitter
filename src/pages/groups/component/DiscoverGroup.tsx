@@ -59,22 +59,21 @@ export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
                         {g?.members.length ? (
                           <MemberWrap>
                             <div style={{ minWidth: "64px" }}>
-                              {g?.members.map((member) => (
-                                <AvatarGroup max={3}>
+                              <AvatarGroup max={3}>
+                                {g?.members.map((member) => (
                                   <UserAvatar
                                     alt="Remy Sharp"
                                     src={member?.profile?.avatar || ""}
                                     key={member?.id}
                                   />
-                                </AvatarGroup>
-                              ))}
+                                ))}
+                              </AvatarGroup>
                             </div>
                             <TextWrap>
                               <Line1>
                                 <span>
                                   {g.members[0]?.displayname} và
-                                  {g.members.length} nguời khác là thành
-                                  viên
+                                  {g.members.length} nguời khác là thành viên
                                 </span>
                               </Line1>
                             </TextWrap>
