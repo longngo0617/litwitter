@@ -9,7 +9,6 @@ interface DiscoverGroupProps {}
 
 export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
   const { data, loading } = useGroupsQuery();
-
   return (
     <div>
       {!data && loading ? (
