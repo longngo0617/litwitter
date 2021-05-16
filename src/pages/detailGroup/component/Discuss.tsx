@@ -8,6 +8,7 @@ import LockIcon from "@material-ui/icons/Lock";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import moment from "moment";
+import { ReadMore } from "./ReadMore";
 
 interface DiscussProps {
   posts: [Post];
@@ -15,12 +16,7 @@ interface DiscussProps {
   about: Group;
 }
 
-export const Discuss: React.FC<DiscussProps> = ({
-  posts,
-  groupId,
-  about,
-}) => {
-
+export const Discuss: React.FC<DiscussProps> = ({ posts, groupId, about }) => {
   return (
     <Box style={{ backgroundColor: "#f0f2f5" }}>
       <Page>
@@ -56,7 +52,9 @@ export const Discuss: React.FC<DiscussProps> = ({
                 <Box2>
                   <Hr />
                   <Describe>
-                    <span>{about?.describe}</span>
+                    <span>
+                      <ReadMore maxCharacterCount={100}>{about?.describe}</ReadMore>
+                    </span>
                   </Describe>
 
                   <Line>
