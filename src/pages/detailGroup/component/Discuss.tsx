@@ -258,6 +258,7 @@ const Introduce = styled.div`
   min-width: 350px;
   margin: 8px;
   position: relative;
+  height: fit-content;
 `;
 const Title = styled.div`
   margin: 4px;

@@ -41,7 +41,7 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
       groupId: params.id,
     },
   });
- 
+
   return (
     <div className="wrapper">
       <Sidebar {...user} />
@@ -55,7 +55,7 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
             <div className="feed__header">
               <ArrowBackIcon
                 className="feed__header--icon"
-                onClick={() => router.goBack()}
+                onClick={() => router.push("/groups/feed")}
               />
               <h2>{data?.getGroup.name}</h2>
             </div>
@@ -216,20 +216,25 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                     </div>
                   </NavLink>
                 </div>
-                {(data?.getGroup.admins as User[])?.concat(data?.getGroup.leader as User).map((ad) => {
-                  const check = ad.username === user.username;
-                  if (check) {
-                    return (
-                      <div className="profile__nav--item" key={ad.username}>
-                        <NavLink to={`${url}/member-requests`} className="link">
-                          <div className="link--title">
-                            <span>Yêu cầu tham gia</span>
-                          </div>
-                        </NavLink>
-                      </div>
-                    );
-                  }
-                })}
+                {(data?.getGroup.admins as User[])
+                  ?.concat(data?.getGroup.leader as User)
+                  .map((ad) => {
+                    const check = ad.username === user.username;
+                    if (check) {
+                      return (
+                        <div className="profile__nav--item" key={ad.username}>
+                          <NavLink
+                            to={`${url}/member-requests`}
+                            className="link"
+                          >
+                            <div className="link--title">
+                              <span>Yêu cầu tham gia</span>
+                            </div>
+                          </NavLink>
+                        </div>
+                      );
+                    }
+                  })}
               </nav>
             </div>
             <Switch>

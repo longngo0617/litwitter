@@ -18,7 +18,12 @@ export const ReadMore: React.FC<ReadMoreProps> = ({
   return (
     <div>
       {resultString}...
-      <LinkReadMore onClick={toggleIsTruncated}> {isTruncated ? "Xem thêm" : "Ẩn bớt"}</LinkReadMore>
+      {text.length < 100 ? null : (
+        <LinkReadMore onClick={toggleIsTruncated}>
+          {" "}
+          {isTruncated ? "Xem thêm" : "Ẩn bớt"}
+        </LinkReadMore>
+      )}
     </div>
   );
 };

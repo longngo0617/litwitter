@@ -2,13 +2,21 @@ import React from "react";
 import { AvatarGroup } from "@material-ui/lab";
 import { Avatar, Button } from "@material-ui/core";
 import styled from "styled-components";
-import { useGroupsQuery } from "../../../generated/graphql";
+import { Group, useGroupsQuery, User } from "../../../generated/graphql";
 import { Loading } from "../../../components/Loading";
+import { UserContext } from "../../../utils/useAuth";
 
 interface DiscoverGroupProps {}
 
 export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
   const { data, loading } = useGroupsQuery();
+  const { user } = React.useContext(UserContext);
+  if (data) {
+    const gro = !!(data?.getGroups[1] as Group).members.find(
+      (e) => e?.username === user.username
+    );
+    console.log(gro);
+  }
   return (
     <div>
       {!data && loading ? (
@@ -17,77 +25,86 @@ export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
         </WrapLoading>
       ) : (
         <Page>
-          {data?.getGroups.map((g) => (
-            <GroupItem key={g?.id}>
-              <GroupContainer>
-                <Item>
-                  <div>
-                    <Linkk>
-                      <div
-                        style={{
-                          paddingBottom: "56.25%",
-                          position: "relative",
-                          width: "100%",
-                        }}
-                      >
-                        <Image>
-                          <img src={g?.imageCover} alt="" />
-                        </Image>
-                      </div>
-                    </Linkk>
-                    <div style={{ padding: "12px 16px 0" }}>
-                      <div style={{ paddingBottom: "4px" }}>
-                        <TextWrap>
-                          <Line>
-                            <span>{g?.name}</span>
-                          </Line>
-                          <Line1>
-                            <span>
-                              {g?.countMembers} thành viên
-                              <span style={{ margin: "0 5px" }}>•</span>
-                              10 bài viết / ngày
-                            </span>
-                          </Line1>
-                        </TextWrap>
-                      </div>
-                    </div>
-                  </div>
-                  <Content>
-                    <div style={{ marginTop: "-15px" }}>
+          {data?.getGroups
+            .filter(
+              (g) =>
+                !(g as Group).members.find(
+                  (e) => e?.username === user.username
+                )
+            )
+            .map((g) => (
+              <GroupItem key={g?.id}>
+                <GroupContainer>
+                  <Item>
+                    <div>
+                      <Linkk>
+                        <div
+                          style={{
+                            paddingBottom: "56.25%",
+                            position: "relative",
+                            width: "100%",
+                          }}
+                        >
+                          <Image>
+                            <img src={g?.imageCover} alt="" />
+                          </Image>
+                        </div>
+                      </Linkk>
                       <div style={{ padding: "12px 16px 0" }}>
-                        {g?.members.length ? (
-                          <MemberWrap>
-                            <div style={{ minWidth: "64px" }}>
-                              <AvatarGroup max={3}>
-                                {g?.members.map((member) => (
-                                  <UserAvatar
-                                    alt="Remy Sharp"
-                                    src={member?.profile?.avatar || ""}
-                                    key={member?.id}
-                                  />
-                                ))}
-                              </AvatarGroup>
-                            </div>
-                            <TextWrap>
-                              <Line1>
-                                <span>
-                                  {g.members[0]?.displayname} và
-                                  {g.members.length} nguời khác là thành viên
-                                </span>
-                              </Line1>
-                            </TextWrap>
-                          </MemberWrap>
-                        ) : null}
+                        <div style={{ paddingBottom: "4px" }}>
+                          <TextWrap>
+                            <Line>
+                              <span>{g?.name}</span>
+                            </Line>
+                            <Line1>
+                              <span>
+                                {g?.countMembers} thành viên
+                                <span style={{ margin: "0 5px" }}>•</span>
+                                10 bài viết / ngày
+                              </span>
+                            </Line1>
+                          </TextWrap>
+                        </div>
                       </div>
                     </div>
-                  </Content>
-                  <div style={{ padding: "16px" }}>
-                    <ButtonJoin variant="contained">Tham gia nhóm</ButtonJoin>
-                  </div>
-                </Item>
-              </GroupContainer>
-            </GroupItem>
-          ))}
+                    <Content>
+                      <div style={{ marginTop: "-15px" }}>
+                        <div style={{ padding: "12px 16px 0" }}>
+                          {g?.members.length ? (
+                            <MemberWrap>
+                              <div
+                                style={{ minWidth: "64px", marginRight: "8px" }}
+                              >
+                                <AvatarGroup max={3}>
+                                  {g?.members.map((member) => (
+                                    <UserAvatar
+                                      alt="Remy Sharp"
+                                      src={member?.profile?.avatar || ""}
+                                      key={member?.id}
+                                    />
+                                  ))}
+                                </AvatarGroup>
+                              </div>
+                              <TextWrap>
+                                <Line1>
+                                  <span>
+                                    {g.members[0]?.displayname} và{" "}
+                                    {g.members.length} nguời khác là thành viên
+                                  </span>
+                                </Line1>
+                              </TextWrap>
+                            </MemberWrap>
+                          ) : null}
+                        </div>
+                      </div>
+                    </Content>
+                    <div style={{ padding: "16px" }}>
+                      <ButtonJoin variant="contained">Tham gia nhóm</ButtonJoin>
+                    </div>
+                  </Item>
+                </GroupContainer>
+              </GroupItem>
+            ))}
         </Page>
       )}
     </div>
