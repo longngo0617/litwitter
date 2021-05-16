@@ -1,0 +1,5 @@
+query Joins($groupId: String!) {
+  getJoinInGroup(groupId: $groupId) {
+    ...RegularJoin
+  }
+}

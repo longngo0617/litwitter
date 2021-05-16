@@ -243,7 +243,7 @@ export type Join = {
   groupId: Scalars['String'];
   name: Scalars['String'];
   imageCover: Scalars['String'];
-  to: User;
+  member: User;
 };
 
 export type RegisterInput = {
@@ -281,7 +281,9 @@ export type Query = {
   getGroup: Group;
   getCommentInGroup: Array<Maybe<Comment>>;
   getPostInGroup: Post;
+  findGroups: Array<Maybe<Group>>;
   getMyInvites: Array<Maybe<Invite>>;
+  getJoinInGroup: Array<Maybe<Join>>;
 };
 
 
@@ -351,6 +353,16 @@ export type QueryGetPostInGroupArgs = {
   postId: Scalars['String'];
 };
 
+
+export type QueryFindGroupsArgs = {
+  name: Scalars['String'];
+};
+
+
+export type QueryGetJoinInGroupArgs = {
+  groupId: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   register: UserResponse;
@@ -377,6 +389,10 @@ export type Mutation = {
   CommentPostInGroup: Scalars['Boolean'];
   createInvite: Scalars['Boolean'];
   acceptInvite: Scalars['Boolean'];
+  remoteInvite: Scalars['Boolean'];
+  createJoin: Scalars['Boolean'];
+  acceptJoin: Scalars['Boolean'];
+  remoteJoin: Scalars['Boolean'];
 };
 
 
@@ -521,6 +537,28 @@ export type MutationAcceptInviteArgs = {
   inviteId: Scalars['String'];
 };
 
+
+export type MutationRemoteInviteArgs = {
+  inviteId: Scalars['String'];
+};
+
+
+export type MutationCreateJoinArgs = {
+  groupId: Scalars['String'];
+};
+
+
+export type MutationAcceptJoinArgs = {
+  groupId: Scalars['String'];
+  userId: Scalars['String'];
+  joinId: Scalars['String'];
+};
+
+
+export type MutationRemoteJoinArgs = {
+  joinId: Scalars['String'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   newPost: Post;
@@ -595,6 +633,15 @@ export type RegularGroupFragment = (
   )>>> }
 );
 
+export type RegularJoinFragment = (
+  { __typename?: 'Join' }
+  & Pick<Join, 'name' | 'id' | 'groupId' | 'imageCover'>
+  & { member: (
+    { __typename?: 'User' }
+    & RegularUserFragment
+  ) }
+);
+
 export type RegularProductFragment = (
   { __typename?: 'Product' }
   & Pick<Product, 'id' | 'price' | 'body' | 'createdAt' | 'image' | 'describe'>
@@ -646,6 +693,18 @@ export type RegularUserResponseFragment = (
     { __typename?: 'User' }
     & RegularUserFragment
   ) }
+);
+
+export type AcceptJoinMutationVariables = Exact<{
+  groupId: Scalars['String'];
+  userId: Scalars['String'];
+  joinId: Scalars['String'];
+}>;
+
+
+export type AcceptJoinMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'acceptJoin'>
 );
 
 export type CommentMutationVariables = Exact<{
@@ -973,6 +1032,19 @@ export type GroupsQuery = (
   )>> }
 );
 
+export type JoinsQueryVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type JoinsQuery = (
+  { __typename?: 'Query' }
+  & { getJoinInGroup: Array<Maybe<(
+    { __typename?: 'Join' }
+    & RegularJoinFragment
+  )>> }
+);
+
 export type MeProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1253,6 +1325,17 @@ export const RegularGroupFragmentDoc = gql`
 }
     ${RegularUserFragmentDoc}
 ${PostSnippetFragmentDoc}`;
+export const RegularJoinFragmentDoc = gql`
+    fragment RegularJoin on Join {
+  name
+  id
+  groupId
+  imageCover
+  member {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
 export const RegularProductFragmentDoc = gql`
     fragment RegularProduct on Product {
   id
@@ -1313,6 +1396,39 @@ export const RegularUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
+export const AcceptJoinDocument = gql`
+    mutation acceptJoin($groupId: String!, $userId: String!, $joinId: String!) {
+  acceptJoin(groupId: $groupId, userId: $userId, joinId: $joinId)
+}
+    `;
+export type AcceptJoinMutationFn = Apollo.MutationFunction<AcceptJoinMutation, AcceptJoinMutationVariables>;
+
+/**
+ * __useAcceptJoinMutation__
+ *
+ * To run a mutation, you first call `useAcceptJoinMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAcceptJoinMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [acceptJoinMutation, { data, loading, error }] = useAcceptJoinMutation({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      userId: // value for 'userId'
+ *      joinId: // value for 'joinId'
+ *   },
+ * });
+ */
+export function useAcceptJoinMutation(baseOptions?: Apollo.MutationHookOptions<AcceptJoinMutation, AcceptJoinMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AcceptJoinMutation, AcceptJoinMutationVariables>(AcceptJoinDocument, options);
+      }
+export type AcceptJoinMutationHookResult = ReturnType<typeof useAcceptJoinMutation>;
+export type AcceptJoinMutationResult = Apollo.MutationResult<AcceptJoinMutation>;
+export type AcceptJoinMutationOptions = Apollo.BaseMutationOptions<AcceptJoinMutation, AcceptJoinMutationVariables>;
 export const CommentDocument = gql`
     mutation Comment($id: String!, $body: String!) {
   createComment(postId: $id, body: $body) {
@@ -2154,6 +2270,41 @@ export function useGroupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Gro
 export type GroupsQueryHookResult = ReturnType<typeof useGroupsQuery>;
 export type GroupsLazyQueryHookResult = ReturnType<typeof useGroupsLazyQuery>;
 export type GroupsQueryResult = Apollo.QueryResult<GroupsQuery, GroupsQueryVariables>;
+export const JoinsDocument = gql`
+    query Joins($groupId: String!) {
+  getJoinInGroup(groupId: $groupId) {
+    ...RegularJoin
+  }
+}
+    ${RegularJoinFragmentDoc}`;
+
+/**
+ * __useJoinsQuery__
+ *
+ * To run a query within a React component, call `useJoinsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useJoinsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useJoinsQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useJoinsQuery(baseOptions: Apollo.QueryHookOptions<JoinsQuery, JoinsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<JoinsQuery, JoinsQueryVariables>(JoinsDocument, options);
+      }
+export function useJoinsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<JoinsQuery, JoinsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<JoinsQuery, JoinsQueryVariables>(JoinsDocument, options);
+        }
+export type JoinsQueryHookResult = ReturnType<typeof useJoinsQuery>;
+export type JoinsLazyQueryHookResult = ReturnType<typeof useJoinsLazyQuery>;
+export type JoinsQueryResult = Apollo.QueryResult<JoinsQuery, JoinsQueryVariables>;
 export const MeProductsDocument = gql`
     query MeProducts {
   getMyProducts {

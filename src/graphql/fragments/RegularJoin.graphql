@@ -1,0 +1,9 @@
+fragment RegularJoin on Join {
+  name
+  id
+  groupId
+  imageCover
+  member {
+    ...RegularUser
+  }
+}

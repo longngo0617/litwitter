@@ -15,6 +15,8 @@ import { NavLink, Route, Switch } from "react-router-dom";
 import { About } from "./component/About";
 import { Loading } from "../../components/Loading";
 import { Discuss } from "./component/Discuss";
+import { MemberRequest } from "./component/MemberRequest";
+import { PopupInvite } from "../groups/component/PopupInvite";
 interface DetailGroupProps {}
 interface ParamsProps {
   id: string;
@@ -32,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const DetailGroup: React.FC<DetailGroupProps> = () => {
   const { user } = React.useContext(UserContext);
+  const [openInvite, setOpenInvite] = React.useState(false);
   const classes = useStyles();
   const router = useHistory();
   const params: ParamsProps = useParams();
@@ -179,6 +182,7 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                             color="secondary"
                             className={classes.button}
                             startIcon={<AddIcon />}
+                            onClick={() => setOpenInvite(!openInvite)}
                           >
                             {data?.getGroup.members.find(
                               (e) => e?.username === user.username
@@ -213,7 +217,6 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                     </div>
                   </NavLink>
                 </div>
-                
                 {!data?.getGroup.public &&
                 !data?.getGroup.members.find(
                   (e) => e?.username === user.username
@@ -253,6 +256,9 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                 <About about={data?.getGroup as Group} url={`${url}/members`} />
               </Route>
               <Route path={`${url}/members`}></Route>
+              <Route path={`${url}/member-requests`}>
+                <MemberRequest groupId={params.id} />
+              </Route>
               <Route exact path={url}>
                 <Discuss
                   posts={data?.getGroup.posts as [Post]}
@@ -263,6 +269,12 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
             </Switch>
           </div>
         </Main>
+      )}
+      {openInvite && (
+        <PopupInvite
+          groups={data?.getGroup as Group}
+          onClose={() => setOpenInvite(!openInvite)}
+        />
       )}
     </div>
   );

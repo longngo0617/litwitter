@@ -1,0 +1,3 @@
+mutation acceptJoin($groupId: String!, $userId: String!, $joinId: String!) {
+  acceptJoin(groupId: $groupId, userId: $userId, joinId: $joinId)
+}
