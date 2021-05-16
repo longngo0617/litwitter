@@ -4,7 +4,7 @@ import Sidebar from "../home/components/Sidebar";
 import styled from "styled-components";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useHistory, useParams, useRouteMatch } from "react-router";
-import { Group, Post, useGroupQuery } from "../../generated/graphql";
+import { Group, Post, useGroupQuery, User } from "../../generated/graphql";
 import PublicIcon from "@material-ui/icons/Public";
 import LockIcon from "@material-ui/icons/Lock";
 import { AvatarGroup } from "@material-ui/lab";
@@ -41,7 +41,7 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
       groupId: params.id,
     },
   });
-
+ 
   return (
     <div className="wrapper">
       <Sidebar {...user} />
@@ -210,12 +210,26 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                   </NavLink>
                 </div>
                 <div className="profile__nav--item">
-                  <NavLink exact to={`${url}/members`} className="link">
+                  <NavLink to={`${url}/members`} className="link">
                     <div className="link--title">
                       <span>Thành viên</span>
                     </div>
                   </NavLink>
                 </div>
+                {(data?.getGroup.admins as User[])?.concat(data?.getGroup.leader as User).map((ad) => {
+                  const check = ad.username === user.username;
+                  if (check) {
+                    return (
+                      <div className="profile__nav--item" key={ad.username}>
+                        <NavLink to={`${url}/member-requests`} className="link">
+                          <div className="link--title">
+                            <span>Yêu cầu tham gia</span>
+                          </div>
+                        </NavLink>
+                      </div>
+                    );
+                  }
+                })}
               </nav>
             </div>
             <Switch>
@@ -226,8 +240,8 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
               <Route exact path={url}>
                 <Discuss
                   posts={data?.getGroup.posts as [Post]}
-                  see={data?.getGroup.public as boolean}
                   groupId={data?.getGroup.id as string}
+                  about={data?.getGroup as Group}
                 />
               </Route>
             </Switch>

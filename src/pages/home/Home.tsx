@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useHistory } from "react-router";
 import { UserContext } from "../../utils/useAuth";
 import { useIsAuth } from "../../utils/useIsAuth";
 import { WithSide } from "../../utils/withSide";
@@ -8,7 +9,11 @@ import { MessageAlert } from "./components/MessageAlert";
 const Home = () => {
   useIsAuth();
   const { errorFile } = useContext(UserContext);
+  const router = useHistory();
   
+  React.useEffect(() => {
+    router.push("/home")
+  })
   return (
     <>
       <WithSide>
