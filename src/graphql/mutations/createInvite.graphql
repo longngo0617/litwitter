@@ -1,0 +1,3 @@
+mutation createInvite($groupId: String!, $userId: String!) {
+  createInvite(groupId: $groupId, userId: $userId)
+}

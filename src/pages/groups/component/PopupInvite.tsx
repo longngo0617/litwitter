@@ -5,7 +5,11 @@ import ReactDOM from "react-dom";
 import styled from "styled-components";
 import CloseIcon from "@material-ui/icons/Close";
 import SearchIcon from "@material-ui/icons/Search";
-import { useUsersQuery, Group } from "../../../generated/graphql";
+import {
+  useUsersQuery,
+  Group,
+  useCreateInviteMutation,
+} from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
 interface PopupInviteProps {
   onClose: () => void;
@@ -18,7 +22,7 @@ export const PopupInvite: React.FC<PopupInviteProps> = ({
 }) => {
   const wrapperRef = React.useRef(null);
   const { data }: any = useUsersQuery();
-
+  const [createInvite] = useCreateInviteMutation();
   const [arrUser, setArrUser] = React.useState<any>([]);
 
   const addItem = (user: any) => {
@@ -39,6 +43,17 @@ export const PopupInvite: React.FC<PopupInviteProps> = ({
     setArrUser(filtered);
   };
 
+  const handleCreateInvite = async () => {
+    for (const u of arrUser) {
+        await createInvite({
+            variables:{
+                groupId:groups.id,
+                userId: u.id
+            }
+        })
+    }
+  };
+
   return ReactDOM.createPortal(
     <Container>
       <Overlay />
@@ -47,7 +62,10 @@ export const PopupInvite: React.FC<PopupInviteProps> = ({
           initialValues={{
             displayname: "",
           }}
-          onSubmit={async (values) => {}}
+          onSubmit={async (values) => {
+            await handleCreateInvite();
+            await onClose();
+          }}
         >
           {({ handleChange, values }) => (
             <Form autoComplete="off">
@@ -111,7 +129,7 @@ export const PopupInvite: React.FC<PopupInviteProps> = ({
                         .filter(
                           (u: any) =>
                             !groups.members.find(
-                              (m:any) => m.username === u.username
+                              (m: any) => m.username === u.username
                             )
                         )
                         .filter(
