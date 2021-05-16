@@ -180,7 +180,11 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                             className={classes.button}
                             startIcon={<AddIcon />}
                           >
-                            Mời
+                            {data?.getGroup.members.find(
+                              (e) => e?.username === user.username
+                            )
+                              ? "Mời"
+                              : "Tham gia nhóm"}
                           </Button>
                         </ItemRight>
                       </InfoRight>
@@ -209,13 +213,20 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                     </div>
                   </NavLink>
                 </div>
-                <div className="profile__nav--item">
-                  <NavLink to={`${url}/members`} className="link">
-                    <div className="link--title">
-                      <span>Thành viên</span>
-                    </div>
-                  </NavLink>
-                </div>
+                
+                {!data?.getGroup.public &&
+                !data?.getGroup.members.find(
+                  (e) => e?.username === user.username
+                ) ? null : (
+                  <div className="profile__nav--item">
+                    <NavLink to={`${url}/members`} className="link">
+                      <div className="link--title">
+                        <span>Thành viên</span>
+                      </div>
+                    </NavLink>
+                  </div>
+                )}
+
                 {(data?.getGroup.admins as User[])
                   ?.concat(data?.getGroup.leader as User)
                   .map((ad) => {
@@ -379,7 +390,6 @@ const Info = styled.div`
   margin-top: -6px;
   margin-right: -6px;
   flex-direction: row;
-  flex-wrap: wrap;
 `;
 const InfoEach = styled.div`
   min-width: 320px;

@@ -37,7 +37,7 @@ export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
                 <GroupContainer>
                   <Item>
                     <div>
-                      <Linkk>
+                      <Linkk href={`/groups/group/${g?.id}`}>
                         <div
                           style={{
                             paddingBottom: "56.25%",

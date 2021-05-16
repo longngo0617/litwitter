@@ -9,6 +9,8 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import moment from "moment";
 import { ReadMore } from "./ReadMore";
+import { Permission } from "./Permission";
+import { UserContext } from "../../../utils/useAuth";
 
 interface DiscussProps {
   posts: [Post];
@@ -17,24 +19,33 @@ interface DiscussProps {
 }
 
 export const Discuss: React.FC<DiscussProps> = ({ posts, groupId, about }) => {
+  const { user } = React.useContext(UserContext);
   return (
     <Box style={{ backgroundColor: "#f0f2f5" }}>
       <Page>
         <Main>
-          <FeedDiscuss>
-            <GroupInlineCompose>
-              <div style={{ marginBottom: "16px" }}>
-                <TweetBox isGroup groupId={groupId} />
-              </div>
-            </GroupInlineCompose>
-            <GroupFeed>
-              <div role="feed">
-                {posts.map((post) => (
-                  <PostItem post={post} key={post.id} groupId={groupId} />
-                ))}
-              </div>
-            </GroupFeed>
-          </FeedDiscuss>
+          {!about.public &&
+          !about.members.find((e) => e?.username === user.username) ? (
+            <FeedDiscuss>
+              <Permission />
+            </FeedDiscuss>
+          ) : (
+            <FeedDiscuss>
+              <GroupInlineCompose>
+                <div style={{ marginBottom: "16px" }}>
+                  <TweetBox isGroup groupId={groupId} />
+                </div>
+              </GroupInlineCompose>
+              <GroupFeed>
+                <div role="feed">
+                  {posts.map((post) => (
+                    <PostItem post={post} key={post.id} groupId={groupId} />
+                  ))}
+                </div>
+              </GroupFeed>
+            </FeedDiscuss>
+          )}
+
           <Introduce>
             <IntroduceDiscuss>
               <div
@@ -53,7 +64,9 @@ export const Discuss: React.FC<DiscussProps> = ({ posts, groupId, about }) => {
                   <Hr />
                   <Describe>
                     <span>
-                      <ReadMore maxCharacterCount={100}>{about?.describe}</ReadMore>
+                      <ReadMore maxCharacterCount={100}>
+                        {about?.describe}
+                      </ReadMore>
                     </span>
                   </Describe>
 
