@@ -1,0 +1,3 @@
+mutation acceptInvite($groupId: String!, $userId: String!, $inviteId: String!) {
+  acceptInvite(groupId: $groupId, userId: $userId, inviteId: $inviteId)
+}

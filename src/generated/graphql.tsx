@@ -633,6 +633,18 @@ export type RegularGroupFragment = (
   )>>> }
 );
 
+export type RegularInviteFragment = (
+  { __typename?: 'Invite' }
+  & Pick<Invite, 'id' | 'groupId' | 'name' | 'imageCover'>
+  & { to: (
+    { __typename?: 'User' }
+    & RegularUserFragment
+  ), from: (
+    { __typename?: 'User' }
+    & RegularUserFragment
+  ) }
+);
+
 export type RegularJoinFragment = (
   { __typename?: 'Join' }
   & Pick<Join, 'name' | 'id' | 'groupId' | 'imageCover'>
@@ -693,6 +705,18 @@ export type RegularUserResponseFragment = (
     { __typename?: 'User' }
     & RegularUserFragment
   ) }
+);
+
+export type AcceptInviteMutationVariables = Exact<{
+  groupId: Scalars['String'];
+  userId: Scalars['String'];
+  inviteId: Scalars['String'];
+}>;
+
+
+export type AcceptInviteMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'acceptInvite'>
 );
 
 export type AcceptJoinMutationVariables = Exact<{
@@ -1043,6 +1067,17 @@ export type GroupsQuery = (
   )>> }
 );
 
+export type InvitesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type InvitesQuery = (
+  { __typename?: 'Query' }
+  & { getMyInvites: Array<Maybe<(
+    { __typename?: 'Invite' }
+    & RegularInviteFragment
+  )>> }
+);
+
 export type JoinsQueryVariables = Exact<{
   groupId: Scalars['String'];
 }>;
@@ -1336,6 +1371,20 @@ export const RegularGroupFragmentDoc = gql`
 }
     ${RegularUserFragmentDoc}
 ${PostSnippetFragmentDoc}`;
+export const RegularInviteFragmentDoc = gql`
+    fragment RegularInvite on Invite {
+  id
+  groupId
+  name
+  imageCover
+  to {
+    ...RegularUser
+  }
+  from {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
 export const RegularJoinFragmentDoc = gql`
     fragment RegularJoin on Join {
   name
@@ -1407,6 +1456,39 @@ export const RegularUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
+export const AcceptInviteDocument = gql`
+    mutation acceptInvite($groupId: String!, $userId: String!, $inviteId: String!) {
+  acceptInvite(groupId: $groupId, userId: $userId, inviteId: $inviteId)
+}
+    `;
+export type AcceptInviteMutationFn = Apollo.MutationFunction<AcceptInviteMutation, AcceptInviteMutationVariables>;
+
+/**
+ * __useAcceptInviteMutation__
+ *
+ * To run a mutation, you first call `useAcceptInviteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAcceptInviteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [acceptInviteMutation, { data, loading, error }] = useAcceptInviteMutation({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      userId: // value for 'userId'
+ *      inviteId: // value for 'inviteId'
+ *   },
+ * });
+ */
+export function useAcceptInviteMutation(baseOptions?: Apollo.MutationHookOptions<AcceptInviteMutation, AcceptInviteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AcceptInviteMutation, AcceptInviteMutationVariables>(AcceptInviteDocument, options);
+      }
+export type AcceptInviteMutationHookResult = ReturnType<typeof useAcceptInviteMutation>;
+export type AcceptInviteMutationResult = Apollo.MutationResult<AcceptInviteMutation>;
+export type AcceptInviteMutationOptions = Apollo.BaseMutationOptions<AcceptInviteMutation, AcceptInviteMutationVariables>;
 export const AcceptJoinDocument = gql`
     mutation acceptJoin($groupId: String!, $userId: String!, $joinId: String!) {
   acceptJoin(groupId: $groupId, userId: $userId, joinId: $joinId)
@@ -2313,6 +2395,40 @@ export function useGroupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Gro
 export type GroupsQueryHookResult = ReturnType<typeof useGroupsQuery>;
 export type GroupsLazyQueryHookResult = ReturnType<typeof useGroupsLazyQuery>;
 export type GroupsQueryResult = Apollo.QueryResult<GroupsQuery, GroupsQueryVariables>;
+export const InvitesDocument = gql`
+    query invites {
+  getMyInvites {
+    ...RegularInvite
+  }
+}
+    ${RegularInviteFragmentDoc}`;
+
+/**
+ * __useInvitesQuery__
+ *
+ * To run a query within a React component, call `useInvitesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInvitesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInvitesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useInvitesQuery(baseOptions?: Apollo.QueryHookOptions<InvitesQuery, InvitesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<InvitesQuery, InvitesQueryVariables>(InvitesDocument, options);
+      }
+export function useInvitesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<InvitesQuery, InvitesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<InvitesQuery, InvitesQueryVariables>(InvitesDocument, options);
+        }
+export type InvitesQueryHookResult = ReturnType<typeof useInvitesQuery>;
+export type InvitesLazyQueryHookResult = ReturnType<typeof useInvitesLazyQuery>;
+export type InvitesQueryResult = Apollo.QueryResult<InvitesQuery, InvitesQueryVariables>;
 export const JoinsDocument = gql`
     query Joins($groupId: String!) {
   getJoinInGroup(groupId: $groupId) {

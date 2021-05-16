@@ -1,0 +1,12 @@
+fragment RegularInvite on Invite {
+  id
+  groupId
+  name
+  imageCover
+  to {
+    ...RegularUser
+  }
+  from {
+    ...RegularUser
+  }
+}

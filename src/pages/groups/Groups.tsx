@@ -15,6 +15,7 @@ import { PopupCreateGroup } from "./component/PopupCreateGroup";
 import { useTypeGroupQuery } from "../../generated/graphql";
 import { DiscoverGroup } from "./component/DiscoverGroup";
 import { FeedGroup } from "./component/FeedGroup";
+import { Invite } from "./component/Invite";
 
 interface GroupsProps {}
 
@@ -60,11 +61,21 @@ export const Groups: React.FC<GroupsProps> = (props) => {
                   </div>
                 </NavLink>
               </div>
+              <div className="profile__nav--item">
+                <NavLink to={`${url}/invite`} className="link">
+                  <div className="link--title">
+                    <span>Invite</span>
+                  </div>
+                </NavLink>
+              </div>
             </nav>
           </div>
           <Switch>
             <Route path={`${url}/discover`}>
               <DiscoverGroup />
+            </Route>
+            <Route path={`${url}/invite`}>
+              <Invite />
             </Route>
             <Route path={url}>
               <FeedGroup />
@@ -72,9 +83,7 @@ export const Groups: React.FC<GroupsProps> = (props) => {
           </Switch>
         </div>
       </Main>
-      <Widgets
-        onOpen={() => setOpen(true)}
-      />
+      <Widgets onOpen={() => setOpen(true)} />
       {open && (
         <PopupCreateGroup
           onClose={() => setOpen(false)}

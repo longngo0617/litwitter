@@ -11,12 +11,7 @@ interface DiscoverGroupProps {}
 export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
   const { data, loading } = useGroupsQuery();
   const { user } = React.useContext(UserContext);
-  if (data) {
-    const gro = !!(data?.getGroups[1] as Group).members.find(
-      (e) => e?.username === user.username
-    );
-    console.log(gro);
-  }
+
   return (
     <div>
       {!data && loading ? (

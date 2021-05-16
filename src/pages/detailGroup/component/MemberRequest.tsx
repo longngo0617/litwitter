@@ -91,11 +91,6 @@ export const MemberRequest: React.FC<MemberRequestProps> = ({ groupId }) => {
   );
 };
 
-const Box = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -130,6 +125,11 @@ const ButtonJoin = styled(Button)`
   background-color: rgb(29, 161, 242);
   color: #fff;
   margin: 0 10px;
+  transition-duration: 0.2s;
+  transition-property: background-color, box-shadow;
+  &:hover {
+    background-color: rgb(26,145,218);
+  }
 `;
 const Content = styled.div`
   margin: 5px;
