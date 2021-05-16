@@ -389,10 +389,10 @@ export type Mutation = {
   CommentPostInGroup: Scalars['Boolean'];
   createInvite: Scalars['Boolean'];
   acceptInvite: Scalars['Boolean'];
-  remoteInvite: Scalars['Boolean'];
+  removeInvite: Scalars['Boolean'];
   createJoin: Scalars['Boolean'];
   acceptJoin: Scalars['Boolean'];
-  remoteJoin: Scalars['Boolean'];
+  removeJoin: Scalars['Boolean'];
 };
 
 
@@ -538,7 +538,7 @@ export type MutationAcceptInviteArgs = {
 };
 
 
-export type MutationRemoteInviteArgs = {
+export type MutationRemoveInviteArgs = {
   inviteId: Scalars['String'];
 };
 
@@ -555,7 +555,7 @@ export type MutationAcceptJoinArgs = {
 };
 
 
-export type MutationRemoteJoinArgs = {
+export type MutationRemoveJoinArgs = {
   joinId: Scalars['String'];
 };
 
@@ -795,6 +795,16 @@ export type CreateInviteMutation = (
   & Pick<Mutation, 'createInvite'>
 );
 
+export type CreateJoinMutationVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type CreateJoinMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'createJoin'>
+);
+
 export type CreatePostMutationVariables = Exact<{
   body: Scalars['String'];
   image?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
@@ -988,6 +998,26 @@ export type RegisterMutation = (
     { __typename?: 'UserResponse' }
     & RegularUserResponseFragment
   ) }
+);
+
+export type RemoveInviteMutationVariables = Exact<{
+  inviteId: Scalars['String'];
+}>;
+
+
+export type RemoveInviteMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'removeInvite'>
+);
+
+export type RemoveJoinMutationVariables = Exact<{
+  joinId: Scalars['String'];
+}>;
+
+
+export type RemoveJoinMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'removeJoin'>
 );
 
 export type SendMessageMutationVariables = Exact<{
@@ -1676,6 +1706,37 @@ export function useCreateInviteMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateInviteMutationHookResult = ReturnType<typeof useCreateInviteMutation>;
 export type CreateInviteMutationResult = Apollo.MutationResult<CreateInviteMutation>;
 export type CreateInviteMutationOptions = Apollo.BaseMutationOptions<CreateInviteMutation, CreateInviteMutationVariables>;
+export const CreateJoinDocument = gql`
+    mutation createJoin($groupId: String!) {
+  createJoin(groupId: $groupId)
+}
+    `;
+export type CreateJoinMutationFn = Apollo.MutationFunction<CreateJoinMutation, CreateJoinMutationVariables>;
+
+/**
+ * __useCreateJoinMutation__
+ *
+ * To run a mutation, you first call `useCreateJoinMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateJoinMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createJoinMutation, { data, loading, error }] = useCreateJoinMutation({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useCreateJoinMutation(baseOptions?: Apollo.MutationHookOptions<CreateJoinMutation, CreateJoinMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateJoinMutation, CreateJoinMutationVariables>(CreateJoinDocument, options);
+      }
+export type CreateJoinMutationHookResult = ReturnType<typeof useCreateJoinMutation>;
+export type CreateJoinMutationResult = Apollo.MutationResult<CreateJoinMutation>;
+export type CreateJoinMutationOptions = Apollo.BaseMutationOptions<CreateJoinMutation, CreateJoinMutationVariables>;
 export const CreatePostDocument = gql`
     mutation createPost($body: String!, $image: [String]) {
   createPost(body: $body, image: $image) {
@@ -2181,6 +2242,68 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const RemoveInviteDocument = gql`
+    mutation removeInvite($inviteId: String!) {
+  removeInvite(inviteId: $inviteId)
+}
+    `;
+export type RemoveInviteMutationFn = Apollo.MutationFunction<RemoveInviteMutation, RemoveInviteMutationVariables>;
+
+/**
+ * __useRemoveInviteMutation__
+ *
+ * To run a mutation, you first call `useRemoveInviteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveInviteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeInviteMutation, { data, loading, error }] = useRemoveInviteMutation({
+ *   variables: {
+ *      inviteId: // value for 'inviteId'
+ *   },
+ * });
+ */
+export function useRemoveInviteMutation(baseOptions?: Apollo.MutationHookOptions<RemoveInviteMutation, RemoveInviteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveInviteMutation, RemoveInviteMutationVariables>(RemoveInviteDocument, options);
+      }
+export type RemoveInviteMutationHookResult = ReturnType<typeof useRemoveInviteMutation>;
+export type RemoveInviteMutationResult = Apollo.MutationResult<RemoveInviteMutation>;
+export type RemoveInviteMutationOptions = Apollo.BaseMutationOptions<RemoveInviteMutation, RemoveInviteMutationVariables>;
+export const RemoveJoinDocument = gql`
+    mutation removeJoin($joinId: String!) {
+  removeJoin(joinId: $joinId)
+}
+    `;
+export type RemoveJoinMutationFn = Apollo.MutationFunction<RemoveJoinMutation, RemoveJoinMutationVariables>;
+
+/**
+ * __useRemoveJoinMutation__
+ *
+ * To run a mutation, you first call `useRemoveJoinMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveJoinMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeJoinMutation, { data, loading, error }] = useRemoveJoinMutation({
+ *   variables: {
+ *      joinId: // value for 'joinId'
+ *   },
+ * });
+ */
+export function useRemoveJoinMutation(baseOptions?: Apollo.MutationHookOptions<RemoveJoinMutation, RemoveJoinMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveJoinMutation, RemoveJoinMutationVariables>(RemoveJoinDocument, options);
+      }
+export type RemoveJoinMutationHookResult = ReturnType<typeof useRemoveJoinMutation>;
+export type RemoveJoinMutationResult = Apollo.MutationResult<RemoveJoinMutation>;
+export type RemoveJoinMutationOptions = Apollo.BaseMutationOptions<RemoveJoinMutation, RemoveJoinMutationVariables>;
 export const SendMessageDocument = gql`
     mutation SendMessage($content: String, $roomId: String!, $image: String) {
   createContentChat(content: $content, roomId: $roomId, image: $image) {

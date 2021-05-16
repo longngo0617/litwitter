@@ -143,5 +143,11 @@ html {
 }
 
 .errorImage {
-  border:1px solid #f44336 !important;
+  border: 1px solid #f44336 !important;
+}
+
+.MuiAvatarGroup-avatar {
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 15px !important;
 }

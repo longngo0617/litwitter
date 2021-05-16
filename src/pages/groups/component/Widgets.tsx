@@ -6,7 +6,7 @@ import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Loading } from "../../../components/Loading";
-import { useMyGroupsQuery } from "../../../generated/graphql";
+import { useGroupsQuery, useMyGroupsQuery } from "../../../generated/graphql";
 
 interface WidgetsProps {
   onOpen: () => void;
@@ -14,10 +14,13 @@ interface WidgetsProps {
 
 export const Widgets: React.FC<WidgetsProps> = ({ onOpen }) => {
   const { data, loading } = useMyGroupsQuery();
+  const groups = useGroupsQuery();
+
   const router = useHistory();
   const handleClickGroup = (router: any, url: string) => {
     return router.replace(`/groups/group/${url}`);
   };
+
   return (
     <div className="widgets" style={{ flex: 0.2, padding: "0 20px" }}>
       {!data && loading ? (
@@ -34,7 +37,7 @@ export const Widgets: React.FC<WidgetsProps> = ({ onOpen }) => {
               <Autocomplete
                 id="free-solo-demo"
                 freeSolo
-                options={data?.getMyGroups as any}
+                options={groups?.data?.getGroups as any}
                 renderInput={(params) => (
                   <TextField {...params} margin="normal" variant="outlined" />
                 )}
@@ -42,7 +45,7 @@ export const Widgets: React.FC<WidgetsProps> = ({ onOpen }) => {
                 renderOption={(option) => (
                   <div className="follow-modal-bottom-itemWrap full-width">
                     <Link
-                      to={`/groups/${option?.id}`}
+                      to={`/groups/group/${option?.id}`}
                       className="link link--none"
                     >
                       <div className="follow-modal-bottom-item">
@@ -79,64 +82,68 @@ export const Widgets: React.FC<WidgetsProps> = ({ onOpen }) => {
               <Text>Tạo nhóm mới</Text>
             </Button>
           </ButtonWrap>
-          <Container>
-            <Header>
-              <Head>Nhóm bạn đã tham gia</Head>
-            </Header>
-            <Main>
-              {data?.getMyGroups.map((group) => (
-                <div
-                  className="follow-modal-bottom-itemWrap"
-                  key={group?.id}
-                  onClick={() => handleClickGroup(router,group?.id as string)}
-                >
-                  <div className="follow-modal-bottom-item">
-                    <div className="item">
-                      <div className="item-left">
-                        <div className="avatar">
-                          <GroupAvatar
-                            variant="square"
-                            src={group?.imageCover || ""}
-                          />
-                        </div>
-                      </div>
-                      <div className="item-right">
-                        <div className="item-right-top">
-                          <div className="item-right-top-text">
-                            <Link to={`/groups/`}>
-                              <div className="name-wrap">
-                                <div
-                                  className="name"
-                                  style={{
-                                    whiteSpace: "pre-wrap",
-                                    wordBreak: "break-word",
-                                    wordWrap: "break-word",
-                                  }}
-                                >
-                                  <span>{group?.name}</span>
-                                </div>
-                              </div>
-                            </Link>
+          {data?.getMyGroups.length ? (
+            <Container>
+              <Header>
+                <Head>Nhóm bạn đã tham gia</Head>
+              </Header>
+              <Main>
+                {data?.getMyGroups.map((group) => (
+                  <div
+                    className="follow-modal-bottom-itemWrap"
+                    key={group?.id}
+                    onClick={() =>
+                      handleClickGroup(router, group?.id as string)
+                    }
+                  >
+                    <div className="follow-modal-bottom-item">
+                      <div className="item">
+                        <div className="item-left">
+                          <div className="avatar">
+                            <GroupAvatar
+                              variant="square"
+                              src={group?.imageCover || ""}
+                            />
                           </div>
                         </div>
-                        <div
-                          className="item-right-bottom"
-                          style={{ paddingTop: 0 }}
-                        >
-                          <span className="body" style={{ fontSize: "12px" }}>
-                            Meo meo meo
-                          </span>
+                        <div className="item-right">
+                          <div className="item-right-top">
+                            <div className="item-right-top-text">
+                              <Link to={`/groups/`}>
+                                <div className="name-wrap">
+                                  <div
+                                    className="name"
+                                    style={{
+                                      whiteSpace: "pre-wrap",
+                                      wordBreak: "break-word",
+                                      wordWrap: "break-word",
+                                    }}
+                                  >
+                                    <span>{group?.name}</span>
+                                  </div>
+                                </div>
+                              </Link>
+                            </div>
+                          </div>
+                          <div
+                            className="item-right-bottom"
+                            style={{ paddingTop: 0 }}
+                          >
+                            <span className="body" style={{ fontSize: "12px" }}>
+                              Meo meo meo
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </Main>
-            <Footer to="/connect">
-              <TextLink>Show more</TextLink>
-            </Footer>
-          </Container>
+                ))}
+              </Main>
+              <Footer to="/connect">
+                <TextLink>Show more</TextLink>
+              </Footer>
+            </Container>
+          ) : null}
         </>
       )}
     </div>

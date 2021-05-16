@@ -2,7 +2,11 @@ import React from "react";
 import { AvatarGroup } from "@material-ui/lab";
 import { Avatar, Button } from "@material-ui/core";
 import styled from "styled-components";
-import { Group, useGroupsQuery, User } from "../../../generated/graphql";
+import {
+  Group,
+  useCreateJoinMutation,
+  useGroupsQuery,
+} from "../../../generated/graphql";
 import { Loading } from "../../../components/Loading";
 import { UserContext } from "../../../utils/useAuth";
 
@@ -11,6 +15,7 @@ interface DiscoverGroupProps {}
 export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
   const { data, loading } = useGroupsQuery();
   const { user } = React.useContext(UserContext);
+  const [createJoin] = useCreateJoinMutation();
 
   return (
     <div>
@@ -23,9 +28,7 @@ export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
           {data?.getGroups
             .filter(
               (g) =>
-                !(g as Group).members.find(
-                  (e) => e?.username === user.username
-                )
+                !(g as Group).members.find((e) => e?.username === user.username)
             )
             .map((g) => (
               <GroupItem key={g?.id}>
@@ -94,7 +97,18 @@ export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
                       </div>
                     </Content>
                     <div style={{ padding: "16px" }}>
-                      <ButtonJoin variant="contained">Tham gia nhóm</ButtonJoin>
+                      <ButtonJoin
+                        variant="contained"
+                        onClick={async () =>
+                          await createJoin({
+                            variables: {
+                              groupId: g?.id as string,
+                            },
+                          })
+                        }
+                      >
+                        Tham gia nhóm
+                      </ButtonJoin>
                     </div>
                   </Item>
                 </GroupContainer>

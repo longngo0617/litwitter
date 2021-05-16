@@ -1,0 +1,3 @@
+mutation createJoin($groupId: String!){
+    createJoin(groupId:$groupId)
+}

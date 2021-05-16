@@ -6,6 +6,7 @@ import {
   JoinsDocument,
   useAcceptJoinMutation,
   useJoinsQuery,
+  useRemoveJoinMutation,
 } from "../../../generated/graphql";
 
 interface MemberRequestProps {
@@ -19,6 +20,7 @@ export const MemberRequest: React.FC<MemberRequestProps> = ({ groupId }) => {
     },
   });
   const [acceptJoin] = useAcceptJoinMutation();
+  const [removeJoin] = useRemoveJoinMutation();
   if (!data && loading) {
     return (
       <WrapLoading>
@@ -78,7 +80,20 @@ export const MemberRequest: React.FC<MemberRequestProps> = ({ groupId }) => {
                   >
                     Chấp nhận
                   </ButtonJoin>
-                  <Button variant="contained" color="secondary">
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={async () =>
+                      await removeJoin({
+                        variables: {
+                          joinId: join?.id as string,
+                        },
+                        refetchQueries: [
+                          { query: JoinsDocument, variables: { groupId } },
+                        ],
+                      })
+                    }
+                  >
                     Từ chối
                   </Button>
                 </JoinRight>
@@ -128,7 +143,7 @@ const ButtonJoin = styled(Button)`
   transition-duration: 0.2s;
   transition-property: background-color, box-shadow;
   &:hover {
-    background-color: rgb(26,145,218);
+    background-color: rgb(26, 145, 218);
   }
 `;
 const Content = styled.div`
@@ -190,6 +205,6 @@ const Topic = styled.div`
     display: block;
     font-size: 1.25rem;
     line-height: 1.2;
-    text-align:center;
+    text-align: center;
   }
 `;

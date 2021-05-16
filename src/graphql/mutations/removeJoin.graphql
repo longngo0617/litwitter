@@ -1,0 +1,3 @@
+mutation removeJoin($joinId: String!) {
+  removeJoin(joinId: $joinId)
+}

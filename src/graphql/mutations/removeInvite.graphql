@@ -1,0 +1,3 @@
+mutation removeInvite($inviteId: String!) {
+  removeInvite(inviteId: $inviteId)
+}

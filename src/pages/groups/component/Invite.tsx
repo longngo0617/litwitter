@@ -5,6 +5,7 @@ import {
   useAcceptInviteMutation,
   useInvitesQuery,
   InvitesDocument,
+  useRemoveInviteMutation,
 } from "../../../generated/graphql";
 import { Loading } from "../../../components/Loading";
 
@@ -13,7 +14,7 @@ interface InviteProps {}
 export const Invite: React.FC<InviteProps> = () => {
   const { data, loading } = useInvitesQuery();
   const [acceptInvite] = useAcceptInviteMutation();
-
+  const [removeInvite] = useRemoveInviteMutation();
   if (!data && loading) {
     return (
       <WrapLoading>
@@ -70,7 +71,19 @@ export const Invite: React.FC<InviteProps> = () => {
                 >
                   Chấp nhận
                 </ButtonJoin>
-                <Button variant="contained">Xoá</Button>
+                <Button
+                  variant="contained"
+                  onClick={async () => {
+                    await removeInvite({
+                      variables: {
+                        inviteId: invite?.id as string,
+                      },
+                      refetchQueries: [{ query: InvitesDocument }],
+                    });
+                  }}
+                >
+                  Xoá
+                </Button>
               </JoinRight>
             </MemberWrap>
           ))}
@@ -177,6 +190,6 @@ const Topic = styled.div`
     display: block;
     font-size: 1.25rem;
     line-height: 1.2;
-    text-align:center;
+    text-align: center;
   }
 `;
