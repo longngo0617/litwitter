@@ -1,22 +1,31 @@
-import React from "react";
-import { UserContext } from "../../utils/useAuth";
-import Sidebar from "../home/components/Sidebar";
-import styled from "styled-components";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { useHistory, useParams, useRouteMatch } from "react-router";
-import { Group, Post, useGroupQuery, User } from "../../generated/graphql";
-import PublicIcon from "@material-ui/icons/Public";
-import LockIcon from "@material-ui/icons/Lock";
-import { AvatarGroup } from "@material-ui/lab";
 import { Avatar, Button } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import AddIcon from "@material-ui/icons/Add";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import RemoveIcon from '@material-ui/icons/Remove';
+import LockIcon from "@material-ui/icons/Lock";
+import PublicIcon from "@material-ui/icons/Public";
+import { AvatarGroup } from "@material-ui/lab";
+import React from "react";
+import { useHistory, useParams, useRouteMatch } from "react-router";
 import { NavLink, Route, Switch } from "react-router-dom";
-import { About } from "./component/About";
+import styled from "styled-components";
 import { Loading } from "../../components/Loading";
+import {
+  Group,
+  Join, Post,
+  useCreateJoinMutation,
+  useGroupQuery,
+  useJoinsQuery,
+  User, useRemoveJoinMutation
+} from "../../generated/graphql";
+import { UserContext } from "../../utils/useAuth";
+import { PopupInvite } from "../groups/component/PopupInvite";
+import Sidebar from "../home/components/Sidebar";
+import { About } from "./component/About";
 import { Discuss } from "./component/Discuss";
 import { MemberRequest } from "./component/MemberRequest";
-import { PopupInvite } from "../groups/component/PopupInvite";
+
 interface DetailGroupProps {}
 interface ParamsProps {
   id: string;
@@ -35,6 +44,9 @@ const useStyles = makeStyles((theme: Theme) =>
 export const DetailGroup: React.FC<DetailGroupProps> = () => {
   const { user } = React.useContext(UserContext);
   const [openInvite, setOpenInvite] = React.useState(false);
+  const [createJoin] = useCreateJoinMutation();
+  const [removeJoin] = useRemoveJoinMutation();
+
   const classes = useStyles();
   const router = useHistory();
   const params: ParamsProps = useParams();
@@ -44,7 +56,14 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
       groupId: params.id,
     },
   });
-
+  const joins = useJoinsQuery({
+    variables: {
+      groupId: params.id,
+    },
+  });
+  const join = joins.data?.getJoinInGroup.find(
+    (j) => j?.member.username === user.username
+  )
   return (
     <div className="wrapper">
       <Sidebar {...user} />
@@ -177,19 +196,50 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                           </MemberWrap>
                         </ItemRight>
                         <ItemRight>
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            className={classes.button}
-                            startIcon={<AddIcon />}
-                            onClick={() => setOpenInvite(!openInvite)}
-                          >
-                            {data?.getGroup.members.find(
-                              (e) => e?.username === user.username
-                            )
-                              ? "Mời"
-                              : "Tham gia nhóm"}
-                          </Button>
+                          {data?.getGroup.members.find(
+                            (e) => e?.username === user.username
+                          ) ? (
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              className={classes.button}
+                              startIcon={<AddIcon />}
+                              onClick={() => setOpenInvite(!openInvite)}
+                            >
+                              Mời
+                            </Button>
+                          ) : join ? (
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              startIcon={<RemoveIcon />}
+                              onClick={async () => {
+                                await removeJoin({
+                                  variables: {
+                                    joinId:  join.id as string,
+                                  },
+                                });
+                              }}
+                            >
+                              Huỷ yêu cầu
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              className={classes.button}
+                              startIcon={<AddIcon />}
+                              onClick={async () => {
+                                await createJoin({
+                                  variables: {
+                                    groupId: data?.getGroup.id as string,
+                                  },
+                                });
+                              }}
+                            >
+                              Tham gia nhóm
+                            </Button>
+                          )}
                         </ItemRight>
                       </InfoRight>
                     </InfoEach>
@@ -257,7 +307,10 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
               </Route>
               <Route path={`${url}/members`}></Route>
               <Route path={`${url}/member-requests`}>
-                <MemberRequest groupId={params.id} />
+                <MemberRequest
+                  groupId={params.id}
+                  joins={joins.data?.getJoinInGroup as [Join]}
+                />
               </Route>
               <Route exact path={url}>
                 <Discuss

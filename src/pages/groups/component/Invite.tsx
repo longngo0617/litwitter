@@ -6,6 +6,7 @@ import {
   useInvitesQuery,
   InvitesDocument,
   useRemoveInviteMutation,
+  MyGroupsDocument
 } from "../../../generated/graphql";
 import { Loading } from "../../../components/Loading";
 
@@ -65,7 +66,10 @@ export const Invite: React.FC<InviteProps> = () => {
                         userId: invite?.to.id as string,
                         inviteId: invite?.id as string,
                       },
-                      refetchQueries: [{ query: InvitesDocument }],
+                      refetchQueries: [
+                        { query: InvitesDocument },
+                        { query: MyGroupsDocument },
+                      ],
                     });
                   }}
                 >

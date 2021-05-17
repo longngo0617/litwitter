@@ -6,6 +6,7 @@ import {
   Group,
   useCreateJoinMutation,
   useGroupsQuery,
+  useRemoveJoinMutation,
 } from "../../../generated/graphql";
 import { Loading } from "../../../components/Loading";
 import { UserContext } from "../../../utils/useAuth";
@@ -16,6 +17,7 @@ export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
   const { data, loading } = useGroupsQuery();
   const { user } = React.useContext(UserContext);
   const [createJoin] = useCreateJoinMutation();
+  const [removeJoin] = useRemoveJoinMutation();
 
   return (
     <div>
@@ -70,9 +72,7 @@ export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
                         <div style={{ padding: "12px 16px 0" }}>
                           {g?.members.length ? (
                             <MemberWrap>
-                              <div
-                                style={{ minWidth: "64px", marginRight: "8px" }}
-                              >
+                              <div style={{ minWidth: "64px" }}>
                                 <AvatarGroup max={3}>
                                   {g?.members.map((member) => (
                                     <UserAvatar
@@ -83,7 +83,7 @@ export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
                                   ))}
                                 </AvatarGroup>
                               </div>
-                              <TextWrap>
+                              <TextWrap style={{ marginLeft: "20px" }}>
                                 <Line1>
                                   <span>
                                     {g.members[0]?.displayname} và{" "}
@@ -99,16 +99,28 @@ export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
                     <div style={{ padding: "16px" }}>
                       <ButtonJoin
                         variant="contained"
-                        onClick={async () =>
+                        onClick={async () => {
                           await createJoin({
                             variables: {
                               groupId: g?.id as string,
                             },
-                          })
-                        }
+                          });
+                        }}
                       >
                         Tham gia nhóm
                       </ButtonJoin>
+                      {/* <ButtonJoin
+                        variant="contained"
+                        onClick={async () => {
+                          await createJoin({
+                            variables: {
+                              groupId: g?.id as string,
+                            },
+                          });
+                        }}
+                      >
+                        Huỷ yêu cầu
+                      </ButtonJoin> */}
                     </div>
                   </Item>
                 </GroupContainer>

@@ -1,38 +1,26 @@
 import { Avatar, Button } from "@material-ui/core";
 import React from "react";
 import styled from "styled-components";
-import { Loading } from "../../../components/Loading";
 import {
+  Join,
   JoinsDocument,
   useAcceptJoinMutation,
-  useJoinsQuery,
   useRemoveJoinMutation,
 } from "../../../generated/graphql";
 
 interface MemberRequestProps {
-  groupId: string;
+  joins: [Join]
+  groupId:string;
 }
 
-export const MemberRequest: React.FC<MemberRequestProps> = ({ groupId }) => {
-  const { data, loading } = useJoinsQuery({
-    variables: {
-      groupId,
-    },
-  });
+export const MemberRequest: React.FC<MemberRequestProps> = ({ joins, groupId }) => {
   const [acceptJoin] = useAcceptJoinMutation();
   const [removeJoin] = useRemoveJoinMutation();
-  if (!data && loading) {
-    return (
-      <WrapLoading>
-        <Loading blue />
-      </WrapLoading>
-    );
-  }
 
   return (
     <Container>
       <Page>
-        {!data?.getJoinInGroup.length ? (
+        {!joins.length ? (
           <EmptyRequest>
             <Image>
               <img src="/null_people.svg" alt="" width="112" height="112" />
@@ -52,8 +40,8 @@ export const MemberRequest: React.FC<MemberRequestProps> = ({ groupId }) => {
             </Mess>
           </EmptyRequest>
         ) : (
-          data?.getJoinInGroup.map((join) => (
-            <MemberBackGround>
+          joins.map((join) => (
+            <MemberBackGround key={join?.id}>
               <MemberWrap>
                 <JoinLeft>
                   <Avatar src={join?.member.profile?.avatar || ""} />
@@ -122,6 +110,7 @@ const Page = styled.div`
 const MemberBackGround = styled.div`
   background-color: #fff;
   border-radius: 12px;
+  margin-bottom:10px;
 `;
 const MemberWrap = styled.div`
   display: flex;
@@ -164,12 +153,6 @@ const Content = styled.div`
 const JoinLeft = styled.div`
   display: flex;
   align-items: stretch;
-`;
-const WrapLoading = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80vh;
 `;
 
 const EmptyRequest = styled.div`
