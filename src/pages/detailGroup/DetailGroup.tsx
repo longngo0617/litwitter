@@ -2,7 +2,7 @@ import { Avatar, Button } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import RemoveIcon from '@material-ui/icons/Remove';
+import RemoveIcon from "@material-ui/icons/Remove";
 import LockIcon from "@material-ui/icons/Lock";
 import PublicIcon from "@material-ui/icons/Public";
 import { AvatarGroup } from "@material-ui/lab";
@@ -13,11 +13,14 @@ import styled from "styled-components";
 import { Loading } from "../../components/Loading";
 import {
   Group,
-  Join, Post,
+  GroupDocument,
+  Join,
+  Post,
   useCreateJoinMutation,
   useGroupQuery,
   useJoinsQuery,
-  User, useRemoveJoinMutation
+  User,
+  useRemoveJoinMutation,
 } from "../../generated/graphql";
 import { UserContext } from "../../utils/useAuth";
 import { PopupInvite } from "../groups/component/PopupInvite";
@@ -56,14 +59,7 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
       groupId: params.id,
     },
   });
-  const joins = useJoinsQuery({
-    variables: {
-      groupId: params.id,
-    },
-  });
-  const join = joins.data?.getJoinInGroup.find(
-    (j) => j?.member.username === user.username
-  )
+
   return (
     <div className="wrapper">
       <Sidebar {...user} />
@@ -208,15 +204,23 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                             >
                               Mời
                             </Button>
-                          ) : join ? (
+                          ) : (data?.getGroup.joins as [Join]).find(
+                              (j) => j?.member.username === user.username
+                            ) ? (
                             <Button
                               variant="contained"
                               color="secondary"
                               startIcon={<RemoveIcon />}
                               onClick={async () => {
+                                const join = (data?.getGroup.joins as [
+                                  Join
+                                ]).find(
+                                  (j) => j?.member.username === user.username
+                                ) as Join;
                                 await removeJoin({
                                   variables: {
-                                    joinId:  join.id as string,
+                                    joinId: join.id as string,
+                                    groupId: data?.getGroup.id as string,
                                   },
                                 });
                               }}
@@ -234,6 +238,14 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                                   variables: {
                                     groupId: data?.getGroup.id as string,
                                   },
+                                  refetchQueries: [
+                                    {
+                                      query: GroupDocument,
+                                      variables: {
+                                        groupId: data?.getGroup.id as string,
+                                      },
+                                    },
+                                  ],
                                 });
                               }}
                             >
@@ -309,7 +321,7 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
               <Route path={`${url}/member-requests`}>
                 <MemberRequest
                   groupId={params.id}
-                  joins={joins.data?.getJoinInGroup as [Join]}
+                  joins={data?.getGroup.joins as [Join]}
                 />
               </Route>
               <Route exact path={url}>

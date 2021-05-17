@@ -75,6 +75,7 @@ export const MemberRequest: React.FC<MemberRequestProps> = ({ joins, groupId }) 
                       await removeJoin({
                         variables: {
                           joinId: join?.id as string,
+                          groupId,
                         },
                         refetchQueries: [
                           { query: JoinsDocument, variables: { groupId } },

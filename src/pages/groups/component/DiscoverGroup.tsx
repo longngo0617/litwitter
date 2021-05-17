@@ -4,6 +4,8 @@ import { Avatar, Button } from "@material-ui/core";
 import styled from "styled-components";
 import {
   Group,
+  GroupDocument,
+  Join,
   useCreateJoinMutation,
   useGroupsQuery,
   useRemoveJoinMutation,
@@ -97,30 +99,56 @@ export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
                       </div>
                     </Content>
                     <div style={{ padding: "16px" }}>
-                      <ButtonJoin
-                        variant="contained"
-                        onClick={async () => {
-                          await createJoin({
-                            variables: {
-                              groupId: g?.id as string,
-                            },
-                          });
-                        }}
-                      >
-                        Tham gia nhóm
-                      </ButtonJoin>
-                      {/* <ButtonJoin
-                        variant="contained"
-                        onClick={async () => {
-                          await createJoin({
-                            variables: {
-                              groupId: g?.id as string,
-                            },
-                          });
-                        }}
-                      >
-                        Huỷ yêu cầu
-                      </ButtonJoin> */}
+                      {g?.joins &&
+                      g?.joins.find(
+                        (j) => j?.member.username === user.username
+                      ) ? (
+                        <ButtonJoin
+                          variant="contained"
+                          onClick={async () => {
+                            const join = (g?.joins as [Join]).find(
+                              (j) => j?.member.username === user.username
+                            ) as Join;
+                            await removeJoin({
+                              variables: {
+                                groupId: g?.id as string,
+                                joinId: join?.id as string,
+                              },
+                              refetchQueries: [
+                                {
+                                  query: GroupDocument,
+                                  variables: {
+                                    groupId: g?.id as string,
+                                  },
+                                },
+                              ],
+                            });
+                          }}
+                        >
+                          Huỷ yêu cầu
+                        </ButtonJoin>
+                      ) : (
+                        <ButtonJoin
+                          variant="contained"
+                          onClick={async () => {
+                            await createJoin({
+                              variables: {
+                                groupId: g?.id as string,
+                              },
+                              refetchQueries: [
+                                {
+                                  query: GroupDocument,
+                                  variables: {
+                                    groupId: g?.id as string,
+                                  },
+                                },
+                              ],
+                            });
+                          }}
+                        >
+                          Tham gia nhóm
+                        </ButtonJoin>
+                      )}
                     </div>
                   </Item>
                 </GroupContainer>

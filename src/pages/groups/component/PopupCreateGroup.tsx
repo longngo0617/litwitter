@@ -61,7 +61,6 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
           }}
           onSubmit={async (values, { setErrors }) => {
             values.imageCover = previewImage;
-            console.log(previewImage)
             const response: any = await createGroup({
               variables: values,
               refetchQueries: [

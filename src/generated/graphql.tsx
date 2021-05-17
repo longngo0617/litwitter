@@ -198,6 +198,15 @@ export type TypeGroup = {
   slug: Scalars['String'];
 };
 
+export type Join = {
+  __typename?: 'Join';
+  id: Scalars['ID'];
+  groupId: Scalars['String'];
+  name: Scalars['String'];
+  imageCover: Scalars['String'];
+  member: User;
+};
+
 export type Group = {
   __typename?: 'Group';
   id: Scalars['ID'];
@@ -212,6 +221,7 @@ export type Group = {
   describe: Scalars['String'];
   posts?: Maybe<Array<Maybe<Post>>>;
   createdAt: Scalars['String'];
+  joins?: Maybe<Array<Maybe<Join>>>;
 };
 
 export type PostInGroup = {
@@ -235,15 +245,6 @@ export type Invite = {
   imageCover: Scalars['String'];
   to: User;
   from: User;
-};
-
-export type Join = {
-  __typename?: 'Join';
-  id: Scalars['ID'];
-  groupId: Scalars['String'];
-  name: Scalars['String'];
-  imageCover: Scalars['String'];
-  member: User;
 };
 
 export type RegisterInput = {
@@ -556,6 +557,7 @@ export type MutationAcceptJoinArgs = {
 
 
 export type MutationRemoveJoinArgs = {
+  groupId: Scalars['String'];
   joinId: Scalars['String'];
 };
 
@@ -630,6 +632,9 @@ export type RegularGroupFragment = (
   ), posts?: Maybe<Array<Maybe<(
     { __typename?: 'Post' }
     & PostSnippetFragment
+  )>>>, joins?: Maybe<Array<Maybe<(
+    { __typename?: 'Join' }
+    & RegularJoinFragment
   )>>> }
 );
 
@@ -1012,6 +1017,7 @@ export type RemoveInviteMutation = (
 
 export type RemoveJoinMutationVariables = Exact<{
   joinId: Scalars['String'];
+  groupId: Scalars['String'];
 }>;
 
 
@@ -1373,6 +1379,17 @@ export const PostSnippetFragmentDoc = gql`
 }
     ${LikeSnippetFragmentDoc}
 ${CommentSnippetFragmentDoc}`;
+export const RegularJoinFragmentDoc = gql`
+    fragment RegularJoin on Join {
+  name
+  id
+  groupId
+  imageCover
+  member {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
 export const RegularGroupFragmentDoc = gql`
     fragment RegularGroup on Group {
   id
@@ -1398,9 +1415,13 @@ export const RegularGroupFragmentDoc = gql`
   posts {
     ...PostSnippet
   }
+  joins {
+    ...RegularJoin
+  }
 }
     ${RegularUserFragmentDoc}
-${PostSnippetFragmentDoc}`;
+${PostSnippetFragmentDoc}
+${RegularJoinFragmentDoc}`;
 export const RegularInviteFragmentDoc = gql`
     fragment RegularInvite on Invite {
   id
@@ -1411,17 +1432,6 @@ export const RegularInviteFragmentDoc = gql`
     ...RegularUser
   }
   from {
-    ...RegularUser
-  }
-}
-    ${RegularUserFragmentDoc}`;
-export const RegularJoinFragmentDoc = gql`
-    fragment RegularJoin on Join {
-  name
-  id
-  groupId
-  imageCover
-  member {
     ...RegularUser
   }
 }
@@ -2274,8 +2284,8 @@ export type RemoveInviteMutationHookResult = ReturnType<typeof useRemoveInviteMu
 export type RemoveInviteMutationResult = Apollo.MutationResult<RemoveInviteMutation>;
 export type RemoveInviteMutationOptions = Apollo.BaseMutationOptions<RemoveInviteMutation, RemoveInviteMutationVariables>;
 export const RemoveJoinDocument = gql`
-    mutation removeJoin($joinId: String!) {
-  removeJoin(joinId: $joinId)
+    mutation removeJoin($joinId: String!, $groupId: String!) {
+  removeJoin(joinId: $joinId, groupId: $groupId)
 }
     `;
 export type RemoveJoinMutationFn = Apollo.MutationFunction<RemoveJoinMutation, RemoveJoinMutationVariables>;
@@ -2294,6 +2304,7 @@ export type RemoveJoinMutationFn = Apollo.MutationFunction<RemoveJoinMutation, R
  * const [removeJoinMutation, { data, loading, error }] = useRemoveJoinMutation({
  *   variables: {
  *      joinId: // value for 'joinId'
+ *      groupId: // value for 'groupId'
  *   },
  * });
  */

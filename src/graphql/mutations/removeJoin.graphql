@@ -1,3 +1,3 @@
-mutation removeJoin($joinId: String!) {
-  removeJoin(joinId: $joinId)
+mutation removeJoin($joinId: String!,$groupId: String!) {
+  removeJoin(joinId: $joinId,groupId:$groupId)
 }

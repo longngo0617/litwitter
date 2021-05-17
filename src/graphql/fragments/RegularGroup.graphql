@@ -22,4 +22,7 @@ fragment RegularGroup on Group {
   posts {
     ...PostSnippet
   }
+  joins {
+    ...RegularJoin
+  }
 }
