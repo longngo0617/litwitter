@@ -2,9 +2,9 @@ import { Avatar, Button } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import RemoveIcon from "@material-ui/icons/Remove";
 import LockIcon from "@material-ui/icons/Lock";
 import PublicIcon from "@material-ui/icons/Public";
+import RemoveIcon from "@material-ui/icons/Remove";
 import { AvatarGroup } from "@material-ui/lab";
 import React from "react";
 import { useHistory, useParams, useRouteMatch } from "react-router";
@@ -18,9 +18,8 @@ import {
   Post,
   useCreateJoinMutation,
   useGroupQuery,
-  useJoinsQuery,
   User,
-  useRemoveJoinMutation,
+  useRemoveJoinMutation
 } from "../../generated/graphql";
 import { UserContext } from "../../utils/useAuth";
 import { PopupInvite } from "../groups/component/PopupInvite";
@@ -28,6 +27,7 @@ import Sidebar from "../home/components/Sidebar";
 import { About } from "./component/About";
 import { Discuss } from "./component/Discuss";
 import { MemberRequest } from "./component/MemberRequest";
+import { Members } from "./component/Members";
 
 interface DetailGroupProps {}
 interface ParamsProps {
@@ -317,7 +317,13 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
               <Route path={`${url}/about`}>
                 <About about={data?.getGroup as Group} url={`${url}/members`} />
               </Route>
-              <Route path={`${url}/members`}></Route>
+              <Route path={`${url}/members`}>
+                <Members 
+                  members={data?.getGroup.members as [User]}
+                  leader={data?.getGroup.leader as User}
+                  admins={data?.getGroup.admins as [User]}
+                  />
+              </Route>
               <Route path={`${url}/member-requests`}>
                 <MemberRequest
                   groupId={params.id}

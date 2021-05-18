@@ -6,7 +6,11 @@ import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Loading } from "../../../components/Loading";
-import { useGroupsQuery, useMyGroupsQuery } from "../../../generated/graphql";
+import {
+  Group,
+  useGroupsQuery,
+  useMyGroupsQuery,
+} from "../../../generated/graphql";
 
 interface WidgetsProps {
   onOpen: () => void;
@@ -39,9 +43,14 @@ export const Widgets: React.FC<WidgetsProps> = ({ onOpen }) => {
                 freeSolo
                 options={groups?.data?.getGroups as any}
                 renderInput={(params) => (
-                  <TextField {...params} margin="normal" variant="outlined" />
+                  <TextField
+                    {...params}
+                    margin="normal"
+                    variant="outlined"
+                    InputProps={{ ...params.InputProps, type: "search" }}
+                  />
                 )}
-                getOptionLabel={(option: any) => ``}
+                getOptionLabel={(option: Group) => option.name}
                 renderOption={(option) => (
                   <div className="follow-modal-bottom-itemWrap full-width">
                     <Link
