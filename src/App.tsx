@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { CommentPost } from "./components/CommentPost";
 import { CommentPostGroup } from "./components/CommentPostGroup";
 import { PopupMore } from "./components/PopupMore";
@@ -11,6 +7,7 @@ import { Connect } from "./pages/connect/Connect";
 import { DetailGroup } from "./pages/detailGroup/DetailGroup";
 import { Detail } from "./pages/detailProduct/Detail";
 import { Details } from "./pages/details/Details";
+import { DetailsPostGroup } from "./pages/detailGroup/component/DetailsPostGroup";
 import { Groups } from "./pages/groups/Groups";
 import Home from "./pages/home/Home";
 import { Login } from "./pages/login/Login";
@@ -34,7 +31,16 @@ const App = () => {
     { path: "/home", name: "Home", Component: Home },
     { path: "/connect", name: "Connect Users", Component: Connect },
     { path: "/notifications", name: "Notifications", Component: Notifications },
-    { path: "/groups/group/:id", name: "Groups Detail", Component: DetailGroup },
+    {
+      path: "/groups/group/:id",
+      name: "Groups Detail",
+      Component: DetailGroup,
+    },
+    {
+      path: "/postgroup/:id&post=:postid",
+      name: "Post Detail Of Group",
+      Component: DetailsPostGroup,
+    },
     { path: "/groups", name: "Groups", Component: Groups },
     { path: "/market/category/:slug?", name: "Marketplace", Component: Market },
     {
@@ -54,7 +60,7 @@ const App = () => {
         <Router>
           <PopupMore />
           <CommentPost />
-          <CommentPostGroup/>
+          <CommentPostGroup />
           <PopupEdit />
           <PopupMess />
           <Switch>

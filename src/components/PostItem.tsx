@@ -31,7 +31,13 @@ export const PostItem: React.FC<PostProps> = (props) => {
     <>
       <div
         className="post"
-        onClick={() => router.replace(`/posts/${props.post.id}`)}
+        onClick={() =>
+          router.replace(
+            !groupId
+              ? `/posts/${props.post.id}`
+              : `/postgroup/${groupId}&post=${props.post.id}`
+          )
+        }
       >
         <Link
           to={`/users/${props.post.username}`}
@@ -116,6 +122,9 @@ export const PostItem: React.FC<PostProps> = (props) => {
                       variables: {
                         postId: props.post.id,
                         groupId: groupId,
+                      },
+                      update: (cache) => {
+                        cache.evict({ id: "Group:" + groupId });
                       },
                     })
               }

@@ -78,9 +78,9 @@ export const TweetBox: React.FC<TweetBoxProps> = ({
                   ...values,
                   groupId: groupId as string,
                 },
-                // update:(cache) => {
-                //   cache.evict({fieldName:""})
-                // }
+                update: (cache) => {
+                  cache.evict({ id: "Group:" + groupId });
+                },
               });
             } else if (isCommentInGroup && groupId) {
               await createCommentInGroup({
@@ -89,7 +89,8 @@ export const TweetBox: React.FC<TweetBoxProps> = ({
                   postId: postId as string,
                   body: values.body,
                 },
-                update: () => {
+                update: (cache) => {
+                  cache.evict({ id: "Group:" + groupId });
                   closeComment();
                 },
               });

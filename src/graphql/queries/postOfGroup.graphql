@@ -1,0 +1,5 @@
+query postOfGroup($groupId: String!, $postId: String!) {
+  getPostInGroup(groupId: $groupId, postId: $postId){
+      ...PostSnippet
+  }
+}

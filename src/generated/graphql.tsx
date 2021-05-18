@@ -1196,6 +1196,20 @@ export type PostQuery = (
   ) }
 );
 
+export type PostOfGroupQueryVariables = Exact<{
+  groupId: Scalars['String'];
+  postId: Scalars['String'];
+}>;
+
+
+export type PostOfGroupQuery = (
+  { __typename?: 'Query' }
+  & { getPostInGroup: (
+    { __typename?: 'Post' }
+    & PostSnippetFragment
+  ) }
+);
+
 export type PostOfMyGroupQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2778,6 +2792,42 @@ export function usePostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostQ
 export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
 export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
 export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
+export const PostOfGroupDocument = gql`
+    query postOfGroup($groupId: String!, $postId: String!) {
+  getPostInGroup(groupId: $groupId, postId: $postId) {
+    ...PostSnippet
+  }
+}
+    ${PostSnippetFragmentDoc}`;
+
+/**
+ * __usePostOfGroupQuery__
+ *
+ * To run a query within a React component, call `usePostOfGroupQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostOfGroupQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostOfGroupQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function usePostOfGroupQuery(baseOptions: Apollo.QueryHookOptions<PostOfGroupQuery, PostOfGroupQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PostOfGroupQuery, PostOfGroupQueryVariables>(PostOfGroupDocument, options);
+      }
+export function usePostOfGroupLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostOfGroupQuery, PostOfGroupQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PostOfGroupQuery, PostOfGroupQueryVariables>(PostOfGroupDocument, options);
+        }
+export type PostOfGroupQueryHookResult = ReturnType<typeof usePostOfGroupQuery>;
+export type PostOfGroupLazyQueryHookResult = ReturnType<typeof usePostOfGroupLazyQuery>;
+export type PostOfGroupQueryResult = Apollo.QueryResult<PostOfGroupQuery, PostOfGroupQueryVariables>;
 export const PostOfMyGroupDocument = gql`
     query postOfMyGroup {
   getPostInMyGroup {

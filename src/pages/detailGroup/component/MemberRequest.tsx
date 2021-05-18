@@ -2,8 +2,8 @@ import { Avatar, Button } from "@material-ui/core";
 import React from "react";
 import styled from "styled-components";
 import {
+  GroupDocument,
   Join,
-  JoinsDocument,
   useAcceptJoinMutation,
   useRemoveJoinMutation,
 } from "../../../generated/graphql";
@@ -61,7 +61,7 @@ export const MemberRequest: React.FC<MemberRequestProps> = ({ joins, groupId }) 
                           joinId: join?.id as string,
                         },
                         refetchQueries: [
-                          { query: JoinsDocument, variables: { groupId } },
+                          { query: GroupDocument, variables: { groupId } },
                         ],
                       });
                     }}
@@ -78,7 +78,7 @@ export const MemberRequest: React.FC<MemberRequestProps> = ({ joins, groupId }) 
                           groupId,
                         },
                         refetchQueries: [
-                          { query: JoinsDocument, variables: { groupId } },
+                          { query: GroupDocument, variables: { groupId } },
                         ],
                       })
                     }

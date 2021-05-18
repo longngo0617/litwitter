@@ -9,14 +9,17 @@ import { Avatar, Button } from "@material-ui/core";
 import { Group, User } from "../../../generated/graphql";
 import moment from "moment";
 import { useHistory } from "react-router";
+import { UserContext } from "../../../utils/useAuth";
 
 interface AboutProps {
   about: Group;
-  url:string;
+  url: string;
 }
 
-export const About: React.FC<AboutProps> = ({ about,url }) => {
+export const About: React.FC<AboutProps> = ({ about, url }) => {
   const router = useHistory();
+  const { user } = React.useContext(UserContext);
+
   return (
     <Box style={{ backgroundColor: "#f0f2f5" }}>
       <Introduce>
@@ -171,9 +174,9 @@ export const About: React.FC<AboutProps> = ({ about,url }) => {
       <Introduce>
         <Title>
           <TitleInside style={{ flexDirection: "row" }}>
-            <h2>Thành viên</h2>
+            <h2 style={{paddingRight:"5px"}}>Thành viên</h2>
             <span style={{ margin: "0 2px" }}>•</span>
-            <span style={{ padding: "0 16px" }}>{about?.members.length}</span>
+            <span style={{ padding: "0 5px" }}>{about?.members.length}</span>
           </TitleInside>
         </Title>
         <Box2>
@@ -192,7 +195,17 @@ export const About: React.FC<AboutProps> = ({ about,url }) => {
                 </AvatarGroup>
                 <div>
                   <Content>
-                    <span>A nguời khác là thành viên</span>
+                    <span>
+                      {about.members
+                        .filter((f) => f?.username !== user.username)
+                        .map((member, index) => (
+                          <>
+                            {member?.displayname?.split(' ').slice(0, -1).join(' ')}
+                            {" "}{index < 2 ? "," : " và "}
+                          </>
+                        ))}
+                      nguời khác là thành viên
+                    </span>
                   </Content>
                 </div>
               </div>
@@ -221,7 +234,12 @@ export const About: React.FC<AboutProps> = ({ about,url }) => {
                 </div>
               </div>
               <div style={{ padding: "16px" }}>
-                <ButtonJoin variant="contained" onClick={() => router.push(`${url}`)}>Xem tất cả</ButtonJoin>
+                <ButtonJoin
+                  variant="contained"
+                  onClick={() => router.push(`${url}`)}
+                >
+                  Xem tất cả
+                </ButtonJoin>
               </div>
             </MemberWrap>
           </div>

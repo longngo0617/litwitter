@@ -285,9 +285,14 @@ export const Members: React.FC<MembersProps> = ({
                 <span style={{ margin: "0 2px" }}>•</span>
                 <span style={{ padding: "0 5px" }}>
                   {
-                    members.filter((m) =>
-                      user.following.find((u: any) => u.username === m.username)
-                    ).length
+                    members
+                      .filter((m) => m.username !== user.username)
+                      .filter(
+                        (m) =>
+                          !user.following.find(
+                            (u: any) => u.username === m.username
+                          )
+                      ).length
                   }
                 </span>
               </TitleInside>
