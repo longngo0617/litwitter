@@ -2,7 +2,7 @@ import { Avatar, Box, IconButton } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import React from "react";
-import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom";
+import { Link, Route, Switch, useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { Image } from "../../../components/Image";
 import { InteractiveBar } from "../../../components/InteractiveBar";
 import { Loading } from "../../../components/Loading";
@@ -16,6 +16,7 @@ import { UserContext } from "../../../utils/useAuth";
 import moment from "moment";
 import { Comment } from "../../details/components/Comment";
 import { WithSide } from "../../../utils/withSide";
+import { FollowPopup } from "../../../components/FollowPopup";
 interface DetailsPostGroupProps {}
 interface ParamsProps {
   id: string;
@@ -175,6 +176,10 @@ export const DetailsPostGroup: React.FC<DetailsPostGroupProps> = ({}) => {
             </div>
           )}
         </div>
+        <Switch>
+          <Route exact path={`${url}/comments`} render={() => <FollowPopup title="Commented"/>}/>
+          <Route exact path={`${url}/likes`} render={() => <FollowPopup title="Liked"/>}/>
+      </Switch>
       </WithSide>
     </>
   );

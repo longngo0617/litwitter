@@ -20,9 +20,6 @@ export const FollowPopup: React.FC<FollowPopupProps> = ({ title }) => {
     (val, index, a) => a.findIndex((t) => t.username === val.username) === index
   );
 
-  const back = router.location.pathname.includes("/comments")
-    ? router.location.pathname.replace("/comments", "")
-    : router.location.pathname.replace("/likes", "");
 
   return ReactDOM.createPortal(
     <div className="follow-wrap">
@@ -34,7 +31,7 @@ export const FollowPopup: React.FC<FollowPopupProps> = ({ title }) => {
               <IconButton
                 aria-label="close-icon"
                 color="primary"
-                onClick={() => router.push(back)}
+                onClick={() => router.goBack()}
               >
                 <CloseIcon />
               </IconButton>
