@@ -7,7 +7,9 @@ import { Image } from "../../../components/Image";
 import { InteractiveBar } from "../../../components/InteractiveBar";
 import { Loading } from "../../../components/Loading";
 import {
+  PostOfGroupDocument,
   useLikeMutation,
+  useLikePostInGroupMutation,
   usePostOfGroupQuery,
 } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
@@ -24,6 +26,8 @@ export const DetailsPostGroup: React.FC<DetailsPostGroupProps> = ({}) => {
   const { openListComment, openMore, user } = React.useContext(UserContext);
   const { url } = useRouteMatch();
   const [likePost] = useLikeMutation();
+  const [likePostInGroup] = useLikePostInGroupMutation();
+
   const params: ParamsProps = useParams();
   const { data, loading } = usePostOfGroupQuery({
     variables: {
@@ -136,13 +140,26 @@ export const DetailsPostGroup: React.FC<DetailsPostGroupProps> = ({}) => {
                   <div className="postSingle__footer">
                     <div className="postSingle__interactive">
                       <InteractiveBar
+                        groupId={params.id}
                         commentCount={data?.getPostInGroup?.commentCount}
                         likeCount={data?.getPostInGroup?.likeCount}
                         likeList={data?.getPostInGroup.likes}
                         item={data?.getPostInGroup}
                         likePost={async () =>
-                          await likePost({
-                            variables: { id: data!.getPostInGroup.id },
+                          await likePostInGroup({
+                            variables: {
+                              postId: params.postid,
+                              groupId: params.id,
+                            },
+                            refetchQueries: [
+                              {
+                                query: PostOfGroupDocument,
+                                variables: {
+                                  postId: params.postid,
+                                  groupId: params.id,
+                                },
+                              },
+                            ],
                           })
                         }
                       />

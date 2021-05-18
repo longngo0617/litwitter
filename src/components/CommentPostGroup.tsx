@@ -28,7 +28,7 @@ export const CommentPostGroup: React.FC<CommentPostGroupProps> = () => {
             <div className="box__comment--content">
               <div className="avartar">
                 <Avatar
-                  src={commentItem?.post?.avatar}
+                  src={("post" in commentItem) ? commentItem?.post?.avatar : commentItem?.avatar}
                   style={{ marginBottom: "10px" }}
                 />
                 <div className="bar">
@@ -38,14 +38,14 @@ export const CommentPostGroup: React.FC<CommentPostGroupProps> = () => {
               <div className="info">
                 <div className="info__top">
                   <span className="info__top--name">
-                    {commentItem?.post?.displayname}
+                    {("post" in commentItem) ? commentItem?.post?.displayname : commentItem?.displayname}
                   </span>
                   <span className="info__top--username">
-                    @{commentItem?.post?.username}
+                    @{("post" in commentItem) ? commentItem?.post?.username : commentItem?.username}
                   </span>
                 </div>
                 <div className="info__bot">
-                  <span className="content">{commentItem?.post?.body}</span>
+                  <span className="content">{("post" in commentItem) ? commentItem?.post?.body : commentItem?.body}</span>
                 </div>
               </div>
             </div>
@@ -55,10 +55,14 @@ export const CommentPostGroup: React.FC<CommentPostGroupProps> = () => {
               </div>
               <div className="reply">
                 Trả lời
-                <span>@{commentItem?.post?.username}</span>
+                <span>@{("post" in commentItem) ? commentItem?.post?.username : commentItem?.username}</span>
               </div>
             </div>
-            <TweetBox isCommentInGroup postId={commentItem?.post?.id} groupId={commentItem?.groupId} />
+            <TweetBox
+              isCommentInGroup
+              postId={commentItem?.post?.id}
+              groupId={commentItem?.groupId}
+            />
           </div>
         </div>
       </div>
