@@ -279,135 +279,157 @@ export const Members: React.FC<MembersProps> = ({
         <Box2>
           <Hr />
           <div style={{ marginBottom: "10px" }}>
-            <Title>
-              <TitleInside style={{ flexDirection: "row" }}>
-                <h2 style={{ paddingRight: "5px" }}>Thành viên khác</h2>
-                <span style={{ margin: "0 2px" }}>•</span>
-                <span style={{ padding: "0 5px" }}>
-                  {
-                    members
+            {members
+              .filter((m) => m.username !== user.username)
+              .filter(
+                (m) =>
+                  !user.following.find((u: any) => u.username === m.username)
+              ).length ? (
+              <>
+                <Title>
+                  <TitleInside style={{ flexDirection: "row" }}>
+                    <h2 style={{ paddingRight: "5px" }}>Thành viên khác</h2>
+                    <span style={{ margin: "0 2px" }}>•</span>
+                    <span style={{ padding: "0 5px" }}>
+                      {
+                        members
+                          .filter((m) => m.username !== user.username)
+                          .filter(
+                            (m) =>
+                              !user.following.find(
+                                (u: any) => u.username === m.username
+                              )
+                          ).length
+                      }
+                    </span>
+                  </TitleInside>
+                </Title>
+                <MemberWrap>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    {members
                       .filter((m) => m.username !== user.username)
                       .filter(
                         (m) =>
                           !user.following.find(
                             (u: any) => u.username === m.username
                           )
-                      ).length
-                  }
-                </span>
-              </TitleInside>
-            </Title>
-            <MemberWrap>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                {members
-                  .filter((m) => m.username !== user.username)
-                  .filter(
-                    (m) =>
-                      !user.following.find(
-                        (u: any) => u.username === m.username
                       )
-                  )
-                  .map((m) => (
-                    <div key={m?.id} className="follow-modal-bottom-itemWrap">
-                      <div
-                        className="follow-modal-bottom-item"
-                        onClick={() => router.replace(`/users/${m?.username}`)}
-                      >
-                        <div className="item">
-                          <div className="item-left">
-                            <div className="avatar">
-                              <Avatar src={m?.profile?.avatar || ""} />
-                            </div>
-                          </div>
-                          <div className="item-right">
-                            <div className="item-right-top">
-                              <div className="item-right-top-text">
-                                <div className="name-wrap">
-                                  <div className="name">
-                                    <span>{m?.displayname}</span>
-                                  </div>
-                                  <div className="username">
-                                    <span>@{m?.username}</span>
-                                    {user.follower.find(
-                                      (ele: Follow) =>
-                                        ele.username === m?.username
-                                    ) ? (
-                                      <span className="follow--me">
-                                        Theo dõi bạn
-                                      </span>
-                                    ) : null}
-                                  </div>
+                      .map((m) => (
+                        <div
+                          key={m?.id}
+                          className="follow-modal-bottom-itemWrap"
+                        >
+                          <div
+                            className="follow-modal-bottom-item"
+                            onClick={() =>
+                              router.replace(`/users/${m?.username}`)
+                            }
+                          >
+                            <div className="item">
+                              <div className="item-left">
+                                <div className="avatar">
+                                  <Avatar src={m?.profile?.avatar || ""} />
                                 </div>
                               </div>
-                              {user.username === m?.username ? null : (
-                                <div
-                                  className="item-right-top-button"
-                                  style={{ minWidth: "102px" }}
-                                >
-                                  {user.following.find(
-                                    (ele: Follow) =>
-                                      ele.username === m?.username
-                                  ) ? (
-                                    <Button
-                                      variant="contained"
-                                      className="btn-follow btn-following"
-                                      onClick={async (e) => {
-                                        e.stopPropagation();
-                                        const data = await followUser({
-                                          variables: {
-                                            username: m?.username,
-                                          },
-                                        });
-                                        await addUser(data?.data?.following);
-                                      }}
+                              <div className="item-right">
+                                <div className="item-right-top">
+                                  <div className="item-right-top-text">
+                                    <div className="name-wrap">
+                                      <div className="name">
+                                        <span>{m?.displayname}</span>
+                                      </div>
+                                      <div className="username">
+                                        <span>@{m?.username}</span>
+                                        {user.follower.find(
+                                          (ele: Follow) =>
+                                            ele.username === m?.username
+                                        ) ? (
+                                          <span className="follow--me">
+                                            Theo dõi bạn
+                                          </span>
+                                        ) : null}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {user.username === m?.username ? null : (
+                                    <div
+                                      className="item-right-top-button"
+                                      style={{ minWidth: "102px" }}
                                     >
-                                      <span className="following">
-                                        Following
-                                      </span>
-                                      <span className="unfollow">Unfollow</span>
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      variant="outlined"
-                                      className="btn-follow"
-                                      onClick={async (e) => {
-                                        e.stopPropagation();
-                                        const data = await followUser({
-                                          variables: {
-                                            username: m?.username,
-                                          },
-                                        });
-                                        await addUser(data?.data?.following);
-                                      }}
-                                    >
-                                      Follow
-                                    </Button>
+                                      {user.following.find(
+                                        (ele: Follow) =>
+                                          ele.username === m?.username
+                                      ) ? (
+                                        <Button
+                                          variant="contained"
+                                          className="btn-follow btn-following"
+                                          onClick={async (e) => {
+                                            e.stopPropagation();
+                                            const data = await followUser({
+                                              variables: {
+                                                username: m?.username,
+                                              },
+                                            });
+                                            await addUser(
+                                              data?.data?.following
+                                            );
+                                          }}
+                                        >
+                                          <span className="following">
+                                            Following
+                                          </span>
+                                          <span className="unfollow">
+                                            Unfollow
+                                          </span>
+                                        </Button>
+                                      ) : (
+                                        <Button
+                                          variant="outlined"
+                                          className="btn-follow"
+                                          onClick={async (e) => {
+                                            e.stopPropagation();
+                                            const data = await followUser({
+                                              variables: {
+                                                username: m?.username,
+                                              },
+                                            });
+                                            await addUser(
+                                              data?.data?.following
+                                            );
+                                          }}
+                                        >
+                                          Follow
+                                        </Button>
+                                      )}
+                                    </div>
                                   )}
                                 </div>
-                              )}
-                            </div>
-                            <div className="item-right-bottom">
-                              <span className="body">{m?.profile?.story}</span>
+                                <div className="item-right-bottom">
+                                  <span className="body">
+                                    {m?.profile?.story}
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      ))}
+                  </div>
+                  {members.filter((m) =>
+                    user.following.find((u: any) => u.username === m.username)
+                  ).length > 3 && (
+                    <div style={{ padding: "16px" }}>
+                      <ButtonJoin
+                        variant="contained"
+                        //   onClick={() => router.push(`${url}`)}
+                      >
+                        Xem tất cả
+                      </ButtonJoin>
                     </div>
-                  ))}
-              </div>
-              {members.filter((m) =>
-                user.following.find((u: any) => u.username === m.username)
-              ).length > 3 && (
-                <div style={{ padding: "16px" }}>
-                  <ButtonJoin
-                    variant="contained"
-                    //   onClick={() => router.push(`${url}`)}
-                  >
-                    Xem tất cả
-                  </ButtonJoin>
-                </div>
-              )}
-            </MemberWrap>
+                  )}
+                </MemberWrap>
+              </>
+            ) : null}
           </div>
         </Box2>
       </Introduce>

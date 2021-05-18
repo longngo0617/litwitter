@@ -174,7 +174,7 @@ export const About: React.FC<AboutProps> = ({ about, url }) => {
       <Introduce>
         <Title>
           <TitleInside style={{ flexDirection: "row" }}>
-            <h2 style={{paddingRight:"5px"}}>Thành viên</h2>
+            <h2 style={{ paddingRight: "5px" }}>Thành viên</h2>
             <span style={{ margin: "0 2px" }}>•</span>
             <span style={{ padding: "0 5px" }}>{about?.members.length}</span>
           </TitleInside>
@@ -200,11 +200,24 @@ export const About: React.FC<AboutProps> = ({ about, url }) => {
                         .filter((f) => f?.username !== user.username)
                         .map((member, index) => (
                           <>
-                            {member?.displayname?.split(' ').slice(0, -1).join(' ')}
-                            {" "}{index < 2 ? "," : " và "}
+                            {member?.displayname
+                              ?.split(" ")
+                              .slice(0, -1)
+                              .join(" ")}{" "}
+                            {about.members.filter(
+                              (f) => f?.username !== user.username
+                            ).length > 1 && index < 2
+                              && ","}
+                            {about.members.filter(
+                              (f) => f?.username !== user.username
+                            ).length > 1 && index > 3
+                              && " và "}
                           </>
                         ))}
-                      nguời khác là thành viên
+                      {about.members.filter(
+                        (f) => f?.username !== user.username
+                      ).length > 1 && "nguời khác"}{" "}
+                      là thành viên
                     </span>
                   </Content>
                 </div>
