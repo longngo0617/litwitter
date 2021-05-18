@@ -27,6 +27,28 @@ export const DiscoverGroup: React.FC<DiscoverGroupProps> = () => {
         <WrapLoading>
           <Loading blue />
         </WrapLoading>
+      ) : !data?.getGroups.filter(
+          (g) =>
+            !(g as Group).members.find((e) => e?.username === user.username)
+        ).length ? (
+        <EmptyRequest>
+          <ImageNull>
+            <img src="/null_people.svg" alt="" width="112" height="112" />
+          </ImageNull>
+          <Mess>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                margin: "-5px 0",
+              }}
+            >
+              <Topic>
+                <span>Hiện không có nhóm khác nào </span>
+              </Topic>
+            </div>
+          </Mess>
+        </EmptyRequest>
       ) : (
         <Page>
           {data?.getGroups
@@ -272,4 +294,40 @@ const WrapLoading = styled.div`
   align-items: center;
   justify-content: center;
   height: 80vh;
+`;
+const EmptyRequest = styled.div`
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const ImageNull = styled.div`
+  margin-bottom: 20px;
+  img {
+    vertical-align: -0.25em;
+  }
+`;
+const Mess = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: -6px;
+  margin-bottom: -6px;
+`;
+const Topic = styled.div`
+  margin: 5px 0;
+  span {
+    color: #65676b;
+    word-break: break-word;
+    font-weight: 600;
+    -webkit-font-smoothing: antialiased;
+    text-align: left;
+    max-width: 100%;
+    word-wrap: break-word;
+    display: block;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    text-align: center;
+  }
 `;

@@ -6,7 +6,7 @@ import {
   useInvitesQuery,
   InvitesDocument,
   useRemoveInviteMutation,
-  MyGroupsDocument
+  MyGroupsDocument,
 } from "../../../generated/graphql";
 import { Loading } from "../../../components/Loading";
 
@@ -105,11 +105,12 @@ const Container = styled.div`
 
 const InviteItem = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   border-bottom: 1px solid #e6ecf0;
   padding-bottom: 10px;
   cursor: pointer;
   background-color: #fff;
+  flex-direction: column;
 `;
 const MemberWrap = styled.div`
   display: flex;
