@@ -3,24 +3,26 @@ import React from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 import moment from "moment";
+import { UserContext } from "../../../utils/useAuth";
 
-export const Chat: React.FC<any> = ({ user, id, lastContent, createdAt }) => {
+export const Chat: React.FC<any> = ({ me,person, id, lastContent, createdAt }) => {
   const router = useHistory();
+  const {user} = React.useContext(UserContext);
   return (
     <Container onClick={() => router.replace(`/messages/${id}`)}>
       <Item>
-        <UserAvatar src={user.profile.avatar} />
+        <UserAvatar src={person.profile.avatar} />
         <UserInfo>
           <UserInfoLeft>
             <NameWrap>
-              <Name>{user.displayname}</Name>
-              <Username>@{user.username}</Username>
+              <Name>{person.displayname}</Name>
+              <Username>@{person.username}</Username>
               <Time>
                 <Username>{createdAt ? moment(createdAt).fromNow() : null}</Username>
               </Time>
             </NameWrap>
             <ContentWrap>
-              <LastContent>{lastContent}</LastContent>
+              <LastContent>{user.username === me ? "Bạn : ": null}{lastContent}</LastContent>
             </ContentWrap>
           </UserInfoLeft>
         </UserInfo>

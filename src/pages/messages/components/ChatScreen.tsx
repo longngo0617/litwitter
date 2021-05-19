@@ -140,7 +140,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
             initialValues={{ content: "", image: "" }}
             onSubmit={async (values) => {
               values.image = imageSelected;
-             await sendMessage({
+              await sendMessage({
                 variables: {
                   content: values.content,
                   roomId: id,
@@ -148,6 +148,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
                 },
               });
               values.content = "";
+              setOpenInput(!openInput);
             }}
           >
             {({ handleChange, values }) => (
@@ -197,7 +198,10 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
                   />
                 </InputTextWrap>
 
-                <IconButton type="submit" disabled={!values.content && !imageSelected }>
+                <IconButton
+                  type="submit"
+                  disabled={!values.content && !imageSelected}
+                >
                   {values.content || imageSelected ? (
                     <SendButton />
                   ) : (

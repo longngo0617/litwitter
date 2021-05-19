@@ -79,25 +79,27 @@ export const Messages: React.FC<MessagesProps> = () => {
                         <Chat
                           key={index}
                           id={r.id}
-                          user={r.members[0]}
+                          person={r.members[0]}
                           lastContent={
                             r?.content[r?.content.length - 1]?.content
                           }
                           createdAt={
                             r.content[r?.content.length - 1]?.createdAt
                           }
+                          me={r.content[r?.content.length - 1]?.username}
                         />
                       ) : (
                         <Chat
                           key={index}
                           id={r.id}
-                          user={r.members[1]}
+                          person={r.members[1]}
                           lastContent={
                             r?.content[r?.content.length - 1]?.content
                           }
                           createdAt={
                             r.content[r?.content.length - 1]?.createdAt
                           }
+                          me={r.content[r?.content.length - 1]?.username}
                         />
                       )
                     )
