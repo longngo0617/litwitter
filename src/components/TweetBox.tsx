@@ -35,7 +35,7 @@ export const TweetBox: React.FC<TweetBoxProps> = ({
   const [createCommentInGroup] = useCreateCommentInGroupMutation();
   const { closeComment, user } = useContext(UserContext);
   const inputFile: any = useRef(null);
-  const { addImage, arrImage, openErrorFile, closeErrorFile } = useContext(
+  const { addImage, arrImage, openErrorFile, closeErrorFile,resetImage } = useContext(
     UserContext
   );
 
@@ -110,6 +110,7 @@ export const TweetBox: React.FC<TweetBoxProps> = ({
               });
             }
             values.body = "";
+            resetImage();
           }}
         >
           {({ isSubmitting }) => (

@@ -55,6 +55,7 @@ const UserContext = createContext({
   setNotiTrue: () => {},
   setNotiFalse: () => {},
   sendMess: () => {},
+  resetImage: () => {},
 });
 
 function returnState(state: any) {
@@ -178,6 +179,11 @@ const userReducer = (state: any, action: any) => {
         ...state,
         arrImage: filtered,
       };
+    case "RESET_IMAGE":
+      return {
+        ...state,
+        arrImage:[],
+      }
     case "OPEN_ERROR_FILE":
       return {
         ...state,
@@ -298,7 +304,10 @@ const UserProvider = (props: any) => {
 
   function sendMess() {
     dispatch({ type: "SET_SENDED" });
+  }
 
+  function resetImage() {
+    dispatch({ type: "RESET_IMAGE" });
   }
 
   const values = {
@@ -333,7 +342,8 @@ const UserProvider = (props: any) => {
     closeErrorFile,
     setNotiTrue,
     setNotiFalse,
-    sendMess
+    sendMess,
+    resetImage
   };
   return <UserContext.Provider value={values} {...props} />;
 };
