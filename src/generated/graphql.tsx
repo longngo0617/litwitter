@@ -388,6 +388,7 @@ export type Mutation = {
   createPostInGroup: Scalars['Boolean'];
   likePostInGroup: Scalars['String'];
   CommentPostInGroup: Scalars['Boolean'];
+  deletePostInGroup: Scalars['Boolean'];
   createInvite: Scalars['Boolean'];
   acceptInvite: Scalars['Boolean'];
   removeInvite: Scalars['Boolean'];
@@ -523,6 +524,12 @@ export type MutationCommentPostInGroupArgs = {
   groupId: Scalars['String'];
   postId: Scalars['String'];
   body: Scalars['String'];
+};
+
+
+export type MutationDeletePostInGroupArgs = {
+  groupId: Scalars['String'];
+  postId: Scalars['String'];
 };
 
 
@@ -896,6 +903,17 @@ export type DeletePostMutationVariables = Exact<{
 export type DeletePostMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deletePost'>
+);
+
+export type DeletePostInGroupMutationVariables = Exact<{
+  groupId: Scalars['String'];
+  postId: Scalars['String'];
+}>;
+
+
+export type DeletePostInGroupMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deletePostInGroup'>
 );
 
 export type DeleteProductMutationVariables = Exact<{
@@ -1988,6 +2006,38 @@ export function useDeletePostMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>;
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
+export const DeletePostInGroupDocument = gql`
+    mutation deletePostInGroup($groupId: String!, $postId: String!) {
+  deletePostInGroup(groupId: $groupId, postId: $postId)
+}
+    `;
+export type DeletePostInGroupMutationFn = Apollo.MutationFunction<DeletePostInGroupMutation, DeletePostInGroupMutationVariables>;
+
+/**
+ * __useDeletePostInGroupMutation__
+ *
+ * To run a mutation, you first call `useDeletePostInGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePostInGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePostInGroupMutation, { data, loading, error }] = useDeletePostInGroupMutation({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useDeletePostInGroupMutation(baseOptions?: Apollo.MutationHookOptions<DeletePostInGroupMutation, DeletePostInGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePostInGroupMutation, DeletePostInGroupMutationVariables>(DeletePostInGroupDocument, options);
+      }
+export type DeletePostInGroupMutationHookResult = ReturnType<typeof useDeletePostInGroupMutation>;
+export type DeletePostInGroupMutationResult = Apollo.MutationResult<DeletePostInGroupMutation>;
+export type DeletePostInGroupMutationOptions = Apollo.BaseMutationOptions<DeletePostInGroupMutation, DeletePostInGroupMutationVariables>;
 export const DeleteProductDocument = gql`
     mutation deleteProduct($id: ID!) {
   deleteProduct(productId: $id)

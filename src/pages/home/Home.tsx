@@ -7,13 +7,14 @@ import Feed from "./components/Feed";
 import { MessageAlert } from "./components/MessageAlert";
 
 const Home = () => {
-  useIsAuth();
   const { errorFile } = useContext(UserContext);
   const router = useHistory();
-  
+
   React.useEffect(() => {
-    router.push("/home")
-  })
+    router.push("/home");
+  });
+  useIsAuth();
+
   return (
     <>
       <WithSide>

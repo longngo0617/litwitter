@@ -1,0 +1,3 @@
+mutation deletePostInGroup($groupId: String!, $postId: String!) {
+  deletePostInGroup(groupId: $groupId, postId: $postId)
+}
