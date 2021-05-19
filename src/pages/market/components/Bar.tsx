@@ -41,7 +41,7 @@ export const Bar: React.FC<BarProps> = ({ fc }) => {
             <Input
               name="displayname"
               autoComplete="off"
-              placeholder="Search people"
+              placeholder="Tìm kiếm trên market place"
               onChange={(e) => setValue(e.target.value)}
               value={value}
               // onClick={fc}

@@ -148,9 +148,9 @@ export const Widgets: React.FC<WidgetsProps> = ({ onOpen }) => {
                   </div>
                 ))}
               </Main>
-              <Footer to="/connect">
+              {/* <Footer to="/groups/discover">
                 <TextLink>Show more</TextLink>
-              </Footer>
+              </Footer> */}
             </Container>
           ) : null}
         </>

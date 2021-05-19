@@ -79,7 +79,9 @@ const Widgets = () => {
             </Header>
             <Main>
               {data?.getUsers
-                .filter((f: any, index: number) => index < 3)
+                .filter((f : any) => f.username !== user.username)
+                .filter((u : any) => !user.following.find((f : any) => f.username === u.username))
+                .filter((f : any, index: number) => index < 3)
                 .map((f: any) => (
                   <div key={f.id} className="follow-modal-bottom-itemWrap">
                     <div className="follow-modal-bottom-item">

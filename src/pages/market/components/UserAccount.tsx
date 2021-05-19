@@ -43,82 +43,85 @@ export const UserAccount: React.FC<UserAccountProps> = () => {
           />
         </InputContainer>
       </TopBar>
-      {/* <Empty>
-        <div className="empty">
-          <div className="empty--text">
-            <span className="title">Tài khoản của bạn</span>
+      {!data?.getMyProducts.lenght ? (
+        <Empty>
+          <div className="empty">
+            <div className="empty--text">
+              <span className="title">Tài khoản của bạn</span>
+            </div>
+            <div className="empty--text empty--info">
+              <span className="info">
+                Khi bạn bắt đầu bán hàng, bài niêm yết của bạn sẽ hiển thị tại
+                đây.
+              </span>
+            </div>
           </div>
-          <div className="empty--text empty--info">
-            <span className="info">
-              Khi bạn bắt đầu bán hàng, bài niêm yết của bạn sẽ hiển thị tại
-              đây.
-            </span>
-          </div>
-        </div>
-      </Empty> */}
-      <ListProduct>
-        {data?.getMyProducts
-          ?.filter((p: any) =>
-            p.body.toLowerCase().includes(value.toLowerCase())
-          )
-          .map((p: any) => (
-            <Product key={p.id}>
-              <ProductImage>
-                <img src={p?.image[0]} />
-              </ProductImage>
-              <ProductInfo>
-                <Wrap>
-                  <TextW>
-                    <TextTop>
-                      <Line>
-                        <span>{p?.body}</span>
-                      </Line>
-                      <Line>
-                        <span style={{ fontWeight: "normal" }}>
-                          {currencyFormat(parseInt(p?.price))} đ
-                        </span>
-                      </Line>
-                    </TextTop>
-                    <TextBottom>
-                      <Line1>
-                        <span>
-                          Còn hàng
-                          <span style={{ margin: "0 5px" }}>.</span>
-                          Đăng lúc {moment(p.createdAt).format("l")}
-                        </span>
-                      </Line1>
-                      <Line1>
-                        <span>Đã niêm yết trên Marketplace</span>
-                      </Line1>
-                    </TextBottom>
-                  </TextW>
-                  <ButtonWrap>
-                    <Button>
-                      <IconCheck />
-                      <Text>Đánh dấu là hết hàng</Text>
-                    </Button>
-                    <ButtonEdit>
-                      <EditIcon />
-                      <Text style={{ color: "#050505" }}>Chỉnh sửa</Text>
-                    </ButtonEdit>
-                    <ButtonDelete
-                      onClick={async () =>
-                        await deleteProduct({
-                          variables: {
-                            id: p.id,
-                          },
-                          refetchQueries: [{ query: MeProductsDocument }],
-                        })
-                      }
-                    >
-                      <DeleteIcon />
-                    </ButtonDelete>
-                  </ButtonWrap>
-                </Wrap>
-              </ProductInfo>
-            </Product>
-          ))}
-      </ListProduct>
+        </Empty>
+      ) : (
+        <ListProduct>
+          {data?.getMyProducts
+            ?.filter((p: any) =>
+              p.body.toLowerCase().includes(value.toLowerCase())
+            )
+            .map((p: any) => (
+              <Product key={p.id}>
+                <ProductImage>
+                  <img src={p?.image[0]} />
+                </ProductImage>
+                <ProductInfo>
+                  <Wrap>
+                    <TextW>
+                      <TextTop>
+                        <Line>
+                          <span>{p?.body}</span>
+                        </Line>
+                        <Line>
+                          <span style={{ fontWeight: "normal" }}>
+                            {currencyFormat(parseInt(p?.price))} đ
+                          </span>
+                        </Line>
+                      </TextTop>
+                      <TextBottom>
+                        <Line1>
+                          <span>
+                            Còn hàng
+                            <span style={{ margin: "0 5px" }}>.</span>
+                            Đăng lúc {moment(p.createdAt).format("l")}
+                          </span>
+                        </Line1>
+                        <Line1>
+                          <span>Đã niêm yết trên Marketplace</span>
+                        </Line1>
+                      </TextBottom>
+                    </TextW>
+                    <ButtonWrap>
+                      <Button>
+                        <IconCheck />
+                        <Text>Đánh dấu là hết hàng</Text>
+                      </Button>
+                      <ButtonEdit>
+                        <EditIcon />
+                        <Text style={{ color: "#050505" }}>Chỉnh sửa</Text>
+                      </ButtonEdit>
+                      <ButtonDelete
+                        onClick={async () =>
+                          await deleteProduct({
+                            variables: {
+                              id: p.id,
+                            },
+                            refetchQueries: [{ query: MeProductsDocument }],
+                          })
+                        }
+                      >
+                        <DeleteIcon />
+                      </ButtonDelete>
+                    </ButtonWrap>
+                  </Wrap>
+                </ProductInfo>
+              </Product>
+            ))}
+        </ListProduct>
+      )}
     </Page>
   );
 };
