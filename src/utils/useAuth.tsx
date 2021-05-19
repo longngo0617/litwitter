@@ -13,6 +13,7 @@ const initState = {
   arrImage: [] as string[],
   errorFile: false,
   notiState: true,
+  successSend : false,
 };
 
 const UserContext = createContext({
@@ -32,6 +33,7 @@ const UserContext = createContext({
   arrImage: [] as string[],
   errorFile: false,
   notiState: true,
+  successSend : false,
   removeImage: (id: string) => {},
   addImage: (fileArr: string) => {},
   openMore: (mousePos: any, item: any, isComment?: boolean) => {},
@@ -52,6 +54,7 @@ const UserContext = createContext({
   closeErrorFile: () => {},
   setNotiTrue: () => {},
   setNotiFalse: () => {},
+  sendMess: () => {},
 });
 
 function returnState(state: any) {
@@ -195,6 +198,11 @@ const userReducer = (state: any, action: any) => {
         ...state,
         notiState: false,
       };
+    case "SET_SENDED":
+      return {
+        ...state,
+        successSend: true,
+      };
     default:
       return state;
   }
@@ -288,6 +296,11 @@ const UserProvider = (props: any) => {
     dispatch({ type: "SET_NOTI_FALSE" });
   }
 
+  function sendMess() {
+    dispatch({ type: "SET_SENDED" });
+
+  }
+
   const values = {
     user: state.user,
     commentState: state.commentState,
@@ -299,6 +312,7 @@ const UserProvider = (props: any) => {
     arrImage: state.arrImage,
     errorFile: state.errorFile,
     notiState: state.notiState,
+    successSend : state.successSend,
     login,
     logout,
     openComment,
@@ -319,6 +333,7 @@ const UserProvider = (props: any) => {
     closeErrorFile,
     setNotiTrue,
     setNotiFalse,
+    sendMess
   };
   return <UserContext.Provider value={values} {...props} />;
 };

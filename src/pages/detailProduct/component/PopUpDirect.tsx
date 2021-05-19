@@ -8,6 +8,8 @@ import {
   useCreateRoomChatMutation,
   useSendMessageMutation,
 } from "../../../generated/graphql";
+import { UserContext } from "../../../utils/useAuth";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 interface PopUpDirectProps {
   fc: () => void;
@@ -17,14 +19,15 @@ interface PopUpDirectProps {
 export const PopUpDirect: React.FC<PopUpDirectProps> = ({ fc, data }) => {
   const [sendMessage] = useSendMessageMutation();
   const [createRoomChat] = useCreateRoomChatMutation();
-
+  const { sendMess } = React.useContext(UserContext);
+  const [loadingCreate, setLoadingCreate] = React.useState(false);
   const contentSample: string[] = [
     "Tôi quan tâm đến mặt hàng này.",
     "Mặt hàng này vẫn còn chứ?",
     "Mặt hàng này đang ở tình trạng thế nào?",
     "Bạn có giao hàng không?",
   ];
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState("Mặt hàng này còn chứ?");
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
@@ -33,8 +36,9 @@ export const PopUpDirect: React.FC<PopUpDirectProps> = ({ fc, data }) => {
   };
 
   const handleSend = async (e: any, value: string) => {
+    setLoadingCreate(true)
     e.preventDefault();
-    const roomId  = await createRoomChat({
+    const roomId = await createRoomChat({
       variables: { userId: data.seller.id },
     });
 
@@ -45,14 +49,17 @@ export const PopUpDirect: React.FC<PopUpDirectProps> = ({ fc, data }) => {
         image: data.image[0],
       },
     });
-    await fc();
+    setLoadingCreate(false)
+    sendMess();
+    fc();
   };
 
   return (
     <Container>
       <Overlay />
       <div className="follow-main">
-        <form autoComplete="off" onSubmit={(e) => handleSend(e,value)}>
+        {loadingCreate && <LinearProgress />}
+        <form autoComplete="off" onSubmit={(e) => handleSend(e, value)}>
           <div className="follow-modal">
             <Wrapper>
               <div className="follow-modal-top" style={{ borderBottom: "0px" }}>

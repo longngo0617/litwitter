@@ -17,6 +17,7 @@ import {
   useProductQuery,
   useSendMessageMutation,
 } from "../../generated/graphql";
+import { UserContext } from "../../utils/useAuth";
 import { PopUpDirect } from "./component/PopUpDirect";
 interface DetailProps {}
 
@@ -29,6 +30,7 @@ function currencyFormat(num: number) {
 export const Detail: React.FC<DetailProps> = () => {
   const [sendMessage] = useSendMessageMutation();
   const [createRoomChat] = useCreateRoomChatMutation();
+  const {successSend,sendMess} = React.useContext(UserContext);
   const [crIndex, SetCrIndex] = useState<number>(0);
   const params: any = useParams();
   const router = useHistory();
@@ -43,6 +45,20 @@ export const Detail: React.FC<DetailProps> = () => {
   if (data) {
     imageLength = data.getProduct.image.length;
   }
+  const handleSend = async (value: string) => {
+    const roomId = await createRoomChat({
+      variables: { userId: data?.getProduct.seller.id },
+    });
+
+    await sendMessage({
+      variables: {
+        content: value,
+        roomId: roomId.data?.createRoomChat as string,
+        image: data?.getProduct?.image[0],
+      },
+    });
+    sendMess();
+  };
 
   if (!data && loading) {
     return (
@@ -55,11 +71,7 @@ export const Detail: React.FC<DetailProps> = () => {
   return (
     <Wrap>
       <Left>
-        <Overlay
-        // style={{
-        //   backgroundImage: `url(${data?.getProduct?.image[crIndex]})`,
-        // }}
-        />
+        <Overlay />
         <Main>
           <CloseButton onClick={() => router.goBack()}>
             <CloseIcon style={{ color: "#fff" }} />
@@ -174,19 +186,8 @@ export const Detail: React.FC<DetailProps> = () => {
           </Line>
           <Formik
             initialValues={{ content: "Mặt hàng này còn chứ?" }}
-            onSubmit={async (values) => {
-              const roomChat : any = await createRoomChat({
-                variables: {
-                  userId: data?.getProduct.seller.id,
-                },
-              });
-              await sendMessage({
-                variables: {
-                  content: values.content,
-                  roomId: roomChat.data?.createRoomChat,
-                  image: data.image[0],
-                },
-              });
+            onSubmit={(values) => {
+              handleSend(values.content);
             }}
           >
             {({ handleChange, values }) => (
@@ -197,13 +198,23 @@ export const Detail: React.FC<DetailProps> = () => {
                   name="content"
                 />
                 {values.content ? (
-                  <SendButton
-                    variant="contained"
-                    type="submit"
-                    startIcon={<SendIcon />}
-                  >
-                    Gửi tin nhắn
-                  </SendButton>
+                  successSend ? (
+                    <SendButtonDisable
+                      variant="contained"
+                      type="submit"
+                      startIcon={<SendIcon />}
+                    >
+                      Đã gửi tin nhắn
+                    </SendButtonDisable>
+                  ) : (
+                    <SendButton
+                      variant="contained"
+                      type="submit"
+                      startIcon={<SendIcon />}
+                    >
+                      Gửi tin nhắn
+                    </SendButton>
+                  )
                 ) : (
                   <SendButtonDisable
                     variant="contained"
