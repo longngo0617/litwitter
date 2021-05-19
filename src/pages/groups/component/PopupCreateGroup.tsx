@@ -1,4 +1,4 @@
-import { IconButton, Button, Avatar } from "@material-ui/core";
+import { IconButton, Button, Avatar, LinearProgress } from "@material-ui/core";
 import { Formik, Form, Field } from "formik";
 import React from "react";
 import styled from "styled-components";
@@ -26,6 +26,7 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
   const [createGroup] = useCreateGroupMutation();
   const { user } = React.useContext(UserContext);
   const inputImage: any = React.useRef(null);
+  const [loadingCreate, setLoadingCreate] = React.useState(false);
   const [previewImage, setPreviewImage] = React.useState<any>("");
   const publicArr = [
     { name: "Công khai", publicc: true },
@@ -51,6 +52,7 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
     <Container>
       <Overlay />
       <div className="follow-main">
+      {loadingCreate && <LinearProgress />}
         <Formik
           initialValues={{
             name: "",
@@ -60,6 +62,7 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
             imageCover: "",
           }}
           onSubmit={async (values, { setErrors }) => {
+            setLoadingCreate(true)
             values.imageCover = previewImage;
             const response: any = await createGroup({
               variables: values,
@@ -72,6 +75,7 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
               response.data?.createGroup.error.length &&
               response.data?.createGroup.error
             ) {
+              setLoadingCreate(false);
               setErrors(toErrorMap(response.data?.createGroup.error));
               setErrorImage(
                 response.data.createGroup.error.find(
@@ -80,6 +84,7 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
               );
             } else {
               onClose();
+              setLoadingCreate(false);
             }
           }}
         >
@@ -247,7 +252,7 @@ const Container = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 3;
+  z-index: 10;
   width: 100vw;
   height: 100vh;
   display: flex;

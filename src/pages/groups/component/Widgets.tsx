@@ -139,7 +139,7 @@ export const Widgets: React.FC<WidgetsProps> = ({ onOpen }) => {
                             style={{ paddingTop: 0 }}
                           >
                             <span className="body" style={{ fontSize: "12px" }}>
-                              Meo meo meo
+                              {group?.public ? "Nhóm công khai" : "Nhóm riêng tư"}
                             </span>
                           </div>
                         </div>

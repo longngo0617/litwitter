@@ -1,4 +1,4 @@
-import { IconButton, Button, Avatar } from "@material-ui/core";
+import { IconButton, Button, Avatar, LinearProgress } from "@material-ui/core";
 import { Formik, Form } from "formik";
 import React, { useRef, useState, useEffect, useContext } from "react";
 import ReactDOM from "react-dom";
@@ -15,6 +15,8 @@ interface PopupMessProps {}
 
 export const PopupMess: React.FC<PopupMessProps> = () => {
   const { data }: any = useUsersQuery();
+  const [loadingCreate, setLoadingCreate] = React.useState(false);
+
   const [display, setDisplay] = useState(false);
   const wrapperRef = useRef(null);
   const [arrUser, setArrUser] = useState<any>([]);
@@ -60,15 +62,19 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
     <Container>
       <Overlay />
       <div className="follow-main">
+        {loadingCreate && <LinearProgress />}
         <Formik
           initialValues={{
             displayname: "",
           }}
           onSubmit={async (values) => {
+            setLoadingCreate(true);
+
             await createRoomChat({
               variables: { userId: arrUser[0].id },
             });
             closeMessage();
+            setLoadingCreate(false);
           }}
         >
           {({ handleChange, values }) => (

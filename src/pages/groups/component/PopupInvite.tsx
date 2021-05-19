@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton, Button, Avatar } from "@material-ui/core";
+import { IconButton, Button, Avatar, LinearProgress } from "@material-ui/core";
 import { Formik, Form } from "formik";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
@@ -24,6 +24,7 @@ export const PopupInvite: React.FC<PopupInviteProps> = ({
   const { data }: any = useUsersQuery();
   const [createInvite] = useCreateInviteMutation();
   const [arrUser, setArrUser] = React.useState<any>([]);
+  const [loadingCreate, setLoadingCreate] = React.useState(false);
 
   const addItem = (user: any) => {
     const existItem = arrUser.find((x: any) => x.id === user.id);
@@ -45,12 +46,12 @@ export const PopupInvite: React.FC<PopupInviteProps> = ({
 
   const handleCreateInvite = async () => {
     for (const u of arrUser) {
-        await createInvite({
-            variables:{
-                groupId:groups.id,
-                userId: u.id
-            }
-        })
+      await createInvite({
+        variables: {
+          groupId: groups.id,
+          userId: u.id,
+        },
+      });
     }
   };
 
@@ -58,13 +59,17 @@ export const PopupInvite: React.FC<PopupInviteProps> = ({
     <Container>
       <Overlay />
       <div className="follow-main">
+        {loadingCreate && <LinearProgress />}
+
         <Formik
           initialValues={{
             displayname: "",
           }}
           onSubmit={async (values) => {
+            setLoadingCreate(true);
             await handleCreateInvite();
-            await onClose();
+            onClose();
+            setLoadingCreate(false);
           }}
         >
           {({ handleChange, values }) => (

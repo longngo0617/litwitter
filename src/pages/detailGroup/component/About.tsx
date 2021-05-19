@@ -198,25 +198,28 @@ export const About: React.FC<AboutProps> = ({ about, url }) => {
                     <span>
                       {about.members
                         .filter((f) => f?.username !== user.username)
+                        .filter((f, index) => index < 3)
                         .map((member, index) => (
                           <>
                             {member?.displayname
                               ?.split(" ")
                               .slice(0, -1)
-                              .join(" ")}{" "}
+                              .join(" ")}
                             {about.members.filter(
                               (f) => f?.username !== user.username
-                            ).length > 1 && index < 2
-                              && ","}
-                            {about.members.filter(
-                              (f) => f?.username !== user.username
-                            ).length > 1 && index > 3
-                              && " và "}
+                            ).length > 1 &&
+                              index < 2 &&
+                              ", "}
                           </>
                         ))}
                       {about.members.filter(
                         (f) => f?.username !== user.username
-                      ).length > 1 && "nguời khác"}{" "}
+                      ).length > 1 &&
+                        ` và ${
+                          about.members.filter(
+                            (f) => f?.username !== user.username
+                          ).length - 3
+                        } nguời khác`}{" "}
                       là thành viên
                     </span>
                   </Content>

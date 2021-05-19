@@ -1,4 +1,4 @@
-import { Avatar, Button, IconButton } from "@material-ui/core";
+import { Avatar, Button, IconButton, LinearProgress } from "@material-ui/core";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CloseIcon from "@material-ui/icons/Close";
 import { Field, Form, Formik } from "formik";
@@ -27,6 +27,7 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
   const { user } = useContext(UserContext);
   const inputImage: any = useRef(null);
   const [arrImage, setArrImage] = useState<string[]>([]);
+  const [loadingCreate, setLoadingCreate] = React.useState(false);
 
   const handleImageChange = (e: any) => {
     if (e.target.files) {
@@ -55,6 +56,7 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
     <Container>
       <Overlay />
       <div className="follow-main">
+        {loadingCreate && <LinearProgress />}
         <Formik
           initialValues={{
             body: "",
@@ -65,6 +67,8 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
             image: [""],
           }}
           onSubmit={async (values, { setErrors }) => {
+            setLoadingCreate(true);
+
             values.image = arrImage;
             const response: any = await createProduct({
               variables: values,
@@ -77,6 +81,7 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
               response.data?.createProduct.error.length &&
               response.data?.createProduct.error
             ) {
+              setLoadingCreate(false);
               setErrors(toErrorMap(response.data?.createProduct.error));
               setErrorImage(
                 response.data.createProduct.error.find(
@@ -85,6 +90,7 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
               );
             } else {
               fc();
+              setLoadingCreate(false);
             }
           }}
         >

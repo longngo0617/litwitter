@@ -1,4 +1,4 @@
-import { Button, IconButton } from "@material-ui/core";
+import { Button, IconButton, LinearProgress } from "@material-ui/core";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CloseIcon from "@material-ui/icons/Close";
 import { Field, Form, Formik } from "formik";
@@ -42,6 +42,7 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
       setPreviewImageCover(reader.result);
     };
   };
+  const [loadingCreate, setLoadingCreate] = React.useState(false);
 
   const previewFileImage = (file: any) => {
     if (!file) return;
@@ -60,6 +61,7 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
     <div className="follow-wrap">
       <div className="follow-overlay"></div>
       <div className="follow-main">
+        {loadingCreate && <LinearProgress />}
         <Formik
           initialValues={{
             fullName: user.profile.fullName,
@@ -69,6 +71,8 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
             story: user.profile.story,
           }}
           onSubmit={async (values, { setErrors }) => {
+            setLoadingCreate(true);
+
             if (previewImageCover !== "") {
               values.imageCover = previewImageCover as string;
             }
@@ -81,6 +85,7 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
                 { query: UserDocument, variables: { username: user.username } },
               ],
             });
+            setLoadingCreate(false);
             cacheProfile(data.data?.editProfile.profile);
             closeEdit();
             setPreviewImageCover("");
