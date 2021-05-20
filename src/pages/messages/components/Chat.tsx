@@ -4,25 +4,78 @@ import { useHistory } from "react-router";
 import styled from "styled-components";
 import moment from "moment";
 import { UserContext } from "../../../utils/useAuth";
+import { User } from "../../../generated/graphql";
 
-export const Chat: React.FC<any> = ({ me,person, id, lastContent, createdAt }) => {
+interface ChatProps {
+  members: [User];
+  id: string;
+  lastContent: string;
+  createdAt: string;
+  me: string;
+  name: string;
+}
+
+export const Chat: React.FC<ChatProps> = ({
+  me,
+  members,
+  id,
+  lastContent,
+  createdAt,
+  name,
+}) => {
   const router = useHistory();
-  const {user} = React.useContext(UserContext);
+  const { user } = React.useContext(UserContext);
+
   return (
     <Container onClick={() => router.replace(`/messages/${id}`)}>
       <Item>
-        <UserAvatar src={person.profile.avatar} />
+        {members.length >= 2 ? (
+          <div style={{ marginRight: "12px" }}>
+            <UserGroup>
+              <UserMemberLeft>
+                <img src={members[0].profile?.avatar as string} alt="" />
+              </UserMemberLeft>
+              <UserMemberRight>
+                <img
+                  src={members[members.length - 1].profile?.avatar as string}
+                  alt=""
+                />
+              </UserMemberRight>
+            </UserGroup>
+          </div>
+        ) : (
+          <UserAvatar src={members[0]?.profile?.avatar || ""} />
+        )}
+
         <UserInfo>
           <UserInfoLeft>
             <NameWrap>
-              <Name>{person.displayname}</Name>
-              <Username>@{person.username}</Username>
+              <Name>
+                {!name 
+                  ? (members[0]?.displayname as string)
+                  .split(" ")
+                  .slice(-1)
+                  .join(" ")
+                  : `${(members[0]?.displayname as string)
+                  .split(" ")
+                  .slice(-1)
+                  .join(" ")}, ${(members[members.length -1 ]?.displayname as string)
+                    .split(" ")
+                    .slice(0,-1)
+                    .join(" ")} và Bạn` }
+              </Name>
+              <Username>{!name && `@${members[0]?.username}`}</Username>
               <Time>
-                <Username>{createdAt ? moment(createdAt).fromNow() : null}</Username>
+                <Username>
+                  {createdAt ? moment(createdAt).fromNow() : null}
+                </Username>
               </Time>
             </NameWrap>
             <ContentWrap>
-              <LastContent>{user.username === me ? "Bạn : ": null}{lastContent}</LastContent>
+              <LastContent>
+                {user.username === me ? "Bạn : " : null}
+                {lastContent}
+              </LastContent>
             </ContentWrap>
           </UserInfoLeft>
         </UserInfo>
@@ -109,3 +162,27 @@ const LastContent = styled.span`
   white-space: nowrap;
 `;
 const Time = styled.div``;
+const UserGroup = styled.div`
+  border-radius: 9999px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  width: 40px;
+  height: 40px;
+  position: relative;
+`;
+const UserMemberLeft = styled.div`
+  flex: 1;
+  img {
+    color: transparent;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    text-align: center;
+    text-indent: 10000px;
+  }
+`;
+const UserMemberRight = styled(UserMemberLeft)`
+  margin-left: 1px;
+  margin-right: calc(-1px);
+`;

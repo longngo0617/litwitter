@@ -25,15 +25,16 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
     variables: { roomId: id },
   });
   const router = useHistory();
+
   useEffect(() => {
     if (data) {
-      const member = data.getChat?.members.find(
+      const members = data.getChat?.members.filter(
         (m: any) => m?.username !== user.username
       );
-      if (member) {
-        setF(member);
+      if (members.length >= 2) {
+        setF(members);
       } else {
-        setF(data.getChat?.members[0]);
+        setF(members[0]);
       }
     }
   }, [id]);
@@ -54,110 +55,299 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
             <IconBack />
           </ButtonBack>
         </IconWrap>
-        <Title>Conversation info</Title>
+        <Title>
+          {f.length >= 2 ? "Thông tin nhóm  " : "Thông tin cuộc trò chuyện"}
+        </Title>
       </Header>
       <Main>
         <InfoWrap>
-          <div className="follow-modal-bottom-itemWrap">
-            <Link to={`/users/${f.username}`} className="link link--none">
-              <div className="follow-modal-bottom-item">
-                <div className="item">
-                  <div className="item-left">
-                    <div className="avatar">
-                      <Avatar src={f.profile?.avatar || ""} />
+          {f.length >= 2 ? (
+            <>
+              <div className="follow-modal-bottom-itemWrap">
+                <div className="follow-modal-bottom-item">
+                  <div className="item">
+                    <div className="item-left">
+                      <div className="avatar">
+                        <div style={{ marginRight: "12px" }}>
+                          <UserGroup>
+                            <UserMemberLeft>
+                              <img
+                                src={f[0].profile?.avatar as string}
+                                alt=""
+                              />
+                            </UserMemberLeft>
+                            <UserMemberRight>
+                              <img
+                                src={f[f.length - 1].profile?.avatar as string}
+                                alt=""
+                              />
+                            </UserMemberRight>
+                          </UserGroup>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="item-right">
-                    <div className="item-right-top">
-                      <div className="item-right-top-text">
-                        <Link to="">
+                    <div className="item-right">
+                      <div className="item-right-top">
+                        <div className="item-right-top-text">
                           <div className="name-wrap">
                             <div className="name">
-                              <span>{f.displayname}</span>
-                            </div>
-                            <div className="username">
-                              <span>@{f.username}</span>
-                              {user.follower.find(
-                                (ele: Follow) => ele.username === f.username
-                              ) ? (
-                                <span className="follow--me">Theo dõi bạn</span>
-                              ) : null}
+                              <span>{`${(f[0]?.displayname as string)
+                                .split(" ")
+                                .slice(-1)
+                                .join(" ")}, ${(f[f.length - 1]
+                                ?.displayname as string)
+                                .split(" ")
+                                .slice(0, -1)
+                                .join(" ")} và Bạn`}</span>
                             </div>
                           </div>
-                        </Link>
-                      </div>
-                      {user.username === f?.username ? null : (
+                        </div>
+
                         <div
                           className="item-right-top-button"
                           style={{ minWidth: "102px" }}
                         >
-                          {user.following.find(
-                            (ele: Follow) => ele.username === f.username
-                          ) ? (
-                            <Button
-                              variant="contained"
-                              className="btn-follow btn-following"
-                              onClick={async (e) => {
-                                e.stopPropagation();
-                                const data = await followUser({
-                                  variables: {
-                                    username: f.username,
-                                  },
-                                  refetchQueries: [{ query: PostsDocument }],
-                                });
-                                await addUser(data?.data?.following);
-                              }}
-                            >
-                              <span className="following">Following</span>
-                              <span className="unfollow">Unfollow</span>
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="outlined"
-                              className="btn-follow"
-                              onClick={async (e) => {
-                                e.stopPropagation();
-                                const data = await followUser({
-                                  variables: {
-                                    username: f.username,
-                                  },
-                                });
-                                await addUser(data?.data?.following);
-                              }}
-                            >
-                              Follow
-                            </Button>
-                          )}
+                          <Button
+                            color="primary"
+                            style={{
+                              color: "rgb(29, 161, 242)",
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            Chỉnh sửa
+                          </Button>
                         </div>
-                      )}
-                    </div>
-                    <div className="item-right-bottom">
-                      <span className="body">{f.story}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </Link>
-          </div>
+              <Border />
+              <Header>
+                <Title>Mọi người</Title>
+              </Header>
+              {f.map((member: any) => (
+                <div className="follow-modal-bottom-itemWrap">
+                  <Link
+                    to={`/users/${member.username}`}
+                    className="link link--none"
+                  >
+                    <div className="follow-modal-bottom-item">
+                      <div className="item">
+                        <div className="item-left">
+                          <div className="avatar">
+                            <Avatar src={member.profile?.avatar || ""} />
+                          </div>
+                        </div>
+                        <div className="item-right">
+                          <div className="item-right-top">
+                            <div className="item-right-top-text">
+                              <Link to="">
+                                <div className="name-wrap">
+                                  <div className="name">
+                                    <span>{member.displayname}</span>
+                                  </div>
+                                  <div className="username">
+                                    <span>@{member.username}</span>
+                                    {user.follower.find(
+                                      (ele: Follow) =>
+                                        ele.username === member.username
+                                    ) ? (
+                                      <span className="follow--me">
+                                        Theo dõi bạn
+                                      </span>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Link>
+                            </div>
+                            {user.username === member?.username ? null : (
+                              <div
+                                className="item-right-top-button"
+                                style={{ minWidth: "102px" }}
+                              >
+                                {user.following.find(
+                                  (ele: Follow) =>
+                                    ele.username === member.username
+                                ) ? (
+                                  <Button
+                                    variant="contained"
+                                    className="btn-follow btn-following"
+                                    onClick={async (e) => {
+                                      e.stopPropagation();
+                                      const data = await followUser({
+                                        variables: {
+                                          username: member.username,
+                                        },
+                                        refetchQueries: [
+                                          { query: PostsDocument },
+                                        ],
+                                      });
+                                      await addUser(data?.data?.following);
+                                    }}
+                                  >
+                                    <span className="following">Following</span>
+                                    <span className="unfollow">Unfollow</span>
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    variant="outlined"
+                                    className="btn-follow"
+                                    onClick={async (e) => {
+                                      e.stopPropagation();
+                                      const data = await followUser({
+                                        variables: {
+                                          username: member.username,
+                                        },
+                                      });
+                                      await addUser(data?.data?.following);
+                                    }}
+                                  >
+                                    Follow
+                                  </Button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                          <div className="item-right-bottom">
+                            <span className="body">{member.story}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+              <Control>
+                <ControlItem>
+                  <Item>
+                    <Text>Thêm thành viên</Text>
+                  </Item>
+                </ControlItem>
+              </Control>
+
+              <Control>
+                <Border />
+                <ControlItem>
+                  <Item>
+                    <Text>Tố cáo cuộc trò chuyện</Text>
+                  </Item>
+                </ControlItem>
+                <ControlItemLeave onClick={() => setOpenPopup(!openPopup)}>
+                  <ItemLeave>
+                    <Text>Rời khỏi cuộc trò chuyện</Text>
+                  </ItemLeave>
+                </ControlItemLeave>
+              </Control>
+            </>
+          ) : (
+            <>
+              <div className="follow-modal-bottom-itemWrap">
+                <Link to={`/users/${f.username}`} className="link link--none">
+                  <div className="follow-modal-bottom-item">
+                    <div className="item">
+                      <div className="item-left">
+                        <div className="avatar">
+                          <Avatar src={f.profile?.avatar || ""} />
+                        </div>
+                      </div>
+                      <div className="item-right">
+                        <div className="item-right-top">
+                          <div className="item-right-top-text">
+                            <Link to="">
+                              <div className="name-wrap">
+                                <div className="name">
+                                  <span>{f.displayname}</span>
+                                </div>
+                                <div className="username">
+                                  <span>@{f.username}</span>
+                                  {user.follower.find(
+                                    (ele: Follow) => ele.username === f.username
+                                  ) ? (
+                                    <span className="follow--me">
+                                      Theo dõi bạn
+                                    </span>
+                                  ) : null}
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                          {user.username === f?.username ? null : (
+                            <div
+                              className="item-right-top-button"
+                              style={{ minWidth: "102px" }}
+                            >
+                              {user.following.find(
+                                (ele: Follow) => ele.username === f.username
+                              ) ? (
+                                <Button
+                                  variant="contained"
+                                  className="btn-follow btn-following"
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    const data = await followUser({
+                                      variables: {
+                                        username: f.username,
+                                      },
+                                      refetchQueries: [
+                                        { query: PostsDocument },
+                                      ],
+                                    });
+                                    await addUser(data?.data?.following);
+                                  }}
+                                >
+                                  <span className="following">Following</span>
+                                  <span className="unfollow">Unfollow</span>
+                                </Button>
+                              ) : (
+                                <Button
+                                  variant="outlined"
+                                  className="btn-follow"
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    const data = await followUser({
+                                      variables: {
+                                        username: f.username,
+                                      },
+                                    });
+                                    await addUser(data?.data?.following);
+                                  }}
+                                >
+                                  Follow
+                                </Button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <div className="item-right-bottom">
+                          <span className="body">{f.story}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+              <Control>
+                <Border />
+                <ControlItem>
+                  <Item>
+                    <Text>Block @{f.username}</Text>
+                  </Item>
+                </ControlItem>
+                <ControlItem>
+                  <Item>
+                    <Text>Report @{f.username}</Text>
+                  </Item>
+                </ControlItem>
+                <ControlItemLeave onClick={() => setOpenPopup(!openPopup)}>
+                  <ItemLeave>
+                    <Text>Rời khỏi cuộc trò chuyện</Text>
+                  </ItemLeave>
+                </ControlItemLeave>
+              </Control>
+            </>
+          )}
         </InfoWrap>
-        <Control>
-          <Border />
-          <ControlItem>
-            <Item>
-              <Text>Block @{f.username}</Text>
-            </Item>
-          </ControlItem>
-          <ControlItem>
-            <Item>
-              <Text>Report @{f.username}</Text>
-            </Item>
-          </ControlItem>
-          <ControlItemLeave onClick={() => setOpenPopup(!openPopup)}>
-            <ItemLeave>
-              <Text>Rời khỏi cuộc trò chuyện</Text>
-            </ItemLeave>
-          </ControlItemLeave>
-        </Control>
       </Main>
       {openPopup && <PopupLeave fc={() => setOpenPopup(false)} id={id} />}
     </Container>
@@ -250,4 +440,28 @@ const ControlItemLeave = styled(ControlItem)`
 `;
 const ItemLeave = styled(Item)`
   color: rgba(224, 36, 94, 1);
+`;
+const UserGroup = styled.div`
+  border-radius: 9999px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  width: 40px;
+  height: 40px;
+  position: relative;
+`;
+const UserMemberLeft = styled.div`
+  flex: 1;
+  img {
+    color: transparent;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    text-align: center;
+    text-indent: 10000px;
+  }
+`;
+const UserMemberRight = styled(UserMemberLeft)`
+  margin-left: 1px;
+  margin-right: calc(-1px);
 `;

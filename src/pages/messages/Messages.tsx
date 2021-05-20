@@ -22,6 +22,7 @@ export const Messages: React.FC<MessagesProps> = () => {
   });
   const params: any = useParams();
   const { url }: any = useRouteMatch();
+
   return (
     <div className="wrapper">
       <Sidebar {...user} />
@@ -75,33 +76,17 @@ export const Messages: React.FC<MessagesProps> = () => {
               <Chats>
                 {data?.getRoomChat
                   ? data.getRoomChat.map((r: any, index: number) =>
-                      r.members[0].username !== user.username ? (
-                        <Chat
-                          key={index}
-                          id={r.id}
-                          person={r.members[0]}
-                          lastContent={
-                            r?.content[r?.content.length - 1]?.content
-                          }
-                          createdAt={
-                            r.content[r?.content.length - 1]?.createdAt
-                          }
-                          me={r.content[r?.content.length - 1]?.username}
-                        />
-                      ) : (
-                        <Chat
-                          key={index}
-                          id={r.id}
-                          person={r.members[1]}
-                          lastContent={
-                            r?.content[r?.content.length - 1]?.content
-                          }
-                          createdAt={
-                            r.content[r?.content.length - 1]?.createdAt
-                          }
-                          me={r.content[r?.content.length - 1]?.username}
-                        />
-                      )
+                      <Chat
+                        key={index}
+                        id={r.id}
+                        name={r.name}
+                        members={r.members.filter(
+                          (m: any) => m.username !== user.username
+                        )}
+                        lastContent={r?.content[r?.content.length - 1]?.content}
+                        createdAt={r.content[r?.content.length - 1]?.createdAt}
+                        me={r.content[r?.content.length - 1]?.username}
+                      />
                     )
                   : null}
               </Chats>

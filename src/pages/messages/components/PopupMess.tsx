@@ -20,6 +20,7 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
   const [display, setDisplay] = useState(false);
   const wrapperRef = useRef(null);
   const [arrUser, setArrUser] = useState<any>([]);
+  const [arrId, setArrId] = useState<string[]>([]);
   const [createRoomChat] = useCreateRoomChatMutation();
   const { messState, closeMessage } = useContext(UserContext);
 
@@ -48,6 +49,7 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
           displayname: user.displayname,
         },
       ]);
+      setArrId([...arrId, user.id]);
     }
   };
   const removeItem = (user: any) => {
@@ -58,6 +60,7 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
   if (!messState) {
     return null;
   }
+
   return ReactDOM.createPortal(
     <Container>
       <Overlay />
@@ -71,7 +74,7 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
             setLoadingCreate(true);
 
             await createRoomChat({
-              variables: { userId: arrUser[0].id },
+              variables: { userId: arrId },
             });
             closeMessage();
             setLoadingCreate(false);

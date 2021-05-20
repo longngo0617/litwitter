@@ -1,5 +1,7 @@
 fragment RegularRoomChat on RoomChat {
   id
+  name
+  image
   content {
     ...ChatSnippet
   }

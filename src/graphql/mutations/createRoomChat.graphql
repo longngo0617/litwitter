@@ -1,3 +1,3 @@
-mutation createRoomChat($userId: String!) {
+mutation createRoomChat($userId: [String]!) {
   createRoomChat(userId: $userId)
 }

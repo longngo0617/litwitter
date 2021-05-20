@@ -99,13 +99,13 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
 
   const TypeUser = () => {
     if (data) {
-      const member = data.getChat?.members.find(
+      const members = data.getChat?.members.filter(
         (m: any) => m?.username !== user.username
       );
-      if (member) {
-        return member;
+      if (members.length >= 2) {
+        return members;
       }
-      return data.getChat?.members[0];
+      return members[0];
     }
   };
 
@@ -113,11 +113,44 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
     <Container>
       <Header>
         <HeaderInfomation>
-          <UserAvatar src={TypeUser()?.profile?.avatar || ""} />
-          <UserInfo>
-            <Name>{TypeUser()?.username || "abc"}</Name>
-            <Username>@{TypeUser()?.displayname || "aaaa"}</Username>
-          </UserInfo>
+          {TypeUser().length >= 2 ? (
+            <>
+              <div style={{ marginRight: "12px" }}>
+                <UserGroup>
+                  <UserMemberLeft>
+                    <img src={TypeUser()[0].profile?.avatar as string} alt="" />
+                  </UserMemberLeft>
+                  <UserMemberRight>
+                    <img
+                      src={
+                        TypeUser()[TypeUser().length - 1].profile
+                          ?.avatar as string
+                      }
+                      alt=""
+                    />
+                  </UserMemberRight>
+                </UserGroup>
+              </div>
+              <UserInfo>
+                <Name>{`${(TypeUser()[0]?.displayname as string)
+                  .split(" ")
+                  .slice(-1)
+                  .join(" ")}, ${(TypeUser()[TypeUser().length - 1]
+                  ?.displayname as string)
+                  .split(" ")
+                  .slice(0, -1)
+                  .join(" ")} và Bạn`}</Name>
+              </UserInfo>
+            </>
+          ) : (
+            <>
+              <UserAvatar src={TypeUser()?.profile?.avatar || ""} />
+              <UserInfo>
+                <Name>{TypeUser()?.username || ""}</Name>
+                <Username>@{TypeUser()?.displayname || ""}</Username>
+              </UserInfo>
+            </>
+          )}
         </HeaderInfomation>
         <HeaderIcon>
           <IconButton
@@ -131,7 +164,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
       </Header>
       <Main>
         <MessageContainer>
-          <SnippetUser user={TypeUser()} />
+          {TypeUser().length >= 2 ? null : <SnippetUser user={TypeUser()} />}
           <MessageWrap>{showMessages()}</MessageWrap>
           <EndOfMessage ref={endOfMessageRef} />
         </MessageContainer>
@@ -377,4 +410,29 @@ const ImageC = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const UserGroup = styled.div`
+  border-radius: 9999px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  width: 40px;
+  height: 40px;
+  position: relative;
+`;
+const UserMemberLeft = styled.div`
+  flex: 1;
+  img {
+    color: transparent;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    text-align: center;
+    text-indent: 10000px;
+  }
+`;
+const UserMemberRight = styled(UserMemberLeft)`
+  margin-left: 1px;
+  margin-right: calc(-1px);
 `;

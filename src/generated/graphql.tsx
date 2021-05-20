@@ -66,17 +66,10 @@ export type Like = {
 export type RoomChat = {
   __typename?: 'RoomChat';
   id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
   content: Array<Maybe<Chat>>;
   members: Array<Maybe<User>>;
-};
-
-export type GroupChat = {
-  __typename?: 'GroupChat';
-  id: Scalars['ID'];
-  body: Scalars['String'];
-  leader: Scalars['String'];
-  members: Array<Maybe<Member>>;
-  content: Array<Maybe<Chat>>;
 };
 
 export type Chat = {
@@ -376,6 +369,7 @@ export type Mutation = {
   deleteComment: Post;
   likePost: Post;
   createRoomChat: Scalars['String'];
+  addMembers: Scalars['Boolean'];
   createRoomChatUsername: RoomChat;
   deleteRoomChat?: Maybe<Scalars['String']>;
   createContentChat: RoomChat;
@@ -448,7 +442,13 @@ export type MutationLikePostArgs = {
 
 
 export type MutationCreateRoomChatArgs = {
-  userId: Scalars['String'];
+  userId: Array<Maybe<Scalars['String']>>;
+};
+
+
+export type MutationAddMembersArgs = {
+  roomId: Scalars['String'];
+  userId: Array<Maybe<Scalars['String']>>;
 };
 
 
@@ -683,7 +683,7 @@ export type RegularProductFragment = (
 
 export type RegularRoomChatFragment = (
   { __typename?: 'RoomChat' }
-  & Pick<RoomChat, 'id'>
+  & Pick<RoomChat, 'id' | 'name' | 'image'>
   & { content: Array<Maybe<(
     { __typename?: 'Chat' }
     & ChatSnippetFragment
@@ -868,7 +868,7 @@ export type CreateProductMutation = (
 );
 
 export type CreateRoomChatMutationVariables = Exact<{
-  userId: Scalars['String'];
+  userId: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
 }>;
 
 
@@ -1502,6 +1502,8 @@ export const ChatSnippetFragmentDoc = gql`
 export const RegularRoomChatFragmentDoc = gql`
     fragment RegularRoomChat on RoomChat {
   id
+  name
+  image
   content {
     ...ChatSnippet
   }
@@ -1904,7 +1906,7 @@ export type CreateProductMutationHookResult = ReturnType<typeof useCreateProduct
 export type CreateProductMutationResult = Apollo.MutationResult<CreateProductMutation>;
 export type CreateProductMutationOptions = Apollo.BaseMutationOptions<CreateProductMutation, CreateProductMutationVariables>;
 export const CreateRoomChatDocument = gql`
-    mutation createRoomChat($userId: String!) {
+    mutation createRoomChat($userId: [String]!) {
   createRoomChat(userId: $userId)
 }
     `;
