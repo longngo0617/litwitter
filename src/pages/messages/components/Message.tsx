@@ -2,11 +2,14 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { UserContext } from "../../../utils/useAuth";
 import moment from "moment";
+import { Avatar } from "@material-ui/core";
+
 interface MessageProps {
   u: string;
   message: string;
   time: string;
   image: string;
+  avatar?: string;
 }
 
 export const Message: React.FC<MessageProps> = ({

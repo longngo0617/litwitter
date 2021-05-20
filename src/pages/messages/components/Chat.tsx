@@ -51,18 +51,15 @@ export const Chat: React.FC<ChatProps> = ({
           <UserInfoLeft>
             <NameWrap>
               <Name>
-                {!name 
+                { members.length <= 2
                   ? (members[0]?.displayname as string)
                   .split(" ")
                   .slice(-1)
                   .join(" ")
-                  : `${(members[0]?.displayname as string)
-                  .split(" ")
-                  .slice(-1)
-                  .join(" ")}, ${(members[members.length -1 ]?.displayname as string)
+                  : `${members.map((m) => ((m?.displayname as string)
                     .split(" ")
-                    .slice(0,-1)
-                    .join(" ")} và Bạn` }
+                    .slice(-1)
+                    .join(" "))).join(', ')} và Bạn`}
               </Name>
               <Username>{!name && `@${members[0]?.username}`}</Username>
               <Time>

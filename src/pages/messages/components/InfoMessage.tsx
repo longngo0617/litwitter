@@ -28,10 +28,8 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
 
   useEffect(() => {
     if (data) {
-      const members = data.getChat?.members.filter(
-        (m: any) => m?.username !== user.username
-      );
-      if (members.length >= 2) {
+      const members = data.getChat?.members;
+      if (members.length > 2) {
         setF(members);
       } else {
         setF(members[0]);
@@ -56,12 +54,12 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
           </ButtonBack>
         </IconWrap>
         <Title>
-          {f.length >= 2 ? "Thông tin nhóm  " : "Thông tin cuộc trò chuyện"}
+          {f.length > 2 ? "Thông tin nhóm  " : "Thông tin cuộc trò chuyện"}
         </Title>
       </Header>
       <Main>
         <InfoWrap>
-          {f.length >= 2 ? (
+          {f.length > 2 && f.filter((m: any) => m.username !== user.username) ? (
             <>
               <div className="follow-modal-bottom-itemWrap">
                 <div className="follow-modal-bottom-item">
@@ -91,14 +89,15 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                         <div className="item-right-top-text">
                           <div className="name-wrap">
                             <div className="name">
-                              <span>{`${(f[0]?.displayname as string)
-                                .split(" ")
-                                .slice(-1)
-                                .join(" ")}, ${(f[f.length - 1]
-                                ?.displayname as string)
-                                .split(" ")
-                                .slice(0, -1)
-                                .join(" ")} và Bạn`}</span>
+                              <span>{`${f
+                              .filter((m:any) => m.username !== user.username)
+                                .map((m : any) =>
+                                  (m?.displayname as string)
+                                    .split(" ")
+                                    .slice(-1)
+                                    .join(" ")
+                                )
+                                .join(", ")} và Bạn`}</span>
                             </div>
                           </div>
                         </div>
@@ -126,7 +125,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
               <Header>
                 <Title>Mọi người</Title>
               </Header>
-              {f.map((member: any) => (
+              {f.filter((m:any) => m.username !== user.username).map((member: any) => (
                 <div className="follow-modal-bottom-itemWrap">
                   <Link
                     to={`/users/${member.username}`}

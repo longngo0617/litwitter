@@ -132,14 +132,10 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
                 </UserGroup>
               </div>
               <UserInfo>
-                <Name>{`${(TypeUser()[0]?.displayname as string)
-                  .split(" ")
-                  .slice(-1)
-                  .join(" ")}, ${(TypeUser()[TypeUser().length - 1]
-                  ?.displayname as string)
-                  .split(" ")
-                  .slice(0, -1)
-                  .join(" ")} và Bạn`}</Name>
+                <Name>{`${TypeUser().map((m : any) => ((m?.displayname as string)
+                    .split(" ")
+                    .slice(-1)
+                    .join(" "))).join(', ')} và Bạn`}</Name>
               </UserInfo>
             </>
           ) : (
