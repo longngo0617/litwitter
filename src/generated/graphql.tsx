@@ -743,6 +743,17 @@ export type AcceptJoinMutation = (
   & Pick<Mutation, 'acceptJoin'>
 );
 
+export type AddMembersMutationVariables = Exact<{
+  roomchatId: Scalars['String'];
+  userId: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
+}>;
+
+
+export type AddMembersMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'addMembers'>
+);
+
 export type CommentMutationVariables = Exact<{
   id: Scalars['String'];
   body: Scalars['String'];
@@ -1596,6 +1607,38 @@ export function useAcceptJoinMutation(baseOptions?: Apollo.MutationHookOptions<A
 export type AcceptJoinMutationHookResult = ReturnType<typeof useAcceptJoinMutation>;
 export type AcceptJoinMutationResult = Apollo.MutationResult<AcceptJoinMutation>;
 export type AcceptJoinMutationOptions = Apollo.BaseMutationOptions<AcceptJoinMutation, AcceptJoinMutationVariables>;
+export const AddMembersDocument = gql`
+    mutation addMembers($roomchatId: String!, $userId: [String]!) {
+  addMembers(roomId: $roomchatId, userId: $userId)
+}
+    `;
+export type AddMembersMutationFn = Apollo.MutationFunction<AddMembersMutation, AddMembersMutationVariables>;
+
+/**
+ * __useAddMembersMutation__
+ *
+ * To run a mutation, you first call `useAddMembersMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddMembersMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addMembersMutation, { data, loading, error }] = useAddMembersMutation({
+ *   variables: {
+ *      roomchatId: // value for 'roomchatId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useAddMembersMutation(baseOptions?: Apollo.MutationHookOptions<AddMembersMutation, AddMembersMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddMembersMutation, AddMembersMutationVariables>(AddMembersDocument, options);
+      }
+export type AddMembersMutationHookResult = ReturnType<typeof useAddMembersMutation>;
+export type AddMembersMutationResult = Apollo.MutationResult<AddMembersMutation>;
+export type AddMembersMutationOptions = Apollo.BaseMutationOptions<AddMembersMutation, AddMembersMutationVariables>;
 export const CommentDocument = gql`
     mutation Comment($id: String!, $body: String!) {
   createComment(postId: $id, body: $body) {

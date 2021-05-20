@@ -17,7 +17,7 @@ interface InfoMessageProps {
   url: string;
 }
 export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
-  const { user, addUser } = useContext(UserContext);
+  const { user, addUser,addMember } = useContext(UserContext);
   const [followUser] = useFollowUserMutation();
   const [f, setF] = useState<any>({});
   const [openPopup, setOpenPopup] = useState<boolean>(false);
@@ -126,11 +126,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                 <Title>Mọi người</Title>
               </Header>
               {f.filter((m:any) => m.username !== user.username).map((member: any) => (
-                <div className="follow-modal-bottom-itemWrap">
-                  <Link
-                    to={`/users/${member.username}`}
-                    className="link link--none"
-                  >
+                <div className="follow-modal-bottom-itemWrap" onClick={() => router.replace(`/users/${f.username}`)}>
                     <div className="follow-modal-bottom-item">
                       <div className="item">
                         <div className="item-left">
@@ -214,11 +210,10 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                         </div>
                       </div>
                     </div>
-                  </Link>
                 </div>
               ))}
               <Control>
-                <ControlItem>
+                <ControlItem onClick={() => addMember(id,f.filter((m: any) => m.username !== user.username))} >
                   <Item>
                     <Text>Thêm thành viên</Text>
                   </Item>
@@ -241,8 +236,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
             </>
           ) : (
             <>
-              <div className="follow-modal-bottom-itemWrap">
-                <Link to={`/users/${f.username}`} className="link link--none">
+              <div className="follow-modal-bottom-itemWrap" onClick={() => router.replace(`/users/${f.username}`)}>
                   <div className="follow-modal-bottom-item">
                     <div className="item">
                       <div className="item-left">
@@ -324,7 +318,6 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                       </div>
                     </div>
                   </div>
-                </Link>
               </div>
               <Control>
                 <Border />

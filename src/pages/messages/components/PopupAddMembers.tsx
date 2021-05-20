@@ -1,20 +1,20 @@
-import { IconButton, Button, Avatar, LinearProgress } from "@material-ui/core";
+import styled from "styled-components";
 import { Formik, Form } from "formik";
 import React, { useRef, useState, useEffect, useContext } from "react";
+import { IconButton, Button, Avatar, LinearProgress } from "@material-ui/core";
 import ReactDOM from "react-dom";
-import styled from "styled-components";
 import CloseIcon from "@material-ui/icons/Close";
 import SearchIcon from "@material-ui/icons/Search";
 import {
+  ChatDocument,
   useAddMembersMutation,
-  useCreateRoomChatMutation,
   useUsersQuery,
 } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
 
-interface PopupMessProps {}
+interface PopupAddMembersProps {}
 
-export const PopupMess: React.FC<PopupMessProps> = () => {
+export const PopupAddMembers: React.FC<PopupAddMembersProps> = () => {
   const { data }: any = useUsersQuery();
   const [loadingCreate, setLoadingCreate] = React.useState(false);
 
@@ -22,8 +22,15 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
   const wrapperRef = useRef(null);
   const [arrUser, setArrUser] = useState<any>([]);
   const [arrId, setArrId] = useState<string[]>([]);
-  const [createRoomChat] = useCreateRoomChatMutation();
-  const { messState, closeMessage, user } = useContext(UserContext);
+  const [addMembers] = useAddMembersMutation();
+
+  const {
+    closeAddMember,
+    roomChatId,
+    arrMemberExist,
+    user,
+    openAddMember,
+  } = useContext(UserContext);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutSide);
@@ -57,10 +64,15 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
     const filtered = arrUser.filter((x: any) => x.id !== user.id);
     setArrUser(filtered);
   };
-
-  if (!messState) {
+  if (!openAddMember) {
     return null;
   }
+  console.log(
+    data?.getUsers.filter(
+      ({ username }: any) =>
+        !arrMemberExist.find((k: any) => k.username === username)
+    )
+  );
 
   return ReactDOM.createPortal(
     <Container>
@@ -74,11 +86,17 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
           onSubmit={async (values) => {
             setLoadingCreate(true);
 
-            await createRoomChat({
-              variables: { userId: arrId },
+            await addMembers({
+              variables: {
+                roomchatId: roomChatId,
+                userId: arrId,
+              },
+              refetchQueries: [
+                { query: ChatDocument, variables: { roomChatId } },
+              ],
             });
 
-            closeMessage();
+            closeAddMember();
             setLoadingCreate(false);
             setArrId([]);
             setArrUser([]);
@@ -96,13 +114,13 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
                       <IconButton
                         aria-label="close-icon"
                         color="primary"
-                        onClick={closeMessage}
+                        onClick={closeAddMember}
                       >
                         <CloseIcon />
                       </IconButton>
                     </div>
                     <div className="follow-modal-top-text">
-                      <h2 className="title">New Message</h2>
+                      <h2 className="title">Add Member</h2>
                     </div>
                     <div className="follow-modal-top-icon">
                       {!arrUser.length ? (
@@ -112,7 +130,7 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
                           className="btn-save"
                           disabled={!arrUser.lenght}
                         >
-                          Next
+                          Add
                         </ButtonDisable>
                       ) : loadingCreate ? (
                         <ButtonDisable
@@ -121,7 +139,7 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
                           className="btn-save"
                           disabled={!arrUser.lenght}
                         >
-                          Next
+                          Add
                         </ButtonDisable>
                       ) : (
                         <Button
@@ -130,7 +148,7 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
                           className="btn-save"
                           type="submit"
                         >
-                          Next
+                          Add
                         </Button>
                       )}
                     </div>
@@ -165,6 +183,12 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
                     <div className="profile__wrapper">
                       {display &&
                         data?.getUsers
+                          .filter(
+                            ({ username }: any) =>
+                              !arrMemberExist.find(
+                                (k: any) => k.username === username
+                              )
+                          )
                           .filter(
                             ({ username }: any) => username !== user.username
                           )

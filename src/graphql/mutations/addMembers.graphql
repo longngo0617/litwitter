@@ -1,0 +1,3 @@
+mutation addMembers($roomchatId:String!,$userId:[String]!) {
+    addMembers(roomId:$roomchatId,userId:$userId)
+}

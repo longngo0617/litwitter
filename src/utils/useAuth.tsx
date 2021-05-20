@@ -13,7 +13,10 @@ const initState = {
   arrImage: [] as string[],
   errorFile: false,
   notiState: true,
-  successSend : false,
+  successSend: false,
+  openAddMember: false,
+  roomChatId: "",
+  arrMemberExist: [] as any[],
 };
 
 const UserContext = createContext({
@@ -33,7 +36,10 @@ const UserContext = createContext({
   arrImage: [] as string[],
   errorFile: false,
   notiState: true,
-  successSend : false,
+  successSend: false,
+  openAddMember: false,
+  roomChatId: "",
+  arrMemberExist: [] as any[],
   removeImage: (id: string) => {},
   addImage: (fileArr: string) => {},
   openMore: (mousePos: any, item: any, isComment?: boolean) => {},
@@ -56,6 +62,8 @@ const UserContext = createContext({
   setNotiFalse: () => {},
   sendMess: () => {},
   resetImage: () => {},
+  addMember: (roomChatId: string = "", members: any) => {},
+  closeAddMember: () => {},
 });
 
 function returnState(state: any) {
@@ -182,8 +190,8 @@ const userReducer = (state: any, action: any) => {
     case "RESET_IMAGE":
       return {
         ...state,
-        arrImage:[],
-      }
+        arrImage: [],
+      };
     case "OPEN_ERROR_FILE":
       return {
         ...state,
@@ -208,6 +216,21 @@ const userReducer = (state: any, action: any) => {
       return {
         ...state,
         successSend: true,
+      };
+    case "OPEN_ADD_MEMBER":
+
+      return {
+        ...state,
+        openAddMember: true,
+        roomChatId: action.payload.roomChatId,
+        arrMemberExist: state.arrMemberExist.concat(action.payload.members),
+      };
+    case "CLOSE_ADD_MEMBER":
+      return {
+        ...state,
+        openAddMember: false,
+        roomChatId: "",
+        arrMemberExist: [],
       };
     default:
       return state;
@@ -310,6 +333,16 @@ const UserProvider = (props: any) => {
     dispatch({ type: "RESET_IMAGE" });
   }
 
+  function addMember(roomChatId: string = "", members: any) {
+
+    dispatch({ type: "OPEN_ADD_MEMBER", payload: { roomChatId, members } });
+    
+  }
+
+  function closeAddMember() {
+    dispatch({ type: "CLOSE_ADD_MEMBER" });
+  }
+
   const values = {
     user: state.user,
     commentState: state.commentState,
@@ -321,7 +354,10 @@ const UserProvider = (props: any) => {
     arrImage: state.arrImage,
     errorFile: state.errorFile,
     notiState: state.notiState,
-    successSend : state.successSend,
+    successSend: state.successSend,
+    roomChatId: state.roomChatId,
+    openAddMember: state.openAddMember,
+    arrMemberExist: state.arrMemberExist,
     login,
     logout,
     openComment,
@@ -343,7 +379,9 @@ const UserProvider = (props: any) => {
     setNotiTrue,
     setNotiFalse,
     sendMess,
-    resetImage
+    resetImage,
+    addMember,
+    closeAddMember,
   };
   return <UserContext.Provider value={values} {...props} />;
 };

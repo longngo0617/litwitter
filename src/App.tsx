@@ -20,6 +20,7 @@ import { Profile } from "./pages/profile/Profile";
 import { Register } from "./pages/register/Register";
 import "./styles/App.scss";
 import { UserProvider } from "./utils/useAuth";
+import { PopupAddMembers } from "./pages/messages/components/PopupAddMembers";
 
 const App = () => {
   const routes = [
@@ -63,6 +64,7 @@ const App = () => {
           <CommentPostGroup />
           <PopupEdit />
           <PopupMess />
+          <PopupAddMembers/>
           <Switch>
             {routes.map((e: any) => (
               <Route key={e.path} path={e.path}>
