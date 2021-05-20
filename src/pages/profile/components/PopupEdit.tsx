@@ -117,7 +117,7 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
                         color="primary"
                         className="btn-save"
                       >
-                        Save{" "}
+                        Save
                       </ButtonDisable>
                     ) : (
                       <Button

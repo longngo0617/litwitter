@@ -52,7 +52,7 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
     <Container>
       <Overlay />
       <div className="follow-main">
-      {loadingCreate && <LinearProgress />}
+        {loadingCreate && <LinearProgress />}
         <Formik
           initialValues={{
             name: "",
@@ -62,7 +62,7 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
             imageCover: "",
           }}
           onSubmit={async (values, { setErrors }) => {
-            setLoadingCreate(true)
+            setLoadingCreate(true);
             values.imageCover = previewImage;
             const response: any = await createGroup({
               variables: values,
@@ -109,14 +109,24 @@ export const PopupCreateGroup: React.FC<PopupCreateGroupProps> = ({
                       <h2 className="title">New Group</h2>
                     </div>
                     <div className="follow-modal-top-icon">
-                      <Button
-                        aria-label="close-icon"
-                        color="primary"
-                        className="btn-save"
-                        type="submit"
-                      >
-                        Tạo nhóm
-                      </Button>
+                      {loadingCreate ? (
+                        <ButtonDisable
+                          aria-label="close-icon"
+                          color="primary"
+                          className="btn-save"
+                        >
+                          Tạo nhóm
+                        </ButtonDisable>
+                      ) : (
+                        <Button
+                          aria-label="close-icon"
+                          color="primary"
+                          className="btn-save"
+                          type="submit"
+                        >
+                          Tạo nhóm
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </Wrapper>
@@ -291,4 +301,7 @@ const ErrorText = styled.div`
   font-weight: 400;
   line-height: 1.66;
   letter-spacing: 0.03333em;
+`;
+const ButtonDisable = styled(Button)`
+  opacity: 0.7;
 `;

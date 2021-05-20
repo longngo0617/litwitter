@@ -22,7 +22,7 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
   const [arrUser, setArrUser] = useState<any>([]);
   const [arrId, setArrId] = useState<string[]>([]);
   const [createRoomChat] = useCreateRoomChatMutation();
-  const { messState, closeMessage } = useContext(UserContext);
+  const { messState, closeMessage, user } = useContext(UserContext);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutSide);
@@ -78,6 +78,8 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
             });
             closeMessage();
             setLoadingCreate(false);
+            setArrId([]);
+            setArrUser([]);
           }}
         >
           {({ handleChange, values }) => (
@@ -101,14 +103,34 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
                       <h2 className="title">New Message</h2>
                     </div>
                     <div className="follow-modal-top-icon">
-                      <Button
-                        aria-label="close-icon"
-                        color="primary"
-                        className="btn-save"
-                        type="submit"
-                      >
-                        Next
-                      </Button>
+                      {!arrUser.length ? (
+                        <ButtonDisable
+                          aria-label="close-icon"
+                          color="primary"
+                          className="btn-save"
+                          disabled={!arrUser.lenght}
+                        >
+                          Next
+                        </ButtonDisable>
+                      ) : loadingCreate ? (
+                        <ButtonDisable
+                          aria-label="close-icon"
+                          color="primary"
+                          className="btn-save"
+                          disabled={!arrUser.lenght}
+                        >
+                          Next
+                        </ButtonDisable>
+                      ) : (
+                        <Button
+                          aria-label="close-icon"
+                          color="primary"
+                          className="btn-save"
+                          type="submit"
+                        >
+                          Next
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </Wrapper>
@@ -141,6 +163,9 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
                     <div className="profile__wrapper">
                       {display &&
                         data?.getUsers
+                          .filter(
+                            ({ username }: any) => username !== user.username
+                          )
                           .filter(
                             ({ username }: any) =>
                               username.indexOf(
@@ -298,4 +323,7 @@ const UserCloseIcon = styled(CloseIcon)`
 `;
 const Border = styled.div`
   border-bottom: 1px solid rgb(196, 207, 214);
+`;
+const ButtonDisable = styled(Button)`
+  opacity: 0.7;
 `;

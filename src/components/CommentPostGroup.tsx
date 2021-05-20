@@ -13,7 +13,7 @@ export const CommentPostGroup: React.FC<CommentPostGroupProps> = () => {
   if (!commentItem.groupId) {
     return null;
   }
-
+console.log(commentItem)
   return ReactDOM.createPortal(
     <div className="box">
       <div className="overlay"></div>
@@ -60,7 +60,7 @@ export const CommentPostGroup: React.FC<CommentPostGroupProps> = () => {
             </div>
             <TweetBox
               isCommentInGroup
-              postId={commentItem?.post?.id}
+              postId={("post" in commentItem) ? commentItem?.post?.id : commentItem.id}
               groupId={commentItem?.groupId}
             />
           </div>

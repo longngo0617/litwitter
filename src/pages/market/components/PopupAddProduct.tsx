@@ -115,14 +115,25 @@ export const PopupAddProduct: React.FC<PopupAddProductProps> = ({
                       <h2 className="title">New Message</h2>
                     </div>
                     <div className="follow-modal-top-icon">
-                      <Button
-                        aria-label="close-icon"
-                        color="primary"
-                        className="btn-save"
-                        type="submit"
-                      >
-                        Tạo bài niêm yết
-                      </Button>
+                      {loadingCreate ? (
+                        <ButtonDisable
+                          aria-label="close-icon"
+                          color="primary"
+                          className="btn-save"
+                          type="submit"
+                        >
+                          Tạo bài niêm yết
+                        </ButtonDisable>
+                      ) : (
+                        <Button
+                          aria-label="close-icon"
+                          color="primary"
+                          className="btn-save"
+                          type="submit"
+                        >
+                          Tạo bài niêm yết
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </Wrapper>
@@ -404,4 +415,7 @@ const ErrorText = styled.div`
   font-weight: 400;
   line-height: 1.66;
   letter-spacing: 0.03333em;
+`;
+const ButtonDisable = styled(Button)`
+  opacity: 0.7;
 `;

@@ -63,7 +63,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
     };
     reader.readAsDataURL(file);
   };
-  const [openInput, setOpenInput] = React.useState<boolean>(false);
+  const [openInput, setOpenInput] = React.useState<boolean>(true);
   const ref = useOutside("click", () => {
     setOpenInput(!openInput);
   });

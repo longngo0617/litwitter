@@ -8,6 +8,7 @@ import {
   useCommentMutation,
   useCreatePostInGroupMutation,
   useCreateCommentInGroupMutation,
+  PostOfGroupDocument,
 } from "../generated/graphql";
 import { UserContext } from "../utils/useAuth";
 import { Image } from "./Image";
@@ -35,9 +36,13 @@ export const TweetBox: React.FC<TweetBoxProps> = ({
   const [createCommentInGroup] = useCreateCommentInGroupMutation();
   const { closeComment, user } = useContext(UserContext);
   const inputFile: any = useRef(null);
-  const { addImage, arrImage, openErrorFile, closeErrorFile,resetImage } = useContext(
-    UserContext
-  );
+  const {
+    addImage,
+    arrImage,
+    openErrorFile,
+    closeErrorFile,
+    resetImage,
+  } = useContext(UserContext);
 
   const handleFileInputChange = (e: any) => {
     if (e.target.files.length > 4) {
@@ -93,6 +98,12 @@ export const TweetBox: React.FC<TweetBoxProps> = ({
                   cache.evict({ id: "Group:" + groupId });
                   closeComment();
                 },
+                refetchQueries: [
+                  {
+                    query: PostOfGroupDocument,
+                    variables: { groupId, postId },
+                  },
+                ],
               });
             } else if (isComment) {
               await createComment({

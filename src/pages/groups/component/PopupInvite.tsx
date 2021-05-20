@@ -93,14 +93,24 @@ export const PopupInvite: React.FC<PopupInviteProps> = ({
                       <h2 className="title">New Message</h2>
                     </div>
                     <div className="follow-modal-top-icon">
-                      <Button
-                        aria-label="close-icon"
-                        color="primary"
-                        className="btn-save"
-                        type="submit"
-                      >
-                        Gửi lời mời
-                      </Button>
+                      {loadingCreate ? (
+                        <ButtonDisable
+                          aria-label="close-icon"
+                          color="primary"
+                          className="btn-save"
+                        >
+                          Gửi lời mời
+                        </ButtonDisable>
+                      ) : (
+                        <Button
+                          aria-label="close-icon"
+                          color="primary"
+                          className="btn-save"
+                          type="submit"
+                        >
+                          Gửi lời mời
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </Wrapper>
@@ -292,4 +302,7 @@ const UserCloseIcon = styled(CloseIcon)`
 `;
 const Border = styled.div`
   border-bottom: 1px solid rgb(196, 207, 214);
+`;
+const ButtonDisable = styled(Button)`
+  opacity: 0.7;
 `;
