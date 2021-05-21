@@ -28,7 +28,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
 
   useEffect(() => {
     if (data) {
-      const members = data.getChat?.members;
+      const members = data.getChat?.members.filter((m: any) => m.username !== user.username);
       if (members.length > 2) {
         setF(members);
       } else {
@@ -59,7 +59,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
       </Header>
       <Main>
         <InfoWrap>
-          {f.length > 2 && f.filter((m: any) => m.username !== user.username) ? (
+          {f.length > 2 ? (
             <>
               <div className="follow-modal-bottom-itemWrap">
                 <div className="follow-modal-bottom-item">
@@ -76,7 +76,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                             </UserMemberLeft>
                             <UserMemberRight>
                               <img
-                                src={f[f.length - 1].profile?.avatar as string}
+                                src={f[1].profile?.avatar as string}
                                 alt=""
                               />
                             </UserMemberRight>
@@ -125,7 +125,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
               <Header>
                 <Title>Mọi người</Title>
               </Header>
-              {f.filter((m:any) => m.username !== user.username).map((member: any) => (
+              {f.map((member: any) => (
                 <div className="follow-modal-bottom-itemWrap" onClick={() => router.replace(`/users/${f.username}`)}>
                     <div className="follow-modal-bottom-item">
                       <div className="item">

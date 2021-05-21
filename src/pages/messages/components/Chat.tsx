@@ -7,7 +7,7 @@ import { UserContext } from "../../../utils/useAuth";
 import { User } from "../../../generated/graphql";
 
 interface ChatProps {
-  members: [User];
+  members: [User] | any;
   id: string;
   lastContent: string;
   createdAt: string;
@@ -29,7 +29,7 @@ export const Chat: React.FC<ChatProps> = ({
   return (
     <Container onClick={() => router.replace(`/messages/${id}`)}>
       <Item>
-        {members.length >= 2 ? (
+        {members.length > 2 ? (
           <div style={{ marginRight: "12px" }}>
             <UserGroup>
               <UserMemberLeft>
@@ -37,7 +37,7 @@ export const Chat: React.FC<ChatProps> = ({
               </UserMemberLeft>
               <UserMemberRight>
                 <img
-                  src={members[members.length - 1].profile?.avatar as string}
+                  src={members[1].profile?.avatar as string}
                   alt=""
                 />
               </UserMemberRight>
@@ -51,12 +51,12 @@ export const Chat: React.FC<ChatProps> = ({
           <UserInfoLeft>
             <NameWrap>
               <Name>
-                { members.length <= 2
+                { members.length < 2
                   ? (members[0]?.displayname as string)
                   .split(" ")
                   .slice(-1)
                   .join(" ")
-                  : `${members.map((m) => ((m?.displayname as string)
+                  : `${members.map((m : any) => ((m?.displayname as string)
                     .split(" ")
                     .slice(-1)
                     .join(" "))).join(', ')} và Bạn`}

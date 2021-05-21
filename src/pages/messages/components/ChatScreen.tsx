@@ -123,7 +123,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
                   <UserMemberRight>
                     <img
                       src={
-                        TypeUser()[TypeUser().length - 1].profile
+                        TypeUser()[1].profile
                           ?.avatar as string
                       }
                       alt=""
