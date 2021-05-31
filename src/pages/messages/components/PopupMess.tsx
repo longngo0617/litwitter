@@ -6,6 +6,7 @@ import styled from "styled-components";
 import CloseIcon from "@material-ui/icons/Close";
 import SearchIcon from "@material-ui/icons/Search";
 import {
+  ChatsDocument,
   useAddMembersMutation,
   useCreateRoomChatMutation,
   useUsersQuery,
@@ -76,6 +77,7 @@ export const PopupMess: React.FC<PopupMessProps> = () => {
 
             await createRoomChat({
               variables: { userId: arrId },
+              refetchQueries: [{ query: ChatsDocument }],
             });
 
             closeMessage();

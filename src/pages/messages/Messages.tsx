@@ -20,6 +20,7 @@ export const Messages: React.FC<MessagesProps> = () => {
   const { data, loading }: any = useChatsQuery({
     pollInterval: 1000,
   });
+
   const params: any = useParams();
   const { url }: any = useRouteMatch();
 

@@ -16,7 +16,6 @@ import { useHistory } from "react-router-dom";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import ImageIcon from "@material-ui/icons/Image";
 import CloseIcon from "@material-ui/icons/Close";
-import { useOutside } from "@pacote/react-use-outside";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,10 +62,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
     };
     reader.readAsDataURL(file);
   };
-  const [openInput, setOpenInput] = React.useState<boolean>(true);
-  const ref = useOutside("click", () => {
-    setOpenInput(!openInput);
-  });
+  const [openInput, setOpenInput] = React.useState<boolean>(false);
   const showMessages = () => {
     if (data) {
       return data.getChat?.content.map((message: any, index: number) => (
@@ -219,7 +215,6 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
                   )}
                   <Input
                     onChange={handleChange}
-                    ref={ref as React.RefObject<HTMLInputElement>}
                     value={values.content}
                     placeholder="Gửi 1 tin nhắn mới"
                     name="content"

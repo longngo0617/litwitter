@@ -24,6 +24,7 @@ export const Message: React.FC<MessageProps> = ({
   const TypeOfImage = user.username === u ? ImageSender : ImageWrap;
   return (
     <Container>
+      {/* <Avatar src=""/> */}
       {message !== "" && <TypeOfMessage>{message}</TypeOfMessage>}
       {image !== null && (
         <TypeOfImage>
