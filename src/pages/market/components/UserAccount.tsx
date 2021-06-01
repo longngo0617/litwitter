@@ -43,7 +43,7 @@ export const UserAccount: React.FC<UserAccountProps> = () => {
           />
         </InputContainer>
       </TopBar>
-      {!data?.getMyProducts.lenght ? (
+      {!data?.getMyProducts.length ? (
         <Empty>
           <div className="empty">
             <div className="empty--text">

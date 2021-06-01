@@ -12,12 +12,10 @@ import { Route, useParams, useRouteMatch } from "react-router";
 import { Loading } from "../../components/Loading";
 import { Switch } from "react-router-dom";
 import { InfoMessage } from "./components/InfoMessage";
-import { useIsAuth } from "../../utils/useIsAuth";
 
 interface MessagesProps {}
 
 export const Messages: React.FC<MessagesProps> = () => {
-  useIsAuth();
   const { user, openMessage } = useContext(UserContext);
   const { data, loading }: any = useChatsQuery({
     pollInterval: 1000,

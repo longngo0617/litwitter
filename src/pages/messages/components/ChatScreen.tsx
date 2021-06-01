@@ -156,7 +156,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
       </Header>
       <Main>
         <MessageContainer>
-          {TypeUser().length >= 2 ? null : <SnippetUser user={TypeUser()} />}
+          {/* {TypeUser().length >= 2 ? null : <SnippetUser user={TypeUser()} />} */}
           <MessageWrap>{showMessages()}</MessageWrap>
           <EndOfMessage ref={endOfMessageRef} />
         </MessageContainer>

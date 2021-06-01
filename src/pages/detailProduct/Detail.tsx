@@ -30,7 +30,7 @@ function currencyFormat(num: number) {
 export const Detail: React.FC<DetailProps> = () => {
   const [sendMessage] = useSendMessageMutation();
   const [createRoomChat] = useCreateRoomChatMutation();
-  const {successSend,sendMess} = React.useContext(UserContext);
+  const { successSend, sendMess, user } = React.useContext(UserContext);
   const [crIndex, SetCrIndex] = useState<number>(0);
   const params: any = useParams();
   const router = useHistory();
@@ -127,15 +127,17 @@ export const Detail: React.FC<DetailProps> = () => {
             <Price>{currencyFormat(parseInt(data?.getProduct?.price))} đ</Price>
             <HangMuc>{data?.getProduct.category.name}</HangMuc>
             <DiaDiem>{data?.getProduct.address.location}</DiaDiem>
-            <WrapButton>
-              <SendButtonn
-                variant="contained"
-                startIcon={<SendIcon />}
-                onClick={() => setDisplay(!display)}
-              >
-                Nhắn tin
-              </SendButtonn>
-            </WrapButton>
+            {user.username !== data?.getProduct?.seller.username && (
+              <WrapButton>
+                <SendButtonn
+                  variant="contained"
+                  startIcon={<SendIcon />}
+                  onClick={() => setDisplay(!display)}
+                >
+                  Nhắn tin
+                </SendButtonn>
+              </WrapButton>
+            )}
             <Mota>
               <Price>Mô tả của người bán</Price>
               <Content>{data?.getProduct.describe}</Content>
@@ -197,7 +199,7 @@ export const Detail: React.FC<DetailProps> = () => {
                   value={values.content}
                   name="content"
                 />
-                {values.content ? (
+                {values.content && user.username !== data?.getProduct?.seller.username ? (
                   successSend ? (
                     <SendButtonDisable
                       variant="contained"
