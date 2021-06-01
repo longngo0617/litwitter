@@ -4,6 +4,7 @@ import { WithSide } from "../../utils/withSide";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PersonIcon from "@material-ui/icons/Person";
+import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import { Avatar, Link } from "@material-ui/core";
 import { useNotificationsQuery, Notification } from "../../generated/graphql";
 import { UserContext } from "../../utils/useAuth";
@@ -51,16 +52,14 @@ export const Notifications: React.FC<NotificationsProps> = () => {
                     ) : noti.type === "Like" ? (
                       <IconHeart />
                     ) : (
-                      <AvatarUserLeft src={noti.avatar || ""} />
+                      <IconComment />
                     )}
                   </NotiLeft>
                   <NotiRight>
                     <div style={{ paddingRight: "20px", marginBottom: "12px" }}>
-                      {noti.type !== "Comment" && (
-                        <WrapAvatar>
-                          <AvatarUser src={noti.avatar || ""} />
-                        </WrapAvatar>
-                      )}
+                      <WrapAvatar>
+                        <AvatarUser src={noti.avatar || ""} />
+                      </WrapAvatar>
                     </div>
                     <Text>
                       <div>
@@ -122,6 +121,11 @@ const IconHeart = styled(FavoriteIcon)`
 `;
 const IconPerson = styled(PersonIcon)`
   color: rgb(29, 161, 242);
+  width: 30px;
+  height: 30px;
+`;
+const IconComment = styled(ChatBubbleOutlineIcon)`
+  color: rgba(29, 161, 242);
   width: 30px;
   height: 30px;
 `;
