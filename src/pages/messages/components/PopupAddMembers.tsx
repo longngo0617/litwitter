@@ -89,7 +89,7 @@ export const PopupAddMembers: React.FC<PopupAddMembersProps> = () => {
             await addMembers({
               variables: {
                 roomchatId: roomChatId,
-                userId: arrId,
+                userIds: arrId,
               },
               refetchQueries: [
                 { query: ChatDocument, variables: { roomChatId } },

@@ -389,6 +389,9 @@ export type Mutation = {
   createJoin: Scalars['Boolean'];
   acceptJoin: Scalars['Boolean'];
   removeJoin: Scalars['Boolean'];
+  leaveTheRoom: Scalars['Boolean'];
+  joinTheRoom: Scalars['Boolean'];
+  leaveTheGroup: Scalars['Boolean'];
 };
 
 
@@ -568,6 +571,22 @@ export type MutationRemoveJoinArgs = {
   joinId: Scalars['String'];
 };
 
+
+export type MutationLeaveTheRoomArgs = {
+  roomId: Scalars['String'];
+};
+
+
+export type MutationJoinTheRoomArgs = {
+  roomId: Scalars['String'];
+  userIds: Array<Maybe<Scalars['String']>>;
+};
+
+
+export type MutationLeaveTheGroupArgs = {
+  groupId: Scalars['String'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   newPost: Post;
@@ -745,13 +764,13 @@ export type AcceptJoinMutation = (
 
 export type AddMembersMutationVariables = Exact<{
   roomchatId: Scalars['String'];
-  userId: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
+  userIds: Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>;
 }>;
 
 
 export type AddMembersMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'addMembers'>
+  & Pick<Mutation, 'joinTheRoom'>
 );
 
 export type CommentMutationVariables = Exact<{
@@ -1608,8 +1627,8 @@ export type AcceptJoinMutationHookResult = ReturnType<typeof useAcceptJoinMutati
 export type AcceptJoinMutationResult = Apollo.MutationResult<AcceptJoinMutation>;
 export type AcceptJoinMutationOptions = Apollo.BaseMutationOptions<AcceptJoinMutation, AcceptJoinMutationVariables>;
 export const AddMembersDocument = gql`
-    mutation addMembers($roomchatId: String!, $userId: [String]!) {
-  addMembers(roomId: $roomchatId, userId: $userId)
+    mutation addMembers($roomchatId: String!, $userIds: [String]!) {
+  joinTheRoom(roomId: $roomchatId, userIds: $userIds)
 }
     `;
 export type AddMembersMutationFn = Apollo.MutationFunction<AddMembersMutation, AddMembersMutationVariables>;
@@ -1628,7 +1647,7 @@ export type AddMembersMutationFn = Apollo.MutationFunction<AddMembersMutation, A
  * const [addMembersMutation, { data, loading, error }] = useAddMembersMutation({
  *   variables: {
  *      roomchatId: // value for 'roomchatId'
- *      userId: // value for 'userId'
+ *      userIds: // value for 'userIds'
  *   },
  * });
  */
