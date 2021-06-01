@@ -16,10 +16,12 @@ import { useTypeGroupQuery } from "../../generated/graphql";
 import { DiscoverGroup } from "./component/DiscoverGroup";
 import { FeedGroup } from "./component/FeedGroup";
 import { Invite } from "./component/Invite";
+import { useIsAuth } from "../../utils/useIsAuth";
 
 interface GroupsProps {}
 
 export const Groups: React.FC<GroupsProps> = (props) => {
+  useIsAuth();
   const { user } = React.useContext(UserContext);
   const router = useHistory();
   const [open, setOpen] = React.useState(false);

@@ -21,7 +21,6 @@ interface ProfileProps {}
 export const Profile: React.FC<ProfileProps> = () => {
   useIsAuth();
   const router = useHistory();
-  let location = useLocation();
   const { url, params }: any = useRouteMatch();
   const { data, error, loading } = useUserQuery({
     variables: {
