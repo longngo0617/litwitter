@@ -59,6 +59,7 @@ export const Login: React.FC<LoginProps> = () => {
                   fullWidth
                   type="submit"
                   variant="outlined"
+                  data-testid="submit-login"
                   className="sidebar__tweet"
                 >
                   {isSubmitting ? <Loading /> : "Đăng nhập"}
