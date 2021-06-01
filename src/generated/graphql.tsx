@@ -1002,6 +1002,26 @@ export type FollowUserMutation = (
   ) }
 );
 
+export type LeaveGroupMutationVariables = Exact<{
+  groupId: Scalars['String'];
+}>;
+
+
+export type LeaveGroupMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'leaveTheGroup'>
+);
+
+export type LeaveRoomChatMutationVariables = Exact<{
+  roomId: Scalars['String'];
+}>;
+
+
+export type LeaveRoomChatMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'leaveTheRoom'>
+);
+
 export type LikeMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -2248,6 +2268,68 @@ export function useFollowUserMutation(baseOptions?: Apollo.MutationHookOptions<F
 export type FollowUserMutationHookResult = ReturnType<typeof useFollowUserMutation>;
 export type FollowUserMutationResult = Apollo.MutationResult<FollowUserMutation>;
 export type FollowUserMutationOptions = Apollo.BaseMutationOptions<FollowUserMutation, FollowUserMutationVariables>;
+export const LeaveGroupDocument = gql`
+    mutation leaveGroup($groupId: String!) {
+  leaveTheGroup(groupId: $groupId)
+}
+    `;
+export type LeaveGroupMutationFn = Apollo.MutationFunction<LeaveGroupMutation, LeaveGroupMutationVariables>;
+
+/**
+ * __useLeaveGroupMutation__
+ *
+ * To run a mutation, you first call `useLeaveGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLeaveGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [leaveGroupMutation, { data, loading, error }] = useLeaveGroupMutation({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useLeaveGroupMutation(baseOptions?: Apollo.MutationHookOptions<LeaveGroupMutation, LeaveGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LeaveGroupMutation, LeaveGroupMutationVariables>(LeaveGroupDocument, options);
+      }
+export type LeaveGroupMutationHookResult = ReturnType<typeof useLeaveGroupMutation>;
+export type LeaveGroupMutationResult = Apollo.MutationResult<LeaveGroupMutation>;
+export type LeaveGroupMutationOptions = Apollo.BaseMutationOptions<LeaveGroupMutation, LeaveGroupMutationVariables>;
+export const LeaveRoomChatDocument = gql`
+    mutation leaveRoomChat($roomId: String!) {
+  leaveTheRoom(roomId: $roomId)
+}
+    `;
+export type LeaveRoomChatMutationFn = Apollo.MutationFunction<LeaveRoomChatMutation, LeaveRoomChatMutationVariables>;
+
+/**
+ * __useLeaveRoomChatMutation__
+ *
+ * To run a mutation, you first call `useLeaveRoomChatMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLeaveRoomChatMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [leaveRoomChatMutation, { data, loading, error }] = useLeaveRoomChatMutation({
+ *   variables: {
+ *      roomId: // value for 'roomId'
+ *   },
+ * });
+ */
+export function useLeaveRoomChatMutation(baseOptions?: Apollo.MutationHookOptions<LeaveRoomChatMutation, LeaveRoomChatMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LeaveRoomChatMutation, LeaveRoomChatMutationVariables>(LeaveRoomChatDocument, options);
+      }
+export type LeaveRoomChatMutationHookResult = ReturnType<typeof useLeaveRoomChatMutation>;
+export type LeaveRoomChatMutationResult = Apollo.MutationResult<LeaveRoomChatMutation>;
+export type LeaveRoomChatMutationOptions = Apollo.BaseMutationOptions<LeaveRoomChatMutation, LeaveRoomChatMutationVariables>;
 export const LikeDocument = gql`
     mutation Like($id: ID!) {
   likePost(postId: $id) {

@@ -1,7 +1,11 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { useDeleteRoomChatMutation } from "../../../generated/graphql";
+import {
+  ChatsDocument,
+  useDeleteRoomChatMutation,
+  useLeaveRoomChatMutation,
+} from "../../../generated/graphql";
 
 interface PopupLeaveProps {
   fc: () => void;
@@ -10,6 +14,7 @@ interface PopupLeaveProps {
 
 export const PopupLeave: React.FC<PopupLeaveProps> = ({ fc, id }) => {
   const [deleteRoomChat] = useDeleteRoomChatMutation();
+  const [leaveRoomChat] = useLeaveRoomChatMutation();
   const router = useHistory();
   return (
     <Container>
@@ -24,8 +29,9 @@ export const PopupLeave: React.FC<PopupLeaveProps> = ({ fc, id }) => {
           <ButtonCancel onClick={fc}>Trở lại</ButtonCancel>
           <ButtonLeave
             onClick={async () => {
-              await deleteRoomChat({
-                variables: { id },
+              await leaveRoomChat({
+                variables: { roomId: id },
+                refetchQueries: [{ query: ChatsDocument }],
               });
               fc();
               router.push("/messages");

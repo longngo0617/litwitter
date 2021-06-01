@@ -1,10 +1,11 @@
-import { Avatar, Button } from "@material-ui/core";
+import { Avatar, Button, IconButton, Tooltip } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import LockIcon from "@material-ui/icons/Lock";
 import PublicIcon from "@material-ui/icons/Public";
 import RemoveIcon from "@material-ui/icons/Remove";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { AvatarGroup } from "@material-ui/lab";
 import React from "react";
 import { useHistory, useParams, useRouteMatch } from "react-router";
@@ -15,11 +16,13 @@ import {
   Group,
   GroupDocument,
   Join,
+  MyGroupsDocument,
   Post,
   useCreateJoinMutation,
   useGroupQuery,
+  useLeaveGroupMutation,
   User,
-  useRemoveJoinMutation
+  useRemoveJoinMutation,
 } from "../../generated/graphql";
 import { UserContext } from "../../utils/useAuth";
 import { PopupInvite } from "../groups/component/PopupInvite";
@@ -49,7 +52,7 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
   const [openInvite, setOpenInvite] = React.useState(false);
   const [createJoin] = useCreateJoinMutation();
   const [removeJoin] = useRemoveJoinMutation();
-
+  const [leaveGroup] = useLeaveGroupMutation();
   const classes = useStyles();
   const router = useHistory();
   const params: ParamsProps = useParams();
@@ -212,9 +215,9 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                               color="secondary"
                               startIcon={<RemoveIcon />}
                               onClick={async () => {
-                                const join = (data?.getGroup.joins as [
-                                  Join
-                                ]).find(
+                                const join = (
+                                  data?.getGroup.joins as [Join]
+                                ).find(
                                   (j) => j?.member.username === user.username
                                 ) as Join;
                                 await removeJoin({
@@ -252,6 +255,34 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                               Tham gia nhóm
                             </Button>
                           )}
+                        </ItemRight>
+                        <ItemRight>
+                          {data?.getGroup.members.find(
+                            (e) => e?.username === user.username
+                          ) ? (
+                            data.getGroup.leader.username ===
+                            user.username ? null : (
+                              <Tooltip
+                                title="Rời khỏi nhóm"
+                                aria-label="leave"
+                                onClick={async () => {
+                                  await leaveGroup({
+                                    variables: {
+                                      groupId: data.getGroup.id,
+                                    },
+                                    refetchQueries: [
+                                      { query: MyGroupsDocument },
+                                    ],
+                                  });
+                                  router.push("/groups/feed");
+                                }}
+                              >
+                                <IconButton aria-label="leave">
+                                  <ExitToAppIcon />
+                                </IconButton>
+                              </Tooltip>
+                            )
+                          ) : null}
                         </ItemRight>
                       </InfoRight>
                     </InfoEach>
@@ -318,11 +349,11 @@ export const DetailGroup: React.FC<DetailGroupProps> = () => {
                 <About about={data?.getGroup as Group} url={`${url}/members`} />
               </Route>
               <Route path={`${url}/members`}>
-                <Members 
+                <Members
                   members={data?.getGroup.members as [User]}
                   leader={data?.getGroup.leader as User}
                   admins={data?.getGroup.admins as [User]}
-                  />
+                />
               </Route>
               <Route path={`${url}/member-requests`}>
                 <MemberRequest
