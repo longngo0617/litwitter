@@ -155,6 +155,7 @@ const Content = styled.div`
 const JoinLeft = styled.div`
   display: flex;
   align-items: stretch;
+  max-width: 442px;
 `;
 const WrapLoading = styled.div`
   display: flex;

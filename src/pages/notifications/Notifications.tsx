@@ -8,12 +8,13 @@ import { Avatar, Link } from "@material-ui/core";
 import { useNotificationsQuery, Notification } from "../../generated/graphql";
 import { UserContext } from "../../utils/useAuth";
 import { useHistory } from "react-router-dom";
+import { Loading } from "../../components/Loading";
 
 interface NotificationsProps {}
 
 export const Notifications: React.FC<NotificationsProps> = () => {
   const [oldData, setOldData] = React.useState([]);
-  const { data, loading } : any  = useNotificationsQuery({
+  const { data, loading }: any = useNotificationsQuery({
     pollInterval: 1000,
   });
   const { user } = useContext(UserContext);
@@ -34,50 +35,52 @@ export const Notifications: React.FC<NotificationsProps> = () => {
           />
           <h2>Notifications</h2>
         </div>
-        {!data && loading
-          ? null
-          : data?.getNotification.notifications
-              .filter((t: Notification) => t.username !== user.username)
-              .map((noti: Notification) => (
-                <Page key={noti.id}>
-                  <NotificationsItem>
-                    <NotiLeft>
-                      {noti.type === "Following" ? (
-                        <IconPerson />
-                      ) : noti.type === "Like" ? (
-                        <IconHeart />
-                      ) : (
-                        <AvatarUserLeft src={noti.avatar || ""} />
+        {!data && loading ? (
+          <WrapLoading>
+            <Loading blue />
+          </WrapLoading>
+        ) : (
+          data?.getNotification.notifications
+            .filter((t: Notification) => t.username !== user.username)
+            .map((noti: Notification) => (
+              <Page key={noti.id}>
+                <NotificationsItem>
+                  <NotiLeft>
+                    {noti.type === "Following" ? (
+                      <IconPerson />
+                    ) : noti.type === "Like" ? (
+                      <IconHeart />
+                    ) : (
+                      <AvatarUserLeft src={noti.avatar || ""} />
+                    )}
+                  </NotiLeft>
+                  <NotiRight>
+                    <div style={{ paddingRight: "20px", marginBottom: "12px" }}>
+                      {noti.type !== "Comment" && (
+                        <WrapAvatar>
+                          <AvatarUser src={noti.avatar || ""} />
+                        </WrapAvatar>
                       )}
-                    </NotiLeft>
-                    <NotiRight>
-                      <div
-                        style={{ paddingRight: "20px", marginBottom: "12px" }}
-                      >
-                        {noti.type !== "Comment" && (
-                          <WrapAvatar>
-                            <AvatarUser src={noti.avatar || ""} />
-                          </WrapAvatar>
-                        )}
-                      </div>
-                      <Text>
-                        <div>
-                          <Linkk href={`/users/${noti.username}`}>
-                            <span>
-                              <span>{noti.displayname}</span>
-                            </span>
-                          </Linkk>
-                        </div>
-                        <span>
+                    </div>
+                    <Text>
+                      <div>
+                        <Linkk href={`/users/${noti.username}`}>
                           <span>
-                            <span>{noti.title}</span>
+                            <span>{noti.displayname}</span>
                           </span>
+                        </Linkk>
+                      </div>
+                      <span>
+                        <span>
+                          <span>{noti.title}</span>
                         </span>
-                      </Text>
-                    </NotiRight>
-                  </NotificationsItem>
-                </Page>
-              ))}
+                      </span>
+                    </Text>
+                  </NotiRight>
+                </NotificationsItem>
+              </Page>
+            ))
+        )}
       </div>
     </WithSide>
   );
@@ -176,4 +179,10 @@ const CommentContent = styled.div`
     font-family: inherit;
     overflow-wrap: break-word;
   }
+`;
+const WrapLoading = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
 `;
