@@ -11,6 +11,7 @@ import {
   useFollowUserMutation,
 } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
+import { PopupEditGroup } from "./PopupEditGroup";
 import { PopupLeave } from "./PopupLeave";
 interface InfoMessageProps {
   id: string;
@@ -21,6 +22,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
   const [followUser] = useFollowUserMutation();
   const [f, setF] = useState<any>({});
   const [openPopup, setOpenPopup] = useState<boolean>(false);
+  const [openPopupEdit, setOpenPopupEdit] = useState<boolean>(false);
   const { data, loading }: any = useChatQuery({
     variables: { roomId: id },
   });
@@ -112,6 +114,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                               color: "rgb(29, 161, 242)",
                               textTransform: "capitalize",
                             }}
+                            onClick={() => setOpenPopupEdit(!openPopupEdit)}
                           >
                             Chỉnh sửa
                           </Button>
@@ -342,6 +345,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
         </InfoWrap>
       </Main>
       {openPopup && <PopupLeave fc={() => setOpenPopup(false)} id={id} />}
+      {openPopupEdit && <PopupEditGroup onClose={() => setOpenPopupEdit(false)}/>}
     </Container>
   );
 };
