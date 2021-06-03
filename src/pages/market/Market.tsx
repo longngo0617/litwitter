@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Switch, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { Loading } from "../../components/Loading";
 import {
   useCategoriesAndLocationsQuery,
   useProductsQuery,
@@ -28,7 +29,11 @@ export const Market: React.FC<MarketProps> = () => {
   });
 
   if (!data && loading) {
-    return null;
+    return (
+      <WrapLoading>
+        <Loading blue />
+      </WrapLoading>
+    );
   }
 
   return (
@@ -59,4 +64,11 @@ const Container = styled.div`
   flex-grow: 1;
   background-color: #f0f2f5;
   height: auto;
+`;
+const WrapLoading = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
 `;

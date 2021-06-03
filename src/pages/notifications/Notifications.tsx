@@ -140,10 +140,6 @@ const AvatarUser = styled(Avatar)`
   height: 32px;
   cursor: pointer;
 `;
-const AvatarUserLeft = styled(AvatarUser)`
-  width: 48px;
-  height: 48px;
-`;
 const Text = styled.div`
   font-weight: 400;
   font-size: 15px;
@@ -167,22 +163,6 @@ const Linkk = styled(Link)`
   font-weight: 600;
   color: rgb(15, 20, 25);
   margin-right: 4px;
-`;
-const CommentContent = styled.div`
-  color: rgb(91, 112, 131);
-  font-weight: 400;
-  font-size: 15px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
-  line-height: 20px;
-  overflow-wrap: break-word;
-  > span {
-    color: inherit;
-    font: inherit;
-    white-space: inherit;
-    font-family: inherit;
-    overflow-wrap: break-word;
-  }
 `;
 const WrapLoading = styled.div`
   display: flex;
