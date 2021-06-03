@@ -117,21 +117,17 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
                     <img src={TypeUser()[0].profile?.avatar as string} alt="" />
                   </UserMemberLeft>
                   <UserMemberRight>
-                    <img
-                      src={
-                        TypeUser()[1].profile
-                          ?.avatar as string
-                      }
-                      alt=""
-                    />
+                    <img src={TypeUser()[1].profile?.avatar as string} alt="" />
                   </UserMemberRight>
                 </UserGroup>
               </div>
               <UserInfo>
-                <Name>{`${TypeUser().map((m : any) => ((m?.displayname as string)
-                    .split(" ")
-                    .slice(-1)
-                    .join(" "))).join(', ')} và Bạn`}</Name>
+                {/* `${TypeUser()
+                  .map((m: any) =>
+                    (m?.displayname as string).split(" ").slice(-1).join(" ")
+                  )
+                  .join(", ")} và Bạn` */}
+                <Name>{data?.getChat?.name}</Name>
               </UserInfo>
             </>
           ) : (
@@ -165,14 +161,15 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
             initialValues={{ content: "", image: "" }}
             onSubmit={async (values) => {
               values.image = imageSelected;
+              const content = values.content;
+              values.content = "";
               await sendMessage({
                 variables: {
-                  content: values.content,
+                  content: content,
                   roomId: id,
                   image: values.image,
                 },
               });
-              values.content = "";
               setOpenInput(!openInput);
             }}
           >
@@ -279,6 +276,9 @@ const Name = styled.h2`
     Arial, sans-serif;
   line-height: 20px;
   overflow-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width:350px;
 `;
 const Username = styled.div`
   color: rgb(91, 112, 131);

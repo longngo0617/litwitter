@@ -10,6 +10,7 @@ import { Group, User } from "../../../generated/graphql";
 import moment from "moment";
 import { useHistory } from "react-router";
 import { UserContext } from "../../../utils/useAuth";
+import { ReadMore } from "./ReadMore";
 
 interface AboutProps {
   about: Group;
@@ -31,7 +32,9 @@ export const About: React.FC<AboutProps> = ({ about, url }) => {
         <Box2>
           <Hr />
           <Describe>
-            <span>{about?.describe}</span>
+            <span>
+              <ReadMore maxCharacterCount={300}>{about?.describe}</ReadMore>
+            </span>
           </Describe>
 
           <Line>

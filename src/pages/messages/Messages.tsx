@@ -12,6 +12,7 @@ import { Route, useParams, useRouteMatch } from "react-router";
 import { Loading } from "../../components/Loading";
 import { Switch } from "react-router-dom";
 import { InfoMessage } from "./components/InfoMessage";
+import { MembersGroup } from "./components/MembersGroup";
 
 interface MessagesProps {}
 
@@ -120,11 +121,14 @@ export const Messages: React.FC<MessagesProps> = () => {
             </Empty>
           ) : (
             <Switch>
+              <Route path={`${url}/info`}>
+                <InfoMessage id={params?.id} url={`${url}/members-group`} />
+              </Route>
+              <Route  path={`${url}/members-group`}>
+                <MembersGroup id={params?.id} />
+              </Route>
               <Route exact path={url}>
                 <ChatScreen id={params?.id} url={url} />
-              </Route>
-              <Route exact path={`${url}/info`}>
-                <InfoMessage id={params?.id} url={url} />
               </Route>
             </Switch>
           )}

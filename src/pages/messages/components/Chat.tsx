@@ -36,10 +36,7 @@ export const Chat: React.FC<ChatProps> = ({
                 <img src={members[0].profile?.avatar as string} alt="" />
               </UserMemberLeft>
               <UserMemberRight>
-                <img
-                  src={members[1].profile?.avatar as string}
-                  alt=""
-                />
+                <img src={members[1].profile?.avatar as string} alt="" />
               </UserMemberRight>
             </UserGroup>
           </div>
@@ -51,15 +48,20 @@ export const Chat: React.FC<ChatProps> = ({
           <UserInfoLeft>
             <NameWrap>
               <Name>
-                { members.length < 2
+                {members.length < 2
                   ? (members[0]?.displayname as string)
-                  .split(" ")
-                  .slice(-1)
-                  .join(" ")
-                  : `${members.map((m : any) => ((m?.displayname as string)
-                    .split(" ")
-                    .slice(-1)
-                    .join(" "))).join(', ')} và Bạn`}
+                      .split(" ")
+                      .slice(-1)
+                      .join(" ")
+                  : // : `${members
+                    //     .map((m: any, i: number) =>
+                    //       (m?.displayname as string)
+                    //         .split(" ")
+                    //         .slice(-1)
+                    //         .join(" ")
+                    //     )
+                    //     .join(", ")} và Bạn`
+                    name}
               </Name>
               <Username>{!name && `@${members[0]?.username}`}</Username>
               <Time>
@@ -128,6 +130,9 @@ const Name = styled.span`
     Arial, sans-serif;
   line-height: 20px;
   overflow-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 175px;
 `;
 const Username = styled.span`
   flex: 1;

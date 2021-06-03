@@ -9,6 +9,7 @@ import {
   PostsDocument,
   useChatQuery,
   useFollowUserMutation,
+  User,
 } from "../../../generated/graphql";
 import { UserContext } from "../../../utils/useAuth";
 import { PopupEditGroup } from "./PopupEditGroup";
@@ -18,19 +19,21 @@ interface InfoMessageProps {
   url: string;
 }
 export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
-  const { user, addUser,addMember } = useContext(UserContext);
+  const { user, addUser, addMember } = useContext(UserContext);
   const [followUser] = useFollowUserMutation();
   const [f, setF] = useState<any>({});
   const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [openPopupEdit, setOpenPopupEdit] = useState<boolean>(false);
-  const { data, loading }: any = useChatQuery({
+  const { data, loading } = useChatQuery({
     variables: { roomId: id },
   });
   const router = useHistory();
 
   useEffect(() => {
     if (data) {
-      const members = data.getChat?.members.filter((m: any) => m.username !== user.username);
+      const members = data.getChat?.members.filter(
+        (m: any) => m.username !== user.username
+      ) as [User];
       if (members.length > 2) {
         setF(members);
       } else {
@@ -50,7 +53,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
   return (
     <Container>
       <Header>
-        <IconWrap onClick={() => router.push(`${url}`)}>
+        <IconWrap onClick={() => router.goBack()}>
           <ButtonBack color="primary" aria-label="back chat screen">
             <IconBack />
           </ButtonBack>
@@ -91,15 +94,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                         <div className="item-right-top-text">
                           <div className="name-wrap">
                             <div className="name">
-                              <span>{`${f
-                              .filter((m:any) => m.username !== user.username)
-                                .map((m : any) =>
-                                  (m?.displayname as string)
-                                    .split(" ")
-                                    .slice(-1)
-                                    .join(" ")
-                                )
-                                .join(", ")} và Bạn`}</span>
+                              <span>{data?.getChat?.name}</span>
                             </div>
                           </div>
                         </div>
@@ -128,8 +123,13 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
               <Header>
                 <Title>Mọi người</Title>
               </Header>
-              {f.map((member: any) => (
-                <div className="follow-modal-bottom-itemWrap" onClick={() => router.replace(`/users/${f.username}`)}>
+              {f
+                .filter((member: any, index: any) => index < 3)
+                .map((member: any) => (
+                  <div
+                    className="follow-modal-bottom-itemWrap"
+                    onClick={() => router.replace(`/users/${f.username}`)}
+                  >
                     <div className="follow-modal-bottom-item">
                       <div className="item">
                         <div className="item-left">
@@ -213,10 +213,29 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                         </div>
                       </div>
                     </div>
-                </div>
-              ))}
+                  </div>
+                ))}
+              {f.length > 3 && (
+                <Control>
+                  <ControlItem
+                    onClick={() => router.push(url)
+                    }
+                  >
+                    <Item>
+                      <Text>Xem tất cả thành viên</Text>
+                    </Item>
+                  </ControlItem>
+                </Control>
+              )}
               <Control>
-                <ControlItem onClick={() => addMember(id,f.filter((m: any) => m.username !== user.username))} >
+                <ControlItem
+                  onClick={() =>
+                    addMember(
+                      id,
+                      f.filter((m: any) => m.username !== user.username)
+                    )
+                  }
+                >
                   <Item>
                     <Text>Thêm thành viên</Text>
                   </Item>
@@ -239,88 +258,89 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
             </>
           ) : (
             <>
-              <div className="follow-modal-bottom-itemWrap" onClick={() => router.replace(`/users/${f.username}`)}>
-                  <div className="follow-modal-bottom-item">
-                    <div className="item">
-                      <div className="item-left">
-                        <div className="avatar">
-                          <Avatar src={f.profile?.avatar || ""} />
-                        </div>
+              <div
+                className="follow-modal-bottom-itemWrap"
+                onClick={() => router.replace(`/users/${f.username}`)}
+              >
+                <div className="follow-modal-bottom-item">
+                  <div className="item">
+                    <div className="item-left">
+                      <div className="avatar">
+                        <Avatar src={f.profile?.avatar || ""} />
                       </div>
-                      <div className="item-right">
-                        <div className="item-right-top">
-                          <div className="item-right-top-text">
-                            <Link to="">
-                              <div className="name-wrap">
-                                <div className="name">
-                                  <span>{f.displayname}</span>
-                                </div>
-                                <div className="username">
-                                  <span>@{f.username}</span>
-                                  {user.follower.find(
-                                    (ele: Follow) => ele.username === f.username
-                                  ) ? (
-                                    <span className="follow--me">
-                                      Theo dõi bạn
-                                    </span>
-                                  ) : null}
-                                </div>
+                    </div>
+                    <div className="item-right">
+                      <div className="item-right-top">
+                        <div className="item-right-top-text">
+                          <Link to="">
+                            <div className="name-wrap">
+                              <div className="name">
+                                <span>{f.displayname}</span>
                               </div>
-                            </Link>
-                          </div>
-                          {user.username === f?.username ? null : (
-                            <div
-                              className="item-right-top-button"
-                              style={{ minWidth: "102px" }}
-                            >
-                              {user.following.find(
-                                (ele: Follow) => ele.username === f.username
-                              ) ? (
-                                <Button
-                                  variant="contained"
-                                  className="btn-follow btn-following"
-                                  onClick={async (e) => {
-                                    e.stopPropagation();
-                                    const data = await followUser({
-                                      variables: {
-                                        username: f.username,
-                                      },
-                                      refetchQueries: [
-                                        { query: PostsDocument },
-                                      ],
-                                    });
-                                    await addUser(data?.data?.following);
-                                  }}
-                                >
-                                  <span className="following">Following</span>
-                                  <span className="unfollow">Unfollow</span>
-                                </Button>
-                              ) : (
-                                <Button
-                                  variant="outlined"
-                                  className="btn-follow"
-                                  onClick={async (e) => {
-                                    e.stopPropagation();
-                                    const data = await followUser({
-                                      variables: {
-                                        username: f.username,
-                                      },
-                                    });
-                                    await addUser(data?.data?.following);
-                                  }}
-                                >
-                                  Follow
-                                </Button>
-                              )}
+                              <div className="username">
+                                <span>@{f.username}</span>
+                                {user.follower.find(
+                                  (ele: Follow) => ele.username === f.username
+                                ) ? (
+                                  <span className="follow--me">
+                                    Theo dõi bạn
+                                  </span>
+                                ) : null}
+                              </div>
                             </div>
-                          )}
+                          </Link>
                         </div>
-                        <div className="item-right-bottom">
-                          <span className="body">{f.story}</span>
-                        </div>
+                        {user.username === f?.username ? null : (
+                          <div
+                            className="item-right-top-button"
+                            style={{ minWidth: "102px" }}
+                          >
+                            {user.following.find(
+                              (ele: Follow) => ele.username === f.username
+                            ) ? (
+                              <Button
+                                variant="contained"
+                                className="btn-follow btn-following"
+                                onClick={async (e) => {
+                                  e.stopPropagation();
+                                  const data = await followUser({
+                                    variables: {
+                                      username: f.username,
+                                    },
+                                    refetchQueries: [{ query: PostsDocument }],
+                                  });
+                                  await addUser(data?.data?.following);
+                                }}
+                              >
+                                <span className="following">Following</span>
+                                <span className="unfollow">Unfollow</span>
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="outlined"
+                                className="btn-follow"
+                                onClick={async (e) => {
+                                  e.stopPropagation();
+                                  const data = await followUser({
+                                    variables: {
+                                      username: f.username,
+                                    },
+                                  });
+                                  await addUser(data?.data?.following);
+                                }}
+                              >
+                                Follow
+                              </Button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <div className="item-right-bottom">
+                        <span className="body">{f.story}</span>
                       </div>
                     </div>
                   </div>
+                </div>
               </div>
               <Control>
                 <Border />
@@ -345,7 +365,9 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
         </InfoWrap>
       </Main>
       {openPopup && <PopupLeave fc={() => setOpenPopup(false)} id={id} />}
-      {openPopupEdit && <PopupEditGroup onClose={() => setOpenPopupEdit(false)}/>}
+      {openPopupEdit && (
+        <PopupEditGroup onClose={() => setOpenPopupEdit(false)} />
+      )}
     </Container>
   );
 };
