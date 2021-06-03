@@ -5,27 +5,40 @@ import { IconButton, Button, Avatar, LinearProgress } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import { TextFormField } from "../../../components/TextFormField";
+import { useEditRoomChatMutation } from "../../../generated/graphql";
 
 interface PopupEditGroupProps {
   onClose: () => void;
+  id: string;
+  name: string;
+  image: string;
 }
 
-export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({ onClose }) => {
+export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({
+  onClose,
+  id,
+  name,
+  image,
+}) => {
   const [loadingCreate, setLoadingCreate] = React.useState(false);
+  const [editRoomChat] = useEditRoomChatMutation();
   const inputImage: any = React.useRef(null);
   const [selectedImage, setSelectedImage] = React.useState("");
   const [previewImage, setPreviewImage] = React.useState<any>("");
+
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
     previewFileImage(file);
     setSelectedImage(e.target.value);
   };
+
   const previewFileImage = (file: any) => {
     if (!file) return;
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setPreviewImage(reader.result);
+      console.log(reader.result)
     };
   };
   return (
@@ -35,13 +48,28 @@ export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({ onClose }) => {
         {loadingCreate && <LinearProgress />}
         <Formik
           initialValues={{
-            groupName: "",
+            groupName: name,
+            image,
           }}
           onSubmit={async (values) => {
             setLoadingCreate(true);
+            if (previewImage) {
+              values.image = previewImage;
+            }
+
+            await editRoomChat({
+              variables: {
+                roomId: id,
+                image: values.image,
+                name: values.groupName,
+              },
+            });
+
+            setLoadingCreate(false);
+            onClose()
           }}
         >
-          {({ handleChange, values }) => (
+          {({ values }) => (
             <Form autoComplete="off">
               <div className="follow-modal">
                 <Wrapper>
@@ -59,12 +87,12 @@ export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({ onClose }) => {
                       <h2 className="title">Edit</h2>
                     </div>
                     <div className="follow-modal-top-icon">
-                      {/* {!arrUser.length ? (
+                      {!values.groupName ? (
                         <ButtonDisable
                           aria-label="close-icon"
                           color="primary"
                           className="btn-save"
-                          disabled={!arrUser.lenght}
+                          disabled={!values.groupName}
                         >
                           Save
                         </ButtonDisable>
@@ -73,7 +101,7 @@ export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({ onClose }) => {
                           aria-label="close-icon"
                           color="primary"
                           className="btn-save"
-                          disabled={!arrUser.lenght}
+                          disabled={!values.groupName}
                         >
                           Save
                         </ButtonDisable>
@@ -86,7 +114,7 @@ export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({ onClose }) => {
                         >
                           Save
                         </Button>
-                      )} */}
+                      )}
                     </div>
                   </div>
                 </Wrapper>
@@ -98,12 +126,20 @@ export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({ onClose }) => {
                         <EditAvatarPad>
                           <UserGroup>
                             <UserGroup>
-                              <UserMemberLeft>
-                                <img src="/per2.jpeg" alt="" />
-                              </UserMemberLeft>
-                              <UserMemberRight>
-                                <img src="/per3.jpeg" alt="" />
-                              </UserMemberRight>
+                              {previewImage ? (
+                                <img src={previewImage} />
+                              ) : image ? (
+                                <img src={image} />
+                              ) : (
+                                <>
+                                  <UserMemberLeft>
+                                    <img src="/per2.jpeg" alt="" />
+                                  </UserMemberLeft>
+                                  <UserMemberRight>
+                                    <img src="/per3.jpeg" alt="" />
+                                  </UserMemberRight>
+                                </>
+                              )}
                             </UserGroup>
                             <OverlayAvatar />
                             <Mid>

@@ -72,20 +72,24 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                     <div className="item-left">
                       <div className="avatar">
                         <div style={{ marginRight: "12px" }}>
-                          <UserGroup>
-                            <UserMemberLeft>
-                              <img
-                                src={f[0].profile?.avatar as string}
-                                alt=""
-                              />
-                            </UserMemberLeft>
-                            <UserMemberRight>
-                              <img
-                                src={f[1].profile?.avatar as string}
-                                alt=""
-                              />
-                            </UserMemberRight>
-                          </UserGroup>
+                          {data?.getChat && data?.getChat.image ? (
+                            <Avatar src={data?.getChat.image} />
+                          ) : (
+                            <UserGroup>
+                              <UserMemberLeft>
+                                <img
+                                  src={f[0].profile?.avatar as string}
+                                  alt=""
+                                />
+                              </UserMemberLeft>
+                              <UserMemberRight>
+                                <img
+                                  src={f[1].profile?.avatar as string}
+                                  alt=""
+                                />
+                              </UserMemberRight>
+                            </UserGroup>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -217,10 +221,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
                 ))}
               {f.length > 3 && (
                 <Control>
-                  <ControlItem
-                    onClick={() => router.push(url)
-                    }
-                  >
+                  <ControlItem onClick={() => router.push(url)}>
                     <Item>
                       <Text>Xem tất cả thành viên</Text>
                     </Item>
@@ -366,7 +367,12 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
       </Main>
       {openPopup && <PopupLeave fc={() => setOpenPopup(false)} id={id} />}
       {openPopupEdit && (
-        <PopupEditGroup onClose={() => setOpenPopupEdit(false)} />
+        <PopupEditGroup
+          onClose={() => setOpenPopupEdit(false)}
+          id={id}
+          name={data?.getChat?.name as string}
+          image={data?.getChat?.image as string}
+        />
       )}
     </Container>
   );

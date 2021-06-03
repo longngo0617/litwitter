@@ -112,14 +112,24 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
           {TypeUser().length >= 2 ? (
             <>
               <div style={{ marginRight: "12px" }}>
-                <UserGroup>
-                  <UserMemberLeft>
-                    <img src={TypeUser()[0].profile?.avatar as string} alt="" />
-                  </UserMemberLeft>
-                  <UserMemberRight>
-                    <img src={TypeUser()[1].profile?.avatar as string} alt="" />
-                  </UserMemberRight>
-                </UserGroup>
+                {data.getChat?.image ? (
+                  <UserAvatar src={data.getChat?.image || ""} />
+                ) : (
+                  <UserGroup>
+                    <UserMemberLeft>
+                      <img
+                        src={TypeUser()[0].profile?.avatar as string}
+                        alt=""
+                      />
+                    </UserMemberLeft>
+                    <UserMemberRight>
+                      <img
+                        src={TypeUser()[1].profile?.avatar as string}
+                        alt=""
+                      />
+                    </UserMemberRight>
+                  </UserGroup>
+                )}
               </div>
               <UserInfo>
                 {/* `${TypeUser()
@@ -278,7 +288,7 @@ const Name = styled.h2`
   overflow-wrap: break-word;
   text-overflow: ellipsis;
   overflow: hidden;
-  max-width:350px;
+  max-width: 350px;
 `;
 const Username = styled.div`
   color: rgb(91, 112, 131);

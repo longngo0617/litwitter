@@ -13,6 +13,7 @@ interface ChatProps {
   createdAt: string;
   me: string;
   name: string;
+  image: string;
 }
 
 export const Chat: React.FC<ChatProps> = ({
@@ -22,6 +23,7 @@ export const Chat: React.FC<ChatProps> = ({
   lastContent,
   createdAt,
   name,
+  image,
 }) => {
   const router = useHistory();
   const { user } = React.useContext(UserContext);
@@ -31,14 +33,18 @@ export const Chat: React.FC<ChatProps> = ({
       <Item>
         {members.length > 2 ? (
           <div style={{ marginRight: "12px" }}>
-            <UserGroup>
-              <UserMemberLeft>
-                <img src={members[0].profile?.avatar as string} alt="" />
-              </UserMemberLeft>
-              <UserMemberRight>
-                <img src={members[1].profile?.avatar as string} alt="" />
-              </UserMemberRight>
-            </UserGroup>
+            {image ? (
+              <UserAvatar src={image} />
+            ) : (
+              <UserGroup>
+                <UserMemberLeft>
+                  <img src={members[0].profile?.avatar as string} alt="" />
+                </UserMemberLeft>
+                <UserMemberRight>
+                  <img src={members[1].profile?.avatar as string} alt="" />
+                </UserMemberRight>
+              </UserGroup>
+            )}
           </div>
         ) : (
           <UserAvatar src={members[0]?.profile?.avatar || ""} />

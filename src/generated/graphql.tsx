@@ -255,7 +255,6 @@ export type Query = {
   getMyPosts: PaginatedPost;
   getChats?: Maybe<Array<Maybe<RoomChat>>>;
   getChat?: Maybe<RoomChat>;
-  getChatReverse?: Maybe<RoomChat>;
   getUsers?: Maybe<Array<Maybe<User>>>;
   getUser?: Maybe<User>;
   getMyUser?: Maybe<User>;
@@ -300,11 +299,6 @@ export type QueryGetMyPostsArgs = {
 
 
 export type QueryGetChatArgs = {
-  roomId?: Maybe<Scalars['ID']>;
-};
-
-
-export type QueryGetChatReverseArgs = {
   roomId?: Maybe<Scalars['ID']>;
 };
 
@@ -370,7 +364,6 @@ export type Mutation = {
   likePost: Post;
   createRoomChat: Scalars['String'];
   addMembers: Scalars['Boolean'];
-  createRoomChatUsername: RoomChat;
   deleteRoomChat?: Maybe<Scalars['String']>;
   createContentChat: RoomChat;
   following: User;
@@ -392,6 +385,7 @@ export type Mutation = {
   leaveTheRoom: Scalars['Boolean'];
   joinTheRoom: Scalars['Boolean'];
   leaveTheGroup: Scalars['Boolean'];
+  editRoom: Scalars['Boolean'];
 };
 
 
@@ -452,11 +446,6 @@ export type MutationCreateRoomChatArgs = {
 export type MutationAddMembersArgs = {
   roomId: Scalars['String'];
   userId: Array<Maybe<Scalars['String']>>;
-};
-
-
-export type MutationCreateRoomChatUsernameArgs = {
-  username: Scalars['String'];
 };
 
 
@@ -585,6 +574,13 @@ export type MutationJoinTheRoomArgs = {
 
 export type MutationLeaveTheGroupArgs = {
   groupId: Scalars['String'];
+};
+
+
+export type MutationEditRoomArgs = {
+  roomId: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
 };
 
 export type Subscription = {
@@ -984,6 +980,18 @@ export type EditProfileMutation = (
       & Pick<Profile, 'avatar' | 'dateOfBirth' | 'fullName' | 'story' | 'coverImage'>
     )> }
   ) }
+);
+
+export type EditRoomChatMutationVariables = Exact<{
+  roomId: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+}>;
+
+
+export type EditRoomChatMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'editRoom'>
 );
 
 export type FollowUserMutationVariables = Exact<{
@@ -2233,6 +2241,39 @@ export function useEditProfileMutation(baseOptions?: Apollo.MutationHookOptions<
 export type EditProfileMutationHookResult = ReturnType<typeof useEditProfileMutation>;
 export type EditProfileMutationResult = Apollo.MutationResult<EditProfileMutation>;
 export type EditProfileMutationOptions = Apollo.BaseMutationOptions<EditProfileMutation, EditProfileMutationVariables>;
+export const EditRoomChatDocument = gql`
+    mutation editRoomChat($roomId: String!, $image: String, $name: String) {
+  editRoom(roomId: $roomId, image: $image, name: $name)
+}
+    `;
+export type EditRoomChatMutationFn = Apollo.MutationFunction<EditRoomChatMutation, EditRoomChatMutationVariables>;
+
+/**
+ * __useEditRoomChatMutation__
+ *
+ * To run a mutation, you first call `useEditRoomChatMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditRoomChatMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editRoomChatMutation, { data, loading, error }] = useEditRoomChatMutation({
+ *   variables: {
+ *      roomId: // value for 'roomId'
+ *      image: // value for 'image'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useEditRoomChatMutation(baseOptions?: Apollo.MutationHookOptions<EditRoomChatMutation, EditRoomChatMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditRoomChatMutation, EditRoomChatMutationVariables>(EditRoomChatDocument, options);
+      }
+export type EditRoomChatMutationHookResult = ReturnType<typeof useEditRoomChatMutation>;
+export type EditRoomChatMutationResult = Apollo.MutationResult<EditRoomChatMutation>;
+export type EditRoomChatMutationOptions = Apollo.BaseMutationOptions<EditRoomChatMutation, EditRoomChatMutationVariables>;
 export const FollowUserDocument = gql`
     mutation followUser($username: String) {
   following(username: $username) {

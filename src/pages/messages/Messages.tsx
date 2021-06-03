@@ -82,6 +82,7 @@ export const Messages: React.FC<MessagesProps> = () => {
                         key={index}
                         id={r.id}
                         name={r.name}
+                        image={r.image}
                         members={r.members.filter(
                           (m: any) => m.username !== user.username
                         )}

@@ -1,0 +1,3 @@
+mutation editRoomChat($roomId: String!, $image: String, $name: String) {
+  editRoom(roomId: $roomId, image: $image, name: $name)
+}
