@@ -12,6 +12,8 @@ interface PopupEditGroupProps {
   id: string;
   name: string;
   image: string;
+  avatarFirst:string;
+  avatarSecond:string;
 }
 
 export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({
@@ -19,6 +21,8 @@ export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({
   id,
   name,
   image,
+  avatarFirst,
+  avatarSecond
 }) => {
   const [loadingCreate, setLoadingCreate] = React.useState(false);
   const [editRoomChat] = useEditRoomChatMutation();
@@ -133,10 +137,10 @@ export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({
                               ) : (
                                 <>
                                   <UserMemberLeft>
-                                    <img src="/per2.jpeg" alt="" />
+                                    <img src={avatarFirst} alt="" />
                                   </UserMemberLeft>
                                   <UserMemberRight>
-                                    <img src="/per3.jpeg" alt="" />
+                                    <img src={avatarSecond} alt="" />
                                   </UserMemberRight>
                                 </>
                               )}

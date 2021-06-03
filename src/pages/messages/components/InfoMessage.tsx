@@ -372,6 +372,8 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ id, url }) => {
           id={id}
           name={data?.getChat?.name as string}
           image={data?.getChat?.image as string}
+          avatarFirst={f[0].profile?.avatar as string}
+          avatarSecond={f[1].profile?.avatar as string}
         />
       )}
     </Container>
