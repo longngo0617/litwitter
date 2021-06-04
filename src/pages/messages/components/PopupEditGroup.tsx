@@ -27,13 +27,11 @@ export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({
   const [loadingCreate, setLoadingCreate] = React.useState(false);
   const [editRoomChat] = useEditRoomChatMutation();
   const inputImage: any = React.useRef(null);
-  const [selectedImage, setSelectedImage] = React.useState("");
   const [previewImage, setPreviewImage] = React.useState<any>("");
 
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
     previewFileImage(file);
-    setSelectedImage(e.target.value);
   };
 
   const previewFileImage = (file: any) => {
@@ -42,7 +40,6 @@ export const PopupEditGroup: React.FC<PopupEditGroupProps> = ({
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setPreviewImage(reader.result);
-      console.log(reader.result)
     };
   };
   return (
