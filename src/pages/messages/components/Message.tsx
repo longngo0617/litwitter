@@ -17,15 +17,22 @@ export const Message: React.FC<MessageProps> = ({
   message,
   time,
   image,
+  avatar,
 }) => {
   const { user } = useContext(UserContext);
-  const TypeOfMessage = user.username === u ? Sender : Reciever;
+  // const TypeOfMessage = user.username === u ? Sender : Reciever;
   const TypeOfTime = user.username === u ? TimeSender : TimeStamp;
   const TypeOfImage = user.username === u ? ImageSender : ImageWrap;
   return (
     <Container>
-      {/* <Avatar src=""/> */}
-      {message !== "" && <TypeOfMessage>{message}</TypeOfMessage>}
+      {message !== "" && user.username === u ? (
+        <Sender>{message}</Sender>
+      ) : (
+        <SenderWrap>
+          {!time ? <ElementNull /> : <Avatar src={avatar} />}
+          <Reciever>{message}</Reciever>
+        </SenderWrap>
+      )}
       {image !== null && (
         <TypeOfImage>
           <img src={image} alt="" />
@@ -40,7 +47,7 @@ const Container = styled.div``;
 const MessageElement = styled.p`
   max-width: 50%;
   width: fit-content;
-  padding: 12px 16px;
+  padding: 12px;
   border-color: rgb(29, 161, 242);
   border-radius: 16px;
   position: relative;
@@ -66,7 +73,7 @@ const Reciever = styled(MessageElement)`
   text-align: left;
   color: #000;
   border-bottom-left-radius: 0px;
-  margin-left: 0px;
+  margin-left: 8px;
 `;
 
 const TimeStamp = styled.div`
@@ -100,4 +107,14 @@ const ImageWrap = styled.div`
 
 const ImageSender = styled(ImageWrap)`
   margin-left: auto;
+`;
+
+const SenderWrap = styled.div`
+  display: flex;
+  font-family: inherit;
+  align-items: center;
+`;
+const ElementNull = styled.div`
+  width: 40px;
+  height: 40px;
 `;

@@ -77,7 +77,7 @@ export const Messages: React.FC<MessagesProps> = () => {
             ) : (
               <Chats>
                 {data?.getRoomChat
-                  ? data.getRoomChat.map((r: any, index: number) =>
+                  ? data.getRoomChat.map((r: any, index: number) => (
                       <Chat
                         key={index}
                         id={r.id}
@@ -90,7 +90,7 @@ export const Messages: React.FC<MessagesProps> = () => {
                         createdAt={r.content[r?.content.length - 1]?.createdAt}
                         me={r.content[r?.content.length - 1]?.username}
                       />
-                    )
+                    ))
                   : null}
               </Chats>
             )}
@@ -125,7 +125,7 @@ export const Messages: React.FC<MessagesProps> = () => {
               <Route path={`${url}/info`}>
                 <InfoMessage id={params?.id} url={`${url}/members-group`} />
               </Route>
-              <Route  path={`${url}/members-group`}>
+              <Route path={`${url}/members-group`}>
                 <MembersGroup id={params?.id} />
               </Route>
               <Route exact path={url}>

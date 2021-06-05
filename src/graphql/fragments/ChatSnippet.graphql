@@ -3,6 +3,7 @@ fragment ChatSnippet on Chat {
     username
     displayname
     createdAt
+    avatar
     content
     image
 }

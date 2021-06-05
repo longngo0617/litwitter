@@ -80,6 +80,7 @@ export type Chat = {
   createdAt: Scalars['String'];
   content?: Maybe<Scalars['String']>;
   image?: Maybe<Scalars['String']>;
+  avatar?: Maybe<Scalars['String']>;
 };
 
 export type Member = {
@@ -596,7 +597,7 @@ export enum CacheControlScope {
 
 export type ChatSnippetFragment = (
   { __typename?: 'Chat' }
-  & Pick<Chat, 'id' | 'username' | 'displayname' | 'createdAt' | 'content' | 'image'>
+  & Pick<Chat, 'id' | 'username' | 'displayname' | 'createdAt' | 'avatar' | 'content' | 'image'>
 );
 
 export type CommentSnippetFragment = (
@@ -1553,6 +1554,7 @@ export const ChatSnippetFragmentDoc = gql`
   username
   displayname
   createdAt
+  avatar
   content
   image
 }

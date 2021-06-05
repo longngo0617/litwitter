@@ -71,6 +71,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ id, url }) => {
           u={message.username}
           message={message.content}
           image={message.image}
+          avatar={message.avatar}
           time={
             message.username !== data.getChat?.content[index + 1]?.username
               ? message.createdAt
