@@ -14,6 +14,7 @@ interface ChatProps {
   me: string;
   name: string;
   image: string;
+  you: string;
 }
 
 export const Chat: React.FC<ChatProps> = ({
@@ -24,6 +25,7 @@ export const Chat: React.FC<ChatProps> = ({
   createdAt,
   name,
   image,
+  you,
 }) => {
   const router = useHistory();
   const { user } = React.useContext(UserContext);
@@ -32,10 +34,10 @@ export const Chat: React.FC<ChatProps> = ({
     <Container onClick={() => router.replace(`/messages/${id}`)}>
       <Item>
         {members.length > 2 ? (
-          <div style={{ marginRight: "12px" }}>
-            {image ? (
-              <UserAvatar src={image} />
-            ) : (
+          image ? (
+            <UserAvatar src={image} />
+          ) : (
+            <div style={{ marginRight: "12px" }}>
               <UserGroup>
                 <UserMemberLeft>
                   <img src={members[0].profile?.avatar as string} alt="" />
@@ -44,8 +46,8 @@ export const Chat: React.FC<ChatProps> = ({
                   <img src={members[1].profile?.avatar as string} alt="" />
                 </UserMemberRight>
               </UserGroup>
-            )}
-          </div>
+            </div>
+          )
         ) : (
           <UserAvatar src={members[0]?.profile?.avatar || ""} />
         )}
@@ -78,7 +80,9 @@ export const Chat: React.FC<ChatProps> = ({
             </NameWrap>
             <ContentWrap>
               <LastContent>
-                {user.username === me ? "Bạn : " : null}
+                {user.username === me
+                  ? "Bạn : "
+                  : you !== undefined ? `${you?.split(" ").slice(0, 1).join(" ")} : ` : null}
                 {lastContent}
               </LastContent>
             </ContentWrap>

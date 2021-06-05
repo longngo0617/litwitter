@@ -89,6 +89,7 @@ export const Messages: React.FC<MessagesProps> = () => {
                         lastContent={r?.content[r?.content.length - 1]?.content}
                         createdAt={r.content[r?.content.length - 1]?.createdAt}
                         me={r.content[r?.content.length - 1]?.username}
+                        you={r.content[r?.content.length - 1]?.displayname}
                       />
                     ))
                   : null}
