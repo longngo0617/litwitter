@@ -21,10 +21,14 @@ export const Messages: React.FC<MessagesProps> = () => {
   const { data, loading }: any = useChatsQuery({
     pollInterval: 1000,
   });
-
+  const [value, setValue] = React.useState("");
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const values = event.target.value;
+    setValue(values);
+  };
   const params: any = useParams();
   const { url }: any = useRouteMatch();
-
+  console.log(value);
   return (
     <div className="wrapper">
       <Sidebar {...user} />
@@ -43,7 +47,11 @@ export const Messages: React.FC<MessagesProps> = () => {
           <Bottom>
             <Search>
               <SearchIcon />
-              <SearchInput placeholder="Tìm kiếm mọi người hoặc nhóm" />
+              <SearchInput
+                placeholder="Tìm kiếm mọi người hoặc nhóm"
+                onChange={handleChange}
+                value={value}
+              />
             </Search>
             {!data && loading ? (
               <WrapLoading>
@@ -76,8 +84,15 @@ export const Messages: React.FC<MessagesProps> = () => {
               </Empty>
             ) : (
               <Chats>
-                {data?.getRoomChat
-                  ? data.getRoomChat.map((r: any, index: number) => (
+                {data?.getRoomChat &&
+                  data.getRoomChat
+                    .filter((r: any, index: number) => {
+                      if (r.name) {
+                        return r.name.toLowerCase().includes(value);
+                      }
+                      return r;
+                    })
+                    .map((r: any, index: number) => (
                       <Chat
                         key={index}
                         id={r.id}
@@ -91,8 +106,7 @@ export const Messages: React.FC<MessagesProps> = () => {
                         me={r.content[r?.content.length - 1]?.username}
                         you={r.content[r?.content.length - 1]?.displayname}
                       />
-                    ))
-                  : null}
+                    ))}
               </Chats>
             )}
           </Bottom>
