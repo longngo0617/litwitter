@@ -98,15 +98,9 @@ export const Connect: React.FC<ConnectProps> = () => {
                                           variables: {
                                             username: f.username,
                                           },
-                                          refetchQueries: [
-                                            {
-                                              query: PostsDocument,
-                                              variables: {
-                                                cursor: "",
-                                                limit:6,
-                                              },
-                                            },
-                                          ],
+                                          update: (cache) => {
+                                            cache.evict({ fieldName: "getPosts:{}" });
+                                          },
                                         });
                                         await addUser(data?.data?.following);
                                       }}
@@ -125,6 +119,9 @@ export const Connect: React.FC<ConnectProps> = () => {
                                         const data = await followUser({
                                           variables: {
                                             username: f.username,
+                                          },
+                                          update: (cache) => {
+                                            cache.evict({ fieldName: "getPosts:{}" });
                                           },
                                         });
                                         await addUser(data?.data?.following);

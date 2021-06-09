@@ -90,6 +90,9 @@ export const Follower: React.FC<any> = (props) => {
                                   variables: {
                                     username: f.username,
                                   },
+                                  update: (cache) => {
+                                    cache.evict({ fieldName: "getPosts:{}" });
+                                  },
                                 });
                                 await addUser(data?.data?.following);
                               }}
@@ -106,6 +109,9 @@ export const Follower: React.FC<any> = (props) => {
                                 const data = await followUser({
                                   variables: {
                                     username: f.username,
+                                  },
+                                  update: (cache) => {
+                                    cache.evict({ fieldName: "getPosts:{}" });
                                   },
                                 });
                                 await addUser(data?.data?.following);

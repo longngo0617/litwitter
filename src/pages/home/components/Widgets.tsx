@@ -130,6 +130,9 @@ const Widgets = () => {
                                         variables: {
                                           username: f.username,
                                         },
+                                        update: (cache) => {
+                                          cache.evict({ fieldName: "getPosts:{}" });
+                                        },
                                       });
                                       await addUser(data?.data?.following);
                                     }}
@@ -146,6 +149,9 @@ const Widgets = () => {
                                       const data = await followUser({
                                         variables: {
                                           username: f.username,
+                                        },
+                                        update: (cache) => {
+                                          cache.evict({ fieldName: "getPosts:{}" });
                                         },
                                       });
                                       await addUser(data?.data?.following);

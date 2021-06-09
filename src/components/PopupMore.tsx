@@ -76,19 +76,6 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
                     });
                   }
                   closeMore();
-                  // (await !moreState.isComment)
-                  //   ? deletePost({
-                  //       variables: { id: moreState.item.post.id },
-                  //       update: (cache) => {
-                  //         cache.evict({ id: "Post:" + moreState.item.post.id });
-                  //       },
-                  //     })
-                  //   : deleteComment({
-                  //       variables: {
-                  //         id: moreState.item.post.postId,
-                  //         commentId: moreState.item.post.id,
-                  //       },
-                  //     });
                 }}
               >
                 <div className="menu--item__icon">

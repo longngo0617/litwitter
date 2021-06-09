@@ -77,6 +77,9 @@ export const FollowPopup: React.FC<FollowPopupProps> = ({ title }) => {
                                     variables: {
                                       username: p.username,
                                     },
+                                    update: (cache) => {
+                                      cache.evict({ fieldName: "getPosts:{}" });
+                                    },
                                   });
                                   await addUser(data?.data?.following);
                                 }}
@@ -92,6 +95,9 @@ export const FollowPopup: React.FC<FollowPopupProps> = ({ title }) => {
                                   const data = await followUser({
                                     variables: {
                                       username: p.username,
+                                    },
+                                    update: (cache) => {
+                                      cache.evict({ fieldName: "getPosts:{}" });
                                     },
                                   });
                                   await addUser(data?.data?.following);
