@@ -252,7 +252,7 @@ export const PopupEdit: React.FC<PopupEditProps> = () => {
                             </div>
                           </div>
                           <Field
-                            label="fullName"
+                            label="Full Name"
                             name="fullName"
                             value={values.fullName}
                             component={TextFormField}

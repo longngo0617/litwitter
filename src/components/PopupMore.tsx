@@ -12,14 +12,17 @@ import {
   useDeleteCommentMutation,
   useFollowUserMutation,
   Follow,
+  useDeletePostInGroupMutation,
+  PostOfMyGroupDocument,
 } from "../generated/graphql";
 import FlagIcon from "@material-ui/icons/Flag";
 
 interface PopupMoreProps {}
 
 export const PopupMore: React.FC<PopupMoreProps> = () => {
-  const { user, moreState, closeMore,addUser } = useContext(UserContext);
+  const { user, moreState, closeMore, addUser } = useContext(UserContext);
   const [deletePost] = useDeletePostMutation();
+  const [deletePostInGroup] = useDeletePostInGroupMutation();
   const [deleteComment] = useDeleteCommentMutation();
   const [followUser] = useFollowUserMutation();
   const ref = useOutside("click", () => {
@@ -29,7 +32,7 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
   if (!moreState.showMenu) {
     return null;
   }
-  console.log(moreState)
+  console.log(moreState);
   return ReactDOM.createPortal(
     <div className="menu--wrap">
       <div className="menu--fixed"></div>
@@ -45,20 +48,47 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
               <div
                 className="menu--item"
                 onClick={async () => {
-                  (await !moreState.isComment)
-                    ? deletePost({
+                  if (!moreState.isComment) {
+                    if (moreState.item.groupId) {
+                      await deletePostInGroup({
+                        variables: {
+                          groupId: moreState.item.groupId,
+                          postId: moreState.item.post.id,
+                        },
+                        update: (cache) => {
+                          cache.evict({ id: "Group:" + moreState.item.groupId });
+                        },
+                      });
+                    } else {
+                      await deletePost({
                         variables: { id: moreState.item.post.id },
                         update: (cache) => {
                           cache.evict({ id: "Post:" + moreState.item.post.id });
                         },
-                      })
-                    : deleteComment({
-                        variables: {
-                          id: moreState.item.post.postId,
-                          commentId: moreState.item.post.id,
-                        },
                       });
+                    }
+                  } else {
+                    await deleteComment({
+                      variables: {
+                        id: moreState.item.post.postId,
+                        commentId: moreState.item.post.id,
+                      },
+                    });
+                  }
                   closeMore();
+                  // (await !moreState.isComment)
+                  //   ? deletePost({
+                  //       variables: { id: moreState.item.post.id },
+                  //       update: (cache) => {
+                  //         cache.evict({ id: "Post:" + moreState.item.post.id });
+                  //       },
+                  //     })
+                  //   : deleteComment({
+                  //       variables: {
+                  //         id: moreState.item.post.postId,
+                  //         commentId: moreState.item.post.id,
+                  //       },
+                  //     });
                 }}
               >
                 <div className="menu--item__icon">
@@ -80,19 +110,33 @@ export const PopupMore: React.FC<PopupMoreProps> = () => {
                   className="menu--item"
                   onClick={async () => {
                     closeMore();
-                    const data = await followUser({ variables: {
-                      username: moreState.item.post.username
-                    } });
+                    const data = await followUser({
+                      variables: {
+                        username: moreState.item.post.username,
+                      },
+                    });
                     await addUser(data?.data?.following);
                   }}
                 >
                   <div className="menu--item__icon">
-                    {!user.following.find((e:Follow) => e.username === moreState.item.post.username) ? <PersonAddIcon /> : <PersonAddDisabledIcon/>}
+                    {!user.following.find(
+                      (e: Follow) => e.username === moreState.item.post.username
+                    ) ? (
+                      <PersonAddIcon />
+                    ) : (
+                      <PersonAddDisabledIcon />
+                    )}
                   </div>
                   <div className="menu--item__text">
                     <div className="menu--item__css">
                       <span className="text">
-                        {!user.following.find((e:Follow) => e.username === moreState.item.post.username) ? "Follow" : "Unfollow" } {moreState?.item?.displayname}
+                        {!user.following.find(
+                          (e: Follow) =>
+                            e.username === moreState.item.post.username
+                        )
+                          ? "Follow"
+                          : "Unfollow"}{" "}
+                        {moreState?.item?.displayname}
                       </span>
                     </div>
                   </div>

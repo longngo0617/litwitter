@@ -28,7 +28,7 @@ export const Profile: React.FC<ProfileProps> = () => {
     },
   });
 
-
+  
   if (!loading && !data) {
     return (
       <div>
@@ -38,6 +38,7 @@ export const Profile: React.FC<ProfileProps> = () => {
     );
   }
 
+  
   return (
     <WithSide>
       <div className="feed">
